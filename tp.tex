@@ -361,13 +361,13 @@
   \InterfazFuncion{AgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{sistema}}{}
   [$s$ $\igobs$ $s_{0}$ $\land$ $¬$($l$ $\in$ links($s$)) $\land$ está?($c$, categorías($s$)]
   {$s$ $\igobs$ nuevoLink($s_{0}$, $l$, $c$)}
-  [$\Theta$(|$l$| + |$c$| + altura(categorías($s$))]
+  [$\Theta$(|$l$| + |$c$| + $h$), donde $h$ representa altura(categorías($s$)).]
   [agrega al sistema el link $l$ con categoría $c$.]
 
   \InterfazFuncion{AccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{sistema}}{}
   [$s$ $\igobs$ $s_{0}$ $\land$ $l$ $\in$ links($s$) $\land$ $f$ $\geq$ fechaActual($s$)]
   {$s$ $\igobs$ acceso($s_{0}$, $l$, $f$)}
-  [$\Theta$(|$l$|)]
+  [$\Theta$(|$l$| + $h$), donde $h$ representa altura(categorías($s$)).]
   [registra un acceso al link $l$ en la fecha $f$.]
 
   \InterfazFuncion{\#Links}{\In{c}{categoría}, \In{s}{sistema}}{nat}
@@ -436,17 +436,20 @@
     \begin{Tupla}[estr\_sistema]
       \tupItem{categorías}{acat}
       \tupItem{links}{dicctrie(estr\_link)}
-      \tupItem{linksPorCatId}{arreglo\_dim(estr\_linkscat)}
+      \tupItem{linksPorCatId}{arreglo\_dimensionable de estr\_linkscat}
+      \tupItem{fechaActual}{fecha}
     \end{Tupla}
     \begin{Tupla}[estr\_link]
       \tupItem{l}{link}
-      \tupItem{c}{categoria}
-      \tupItem{fs}{conj(fecha)}            
+      \tupItem{cid}{nat}
+      \tupItem{últimoAcceso}{fecha}
+      \tupItem{as}{arreglo\_estático[3] de fecha}            
     \end{Tupla} \\
     \begin{Tupla}[estr\_linkscat]
-      \tupItem{dc}{puntero(datoscat)}
+      \tupItem{c}{puntero(datoscat)}
       \tupItem{ls}{lista(puntero(estr\_link))}
-      \tupItem{ord?}{bool}            
+      \tupItem{últimoAcceso}{fecha}      
+      \tupItem{ordenado?}{bool}            
     \end{Tupla}    
   \end{Estructura}
   
