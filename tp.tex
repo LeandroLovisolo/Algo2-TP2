@@ -1,5 +1,5 @@
 \documentclass[a4paper,10pt]{article}
-\usepackage[paper=a4paper, hmargin=1.5cm, bottom=1.5cm, top=3.5cm]{geometry}
+\usepackage[paper=a4paper, hmargin=1.5cm, bottom=1.5cm, top=1.5cm]{geometry}
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish]{babel}
@@ -7,6 +7,8 @@
 \usepackage{xargs}
 \usepackage{ifthen}
 \usepackage{aed2-tad,aed2-symb,aed2-itef}
+\usepackage{enumitem}
+\setenumerate{noitemsep}
 
 
 \newcommand{\moduloNombre}[1]{\textbf{#1}}
@@ -118,11 +120,9 @@
 
 \newcommand{\DRef}{\ensuremath{\rightarrow}}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Inicio del TP                                                             %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 \begin{document}
 
@@ -170,9 +170,7 @@
   [$\Theta(|c|)$]
   [devuelve el $id$ de la categoría $c$.]
   
-  
   \Titulo{Operaciones de datos de categoría}
-  
   
   DUDA: ¿Hace falta crear un TAD para el género datoscat para poder especificar
         las pre y postcondiciones de las funciones a continuación?
@@ -200,7 +198,6 @@
   {???}
   [$\Theta(1)$]
   [devuelve un conjunto de punteros a los datos de las categorías hijas directas asociadas a $dc$.]  
-
 
   \Titulo{Operaciones de iterador de categorías}
   
@@ -232,16 +229,74 @@
   \begin{Estructura}{acat}[estr\_acat]
     \begin{Tupla}[estr\_acat]
       \tupItem{raíz}{puntero(datoscat)}%
-      \tupItem{categorías}{dicc\_trie(datoscat)}%
+      \tupItem{categorías}{dicctrie(datoscat)}%
     \end{Tupla}
   \end{Estructura}
 
-  \Rep[lst][l]{($l$.primero $=$ NULL) $=$ ($l$.longitud $=$ $0$) $\yluego$ ($l$.longitud $\neq$ $0$ \impluego \\
-    Nodo($l$, $l$.longitud) $=$ $l$.primero $\land$ \\
-    ($\forall i$: nat)(Nodo($l$,$i$)\DRef siguiente $=$ Nodo($l$,$i+1$)\DRef anterior) $\land$ \\
-    ($\forall i$: nat)($1 \leq i <$ $l$.longitud $\implies$ Nodo($l$,$i$) $\neq$ $l$.primero)}\mbox{}
- 
-  \AbsFc[lst]{secu($\alpha$)}[l]{\IF $l$.longitud $=$ $0$ THEN \secuencia{} ELSE \secuencia{$l$.primero\DRef dato}[Abs(FinLst($l$))] FI}
+  Invariante de representación:
+
+  \begin{enumerate}
+    \item raíz no puede ser nulo.
+    \item raíz tiene que estar en el diccionario de categorías.
+    \item raíz tiene que tener id 1.
+    \item para todas las categorías en el diccionario:
+    \begin{enumerate}
+      \item la categoría no puede ser nula.
+      \item el nombre de la categoría deber ser igual a su clave en el diccionario.
+      \item el id de la categoría debe estar en rango.      
+      \item dos categorías no pueden tener el mismo id.      
+      \item los hijos de la categoría tienen que estar en el diccionario de categorías.
+      \item el padre es nulo si y sólo si la categoría es la raíz.
+      \item si el padre no es nulo, tiene que estar en el diccionario de categorías.
+      \item si el padre no es nulo, la categoría está entre los hijos del padre.
+      \item si el padre no es nulo, el id de la categoría debe ser superior al del padre.
+    \end{enumerate}
+  \end{enumerate}
+
+  \Rep[estr\_acat][e]{ \\
+      (1) \hspace*{0mm} $¬$($e$.raíz $\igobs$ NULL) $\yluego$ \\
+      (2) \hspace*{0mm} def?($e$.raíz\DRef nombre, $e$.categorías) $\yluego$
+                        obtener($e$.raíz\DRef nombre, $e$.categorías) $\igobs$ $e$.raíz $\land$ \\      
+      (3) \hspace*{0mm} $e$.raíz\DRef id $\igobs$ 1 $\land$ \\
+      (4) \hspace*{0mm} ($\forall c$: categoria)(def?($c$, $e$.categorías) $\impluego$ ( \\
+      (4a) \hspace*{5mm} $¬$(obtener($c$, $e$.categorías) $\igobs$ NULL) $\yluego$ \\
+      (4b) \hspace*{5mm} obtener($c$, $e$.categorías)\DRef nombre $\igobs$ $c$ $\yluego$ \\
+      (4c) \hspace*{5mm} 1 $\leq$ obtener($c$, $e$.categorías)\DRef id $\land$
+                        obtener($c$, $e$.categorías)\DRef id $\leq$ \#(claves($e$.categorías)) $\land$ \\
+      (4d) \hspace*{5mm} ($\forall c'$: categoría)(obtener($c$, $e$.categorías)\DRef id $\igobs$
+                                                  obtener($c'$, $e$.categorías)\DRef id $\ssi$
+                                                  $c$ $\igobs$ $c'$) $\land$ \\
+      (4e) \hspace*{5mm} ($\forall h$: puntero(datoscat))($h$ $\in$ obtener($c$, $e$.categorías)\DRef hijos $\impluego$ \\
+          \hspace*{20mm} def?($h$\DRef nombre, $e$.categorías)) $\yluego$ \\
+      (4f) \hspace*{5mm} obtener($c$, $e$.categorías)\DRef padre $\igobs$ NULL $\ssi$ $c$ $\igobs$ $e$.raíz\DRef nombre $\yluego$ \\      
+      (4g) \hspace*{5mm} $¬$(obtener($c$, $e$.categorías)\DRef padre $\igobs$ NULL) $\impluego$ \\
+          \hspace*{20mm} def?(obtener($c$, $e$.categorías)\DRef padre\DRef nombre, $e$.categorías) $\yluego$ \\
+      (4h) \hspace*{5mm} $¬$(obtener($c$, $e$.categorías)\DRef padre $\igobs$ NULL) $\impluego$ \\
+          \hspace*{20mm} obtener($c$, $e$.categorías) $\in$ obtener($c$, $e$.categorías)\DRef padre\DRef hijos) $\land$ \\ 
+      (4i) \hspace*{5mm} $¬$(obtener($c$, $e$.categorías)\DRef padre $\igobs$ NULL) $\impluego$ \\
+          \hspace*{20mm} obtener($c$, $e$.categorías)\DRef padre\DRef id < \ obtener($c$, $e$.categorías)\DRef id))
+  }
+
+  \mbox{}
+
+  DUDA: ¿Está bien acceder a los campos de datoscat como si fuera una tupla?
+        Notar que se usa el género datoscat en vez de su estructura de representación estr\_datoscat.
+
+  ~  
+  
+  DUDA: Para acortar el Rep, ¿puedo declarar variables dentro del mismo? Ejemplo:\\
+        \hspace*{20mm} $x$ $\igobs$ obtener($c$, $e$.categorías) $\land$ $¬$($x$\DRef padre $\igobs$ NULL) $\impluego$ \\
+        \hspace*{30mm} (def?($x$\DRef padre\DRef nombre, $e$.categorías) $\yluego$ $x$ $\in$ $x$\DRef padre\DRef hijos)
+
+  ~
+
+  \Abs[estr\_acat]{acat}[e]{ac}
+    {categorias($ac$) $\igobs$ claves($e$.categorías) $\yluego$ \\
+    raíz($ac$) $\igobs$ $e$.raíz\DRef nombre $\land$ \\
+    ($\forall c$: categoria)($c$ $\in$ claves($e$.categorías) $\impluego$ ( \\
+    \hspace*{5mm} padre($ac$, $c$) $\igobs$ obtener($c$, $e$.categorías)\DRef padre\DRef nombre $\land$ \\
+    \hspace*{5mm} id($ac$, $c$) $\igobs$ obtener($c$, $e$.categorías)\DRef id))
+  }
 
   ~
 
@@ -249,10 +304,10 @@
   
   \begin{Estructura}{datoscat}[estr\_datoscat]
     \begin{Tupla}[estr\_datoscat]
-      \tupItem{id}{nat}%
-      \tupItem{nombre}{categori<}%
-      \tupItem{padre}{puntero(datoscat)}%            
-      \tupItem{hijos}{conj(puntero(datoscat))}%
+      \tupItem{id}{nat}
+      \tupItem{nombre}{categoria}
+      \tupItem{padre}{puntero(datoscat)}
+      \tupItem{hijos}{conj(puntero(datoscat))}
     \end{Tupla}
   \end{Estructura} 
 
