@@ -349,15 +349,81 @@
 \begin{Interfaz}
   \textbf{se explica con}: \tadNombre{LinkLinkIt}, \tadNombre{Iterador Unidireccional(Link)}.
 
-  \textbf{géneros}: \TipoVariable{lli}, \TipoVariable{datoslink}, \TipoVariable{iterlli}.
+  \textbf{géneros}: \TipoVariable{sistema}, \TipoVariable{iterlinks}.
 
   \Titulo{Operaciones básicas del sistema}
   
-  Pendiente.
+  \InterfazFuncion{CrearSistema}{\In{ac}{acat}}{sistema}
+  {$res$ $\igobs$ iniciar($ac$)}
+  [$\Theta$(\#(categorías($ac$))]
+  [crea un sistema cuyo árbol de categorías es $ac$.]
+
+  \InterfazFuncion{AgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{sistema}}{}
+  [$s$ $\igobs$ $s_{0}$ $\land$ $¬$($l$ $\in$ links($s$)) $\land$ está?($c$, categorías($s$)]
+  {$s$ $\igobs$ nuevoLink($s_{0}$, $l$, $c$)}
+  [$\Theta$(|$l$| + |$c$| + altura(categorías($s$))]
+  [agrega al sistema el link $l$ con categoría $c$.]
+
+  \InterfazFuncion{AccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{sistema}}{}
+  [$s$ $\igobs$ $s_{0}$ $\land$ $l$ $\in$ links($s$) $\land$ $f$ $\geq$ fechaActual($s$)]
+  {$s$ $\igobs$ acceso($s_{0}$, $l$, $f$)}
+  [$\Theta$(|$l$|)]
+  [registra un acceso al link $l$ en la fecha $f$.]
+
+  \InterfazFuncion{\#Links}{\In{c}{categoría}, \In{s}{sistema}}{nat}
+  [está?($c$, categorías($s$))]
+  {$res$ $\igobs$ cantLinks($s$, $c$)}
+  [$\Theta$(|$c$|)]
+  [devuelve la cantidad de links bajo la categoría $c$ y todas sus subcategorías.]
+
+  \InterfazFuncion{CrearIterLinks}{\In{c}{categoría}, \In{s}{sistema}}{iterlinks}
+  [está?($c$, categorías($s$))]
+  {alias(SecuSuby($res$) $\igobs$ linksOrdenadosPorAccesos($ac$, $padre$)) $\land$ vacia?(Anteriores($res$))}
+  [$\Theta$(|$c$| + $n$·log($n$)), donde $n$ representa long(linksOrdenadosPorAccesos($s$, $c$)).]
+  [devuelve un iterador unidireccional de los links de la categoría $c$ y todas sus subcategorías ordenados de mayor a menor cantidad de accesos recientes.]
   
-  \Titulo{Operaciones del iterador}
+  \Titulo{Operaciones de iterador de links}
   
-  Pendiente.
+  \InterfazFuncion{HayMás?}{\In{it}{iterlinks}}{bool}
+  {$res$ $\igobs$ HayMás?($it$)}
+  [$\Theta(1)$]
+  [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
+
+  \InterfazFuncion{LinkActual}{\In{it}{iterlinks}}{link}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ Actual($it$)}
+  [$\Theta(1)$]
+  [devuelve el link actual del iterador.]
+
+  \InterfazFuncion{CategoríaLinkActual}{\In{it}{iterlinks}}{categoria}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ categoríaLink(???, Actual($it$))}
+  [$\Theta(1)$]
+  [devuelve la categoría del link actual del iterador.]
+  
+  DUDA: En la postcondición no dispongo de un sistema para la llamada a categoríaLink, pues la
+        interfaz de la función no recibe un sistema como parámetro ya que toda la información
+        que necesita el algoritmo está contenida en el iterador. ¿Cómo hago para especificar
+        la postcondición si no tengo un sistema?
+        
+
+  \InterfazFuncion{AccesosRecientesLinkActual}{\In{it}{iterlinks}}{nat}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ accesosRecientes(???, ???, Actual($it$))}
+  [$\Theta(1)$]
+  [devuelve la cantidad de accesos del link actual del iterador durante los días de la intersección
+   de los tres días ``recientes'' del link $l$ y de los tres días ``recientes'' del link que tuvo
+   último acceso entre los links de la categoría $c$ con la que se creó este iterador, y los links
+   de todas sus subcategorías.]
+
+  DUDA: Misma duda que en la función anterior: ¿cómo hago para especificar la postcondición si
+        no dispongo ni de la categoría ni del sistema para la llamada a accesosRecientes?
+
+  \InterfazFuncion{Avanzar}{\Inout{it}{iterlinks}}{}
+  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$)]
+  {$res$ $\igobs$ Avanzar($it_{0}$)}
+  [$\Theta(1)$]
+  [avanza el iterador a la posición siguiente.]  
   
 \end{Interfaz}
 
