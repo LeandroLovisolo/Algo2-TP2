@@ -432,19 +432,33 @@
 \begin{Representacion}
   \Titulo{Representación del sistema}
   
-  ~  
+  \begin{Estructura}{sistema}[estr\_sistema]
+    \begin{Tupla}[estr\_sistema]
+      \tupItem{categorías}{acat}
+      \tupItem{links}{dicctrie(estr\_link)}
+      \tupItem{linksPorCatId}{arreglo\_dim(estr\_linkscat)}
+    \end{Tupla}
+    \begin{Tupla}[estr\_link]
+      \tupItem{l}{link}
+      \tupItem{c}{categoria}
+      \tupItem{fs}{conj(fecha)}            
+    \end{Tupla} \\
+    \begin{Tupla}[estr\_linkscat]
+      \tupItem{dc}{puntero(datoscat)}
+      \tupItem{ls}{lista(puntero(estr\_link))}
+      \tupItem{ord?}{bool}            
+    \end{Tupla}    
+  \end{Estructura}
   
-  Pendiente.
+  \Titulo{Representación de iterador de links}  
   
-  ~
-  
-  \Titulo{Representación del iterador}  
-  
-  ~  
-  
-  Pendiente.
-  
-  ~  
+  \begin{Estructura}{iterlinks}[estr\_iter]
+    \begin{Tupla}[estr\_iter]
+      \tupItem{s}{estr\_sistema}
+      \tupItem{c}{categoria}
+      \tupItem{it}{itLista(puntero(estr\_link))}
+    \end{Tupla}
+  \end{Estructura}
   
 \end{Representacion}
 
