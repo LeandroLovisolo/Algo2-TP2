@@ -120,13 +120,62 @@
 
 \newcommand{\DRef}{\ensuremath{\rightarrow}}
 
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TAD DatosCategoría                                                        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{TAD \tadNombre{DatosCategoría}}
+
+\begin{tad}{\tadNombre{DatosCategoría}}
+\tadGeneros{datoscat}
+\tadExporta{datoscat, generadores, observadores básicos, idDC, esRaíz?, padreDC, hijosDC}
+\tadUsa{\tadNombre{Bool, Nat, Categoria, Conjunto(Categoria), ArbolCategorias}}
+
+\tadIgualdadObservacional{dc}{dc'}{datoscat}{nombreDC($dc$) $\igobs$ nombreDC($dc'$) $\land$ \\ acatDC($dc$) $\igobs$ acatDC($dc'$)}
+
+\tadAlinearFunciones{categoriasADatosCat}{conj(categoria)/cs, acat/ac}
+\tadGeneradores
+
+\tadOperacion{crearDatosCat}{categoria/c,acat/ac}{datoscat}{c $\in$ categorias(ac)}
+
+\tadObservadores
+
+\tadOperacion{nombreDC}{datoscat}{categoria}{}
+\tadOperacion{acatDC}{datoscat}{acat}{}
+
+\tadOtrasOperaciones
+
+\tadOperacion{idDC}{datoscat}{nat}{}
+\tadOperacion{esRaíz?}{datoscat}{bool}{}
+\tadOperacion{padreDC}{datoscat/dc}{datoscat}{$\neg$ esRaíz?($dc$)}
+\tadOperacion{hijosDC}{datoscat}{conj(datoscat)}{}
+\tadOperacion{categoríasADatosCat}{conj(categoria)/cs, acat/ac}{conj(datoscat)}{cs $\subseteq$ categorias(ac)}
+
+\tadAlinearAxiomas{nombreDC(crearDatosCat($c$, $ac$))}
+\tadAxiomas[\paratodo{categoria}{c}, \paratodo{conj(categoria)}{cs}, \paratodo{acat}{ac}]
+
+\tadAxioma{nombreDC(crearDatosCat($c$, $ac$))}{$c$}
+\tadAxioma{acatDC(crearDatosCat($c$, $ac$))}{$ac$}
+\tadAxioma{idDC(crearDatosCat($c$, $ac$))}{id($ac$, $c$)}
+\tadAxioma{esRaíz?(crearDatosCat($c$, $ac$))}{$c$ $\igobs$ raíz($ac$)}
+\tadAxioma{padreDC(crearDatosCat($c$, $ac$))}{crearDatosCat(padre($ac$, $c$), $ac$)}
+\tadAxioma{hijosDC(crearDatosCat($c$, $ac$))}{categoriasADatosCat(hijos($ac$, $c$), $ac$)}
+\tadAxioma{categoríasADatosCat($cs$, $ac$)}{\IF $\emptyset$?($cs$)
+                                            THEN $\emptyset$
+                                            ELSE Ag(crearDatosCat(dameUno($cs$), $ac$), sinUno($cs$))
+                                            FI}
+
+\end{tad}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Árbol de Categorías                                                       %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-\begin{document}
 
 \section{Módulo ÁrbolCategorías}
 
