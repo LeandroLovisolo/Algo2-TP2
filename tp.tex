@@ -181,7 +181,7 @@
 
 \begin{Interfaz}
 
-  \textbf{se explica con}: \tadNombre{ÁrbolCategorías}, \tadNombre{Iterador Unidireccional(Categoría)}.
+  \textbf{se explica con}: \tadNombre{DatosCategoría}, \tadNombre{ÁrbolCategorías}, \tadNombre{Iterador Unidireccional(Categoría)}.
 
   \textbf{géneros}: \TipoVariable{acat}, \TipoVariable{datoscat}, \TipoVariable{itercat}.
 
@@ -222,33 +222,31 @@
   [devuelve el $id$ de la categoría $c$.]
   
   \Titulo{Operaciones de datos de categoría}
-  
-  DUDA: ¿Hace falta crear un TAD para el género datoscat para poder especificar
-        las pre y postcondiciones de las funciones a continuación?
-        
+          
   \InterfazFuncion{ObtenerId}{\In{dc}{datoscat}}{nat}
-  [???]
-  {???}
+  {$res$ $\igobs$ idDC($dc$)}
   [$\Theta(1)$]
   [devuelve el $id$ de la categoría asociada a $dc$.]  
 
   \InterfazFuncion{ObtenerNombre}{\In{dc}{datoscat}}{nat}
-  [???]
-  {???}
+  {$res$ $\igobs$ nombreDC($dc$)}
   [$\Theta(1)$]
   [devuelve el nombre de la categoría asociada a $dc$.]  
 
   \InterfazFuncion{ObtenerPadre}{\In{dc}{datoscat}}{puntero(datoscat)}
-  [???]
-  {???}
+  [$\neg$ esRaíz?($dc$)]
+  {$res$ $\igobs$ padreDC($dc$)}
   [$\Theta(1)$]
   [devuelve un puntero a los datos de la categoría padre asociada a $dc$.]  
 
+  DUDA: ¿Está bien la postcondición? $res$ es de tipo puntero(datoscat), mientras que padreDC devuelve datoscat.
+
   \InterfazFuncion{ObtenerHijos}{\In{dc}{datoscat}}{conj(puntero(datoscat))}
-  [???]
-  {???}
+  {$res$ $\igobs$ hijosDC($dc$)}
   [$\Theta(1)$]
   [devuelve un conjunto de punteros a los datos de las categorías hijas directas asociadas a $dc$.]  
+
+  DUDA: ¿Está bien la postcondición? $res$ es de tipo conj(puntero(datoscat)), mientras que hijosDC devuelve conj(datoscat).
 
   \Titulo{Operaciones de iterador de categorías}
   
@@ -544,31 +542,27 @@
 
   \Titulo{Operaciones básicas de diccionario trie}
   
-   \InterfazFuncion{Crear}{}{dicctrie$(\alpha)$}
-  [true]
+  \InterfazFuncion{Crear}{}{dicctrie$(\alpha)$}
   {$res$ $\igobs$ vacío()}
   [$\Theta(1)$]
-  [crea un diccionario de trie]
+  [crea un nuevo diccionario vacío.]
 
-   \InterfazFuncion{Definido}{\In{t}{dicctrie$(\alpha)$},  \In{clave}{string}}{bool}
-  [true]
-  {$res$ $\igobs$ def?($clave$, $t$)}
-  [$\Theta(|clave|)$]
-  [devuelve true si está definido $clave$.]
+  \InterfazFuncion{Definido?}{\In{c}{string}, \In{d}{dicctrie$(\alpha)$}}{bool}
+  {$res$ $\igobs$ def?($c$, $d$)}
+  [$\Theta(|c|)$]
+  [devuelve \textbf{true} si y sólo si $c$ está definido en el diccionario.]
 
-   \InterfazFuncion{Definir}{\Inout{t}{dicctrie$(\alpha)$},  \In{clave}{string}, \In{sig}{$\alpha$}}{}
-  [$t$ $\igobs$ $t_{0}$]
-  {$t$ $\igobs$ definir($t_{0}$, $clave$, $sig$)}
-  [$\Theta(|clave| + sig)$]
-  [define la clave $clave$ con el significado $sig$.]
+  \InterfazFuncion{Definir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{dicctrie$(\alpha)$}}{}
+  [$d$ $\igobs$ $d_{0}$]
+  {$d$ $\igobs$ definir($d_{0}$, $c$, $s$)}
+  [$\Theta(|c| + copy(s))$]
+  [define la clave $c$ con el significado $s$ en el diccionario.]
   
-  DUDA Como poner la complejidad de sig? 
-  
-   \InterfazFuncion{Obtener}{\In{t}{dicctrie$(\alpha)$}, \In{clave}{string}}{$\alpha$}
-  [def?($clave$, $t$)]
-  {$res$ $\igobs$ obtener($clave$, $t$)}
-  [$\Theta(|clave|)$]
-  [obtiene el significado definido como $clave$.]  
+  \InterfazFuncion{Obtener}{\In{c}{string}, \In{d}{dicctrie$(\alpha)$}}{$\alpha$}
+  [def?($c$, $d$)]
+  {$res$ $\igobs$ obtener($c$, $d$)}
+  [$\Theta(|c|)$]
+  [devuelve el significado de la clave $c$ en $d$.]  
    
   
   \Titulo{Operaciones del iterador}
