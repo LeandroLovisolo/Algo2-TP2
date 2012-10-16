@@ -495,7 +495,32 @@
 
   \Titulo{Operaciones básicas de diccionario trie}
   
-  Pendiente.
+   \InterfazFuncion{Crear}{}{dicctrie$(\alpha)$}
+  [true]
+  {$res$ $\igobs$ vacío()}
+  [$\Theta(1)$]
+  [crea un diccionario de trie]
+
+   \InterfazFuncion{Definido}{\In{t}{dicctrie$(\alpha)$},  \In{clave}{string}}{bool}
+  [true]
+  {$res$ $\igobs$ def?($clave$, $t$)}
+  [$\Theta(|clave|)$]
+  [devuelve true si está definido $clave$.]
+
+   \InterfazFuncion{Definir}{\Inout{t}{dicctrie$(\alpha)$},  \In{clave}{string}, \In{sig}{$\alpha$}}{}
+  [$t$ $\igobs$ $t_{0}$]
+  {$t$ $\igobs$ definir($t_{0}$, $clave$, $sig$)}
+  [$\Theta(|clave| + sig)$]
+  [define la clave $clave$ con el significado $sig$.]
+  
+  DUDA Como poner la complejidad de sig? 
+  
+   \InterfazFuncion{Obtener}{\In{t}{dicctrie$(\alpha)$}, \In{clave}{string}}{$\alpha$}
+  [def?($clave$, $t$)]
+  {$res$ $\igobs$ obtener($clave$, $t$)}
+  [$\Theta(|clave|)$]
+  [obtiene el significado definido como $clave$.]  
+   
   
   \Titulo{Operaciones del iterador}
   
