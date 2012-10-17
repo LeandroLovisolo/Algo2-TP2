@@ -16,7 +16,7 @@
 \newcommand{\LFI}{\textrm{\textbf{fi}}}
 
 \newlength{\itef@widthUnaLinea}
-\def\IF#1THEN#2ELSE#3FI{%
+\def\TADIF#1THEN#2ELSE#3FI{%
     \settowidth{\itef@widthUnaLinea}{\IFL#1THEN#2ELSE#3FI}%
     \ifthenelse{\lengthtest{\itef@widthUnaLinea<\linewidth}}{%
         \IFL#1THEN#2ELSE#3FI%

@@ -8,6 +8,10 @@
 \usepackage{ifthen}
 \usepackage{aed2-tad,aed2-symb,aed2-itef}
 \usepackage{enumitem}
+\usepackage{algorithmic}
+\usepackage{scrextend}
+
+
 \setenumerate{noitemsep}
 
 
@@ -124,6 +128,29 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Macros nuestros                                                           %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%InterfazFuncion(nombre, argumentos, valor retorno)
+\newcommandx{\InterfazAlgoritmo}[3]{%
+  \hangindent=\parindent
+  \TipoFuncion{#1}{#2}{#3}%
+}
+
+%Algoritmo(nombre, argumentos, valor retorno) { cuerpo }%
+\newenvironmentx{Algoritmo}[3]{%
+  \InterfazAlgoritmo{#1}{#2}{#3}
+  \begin{addmargin}[2em]{0em}
+    \begin{algorithmic}
+}
+{
+    \end{algorithmic}
+  \end{addmargin}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TAD DatosCategoría                                                        %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -164,7 +191,7 @@
 \tadAxioma{esRaíz?(crearDatosCat($c$, $ac$))}{$c$ $\igobs$ raíz($ac$)}
 \tadAxioma{padreDC(crearDatosCat($c$, $ac$))}{crearDatosCat(padre($ac$, $c$), $ac$)}
 \tadAxioma{hijosDC(crearDatosCat($c$, $ac$))}{categoriasADatosCat(hijos($ac$, $c$), $ac$)}
-\tadAxioma{categoríasADatosCat($cs$, $ac$)}{\IF $\emptyset$?($cs$)
+\tadAxioma{categoríasADatosCat($cs$, $ac$)}{\TADIF $\emptyset$?($cs$)
                                             THEN $\emptyset$
                                             ELSE Ag(crearDatosCat(dameUno($cs$), $ac$), sinUno($cs$))
                                             FI}
@@ -382,7 +409,36 @@
 
 \begin{Algoritmos}
 
-  Pendiente.
+  \begin{Algoritmo}{iCrearÁrbol}{\In{raiz}{categoria}}{estr\_acat}
+  	\STATE var $raiz\_estr$: \TipoVariable{estr\_datoscat}
+	\STATE var $categorias$: \TipoVariable{dicctrie(estr\_datoscat)}
+  	\STATE
+    \STATE $raiz\_estr$ $\leftarrow$ $\langle$\TipoVariable{id}: 1, \TipoVariable{nombre}: $raiz$,
+                                      \TipoVariable{padre}: NULL, \TipoVariable{hijos}: \NombreFuncion{Vacío}()$\rangle$
+    \STATE $categorias$ $\leftarrow$ \NombreFuncion{CrearDiccionario}()
+  	\STATE    
+    \STATE \NombreFuncion{Definir}($raiz$, \&($raiz\_estr$), $categorias$)
+   	\STATE
+  	\STATE $res$ $\leftarrow$ $\langle$\TipoVariable{raiz}: \&($raiz\_estr$), \TipoVariable{categorias}: $categorias\rangle$
+  \end{Algoritmo}
+
+  ~  
+   
+  \begin{Algoritmo}{iNombreCategoríaRaíz}{\In{ac}{estr\_acat}}{categoria}
+	\STATE $res \leftarrow ac.raiz\DRef nombre$  
+  \end{Algoritmo}  
+
+  ~
+  
+  \begin{Algoritmo}{iAgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{estr\_acat}}{}
+  	\STATE var $estr\_hija$: \TipoVariable{estr\_datoscat}
+  	\STATE $estr\_hija$ $\leftarrow$ $\langle$\TipoVariable{id}: \NombreFuncion{\#Claves}($ac.categorias$) + 1,
+  	                                          \TipoVariable{nombre}: $hija$, \\
+  	                                          \hspace*{22mm}
+  	                                          \TipoVariable{padre}: \NombreFuncion{Obtener}($padre$, $ac.categorias$),
+  	                                          \TipoVariable{hijos}: \NombreFuncion{Vacío}() $\rangle$
+    \STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$)
+  \end{Algoritmo}
   
 \end{Algoritmos}
 
@@ -542,7 +598,7 @@
 
   \Titulo{Operaciones básicas de diccionario trie}
   
-  \InterfazFuncion{Crear}{}{dicctrie$(\alpha)$}
+  \InterfazFuncion{CrearDiccionario}{}{dicctrie$(\alpha)$}
   {$res$ $\igobs$ vacío()}
   [$\Theta(1)$]
   [crea un nuevo diccionario vacío.]
@@ -564,6 +620,10 @@
   [$\Theta(|c|)$]
   [devuelve el significado de la clave $c$ en $d$.]  
    
+  \InterfazFuncion{\#Claves}{\In{d}{dicctrie$(\alpha)$}}{nat}
+  {$res$ $\igobs$ \#(claves($d$))}
+  [$\Theta(1)$]
+  [devuelve la cantidad de claves del diccionario.]    
   
   \Titulo{Operaciones del iterador}
   
