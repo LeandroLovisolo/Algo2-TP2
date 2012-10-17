@@ -659,6 +659,7 @@
 \begin{Algoritmos}
 
   \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}
+  	\STATE var $i$: \TipoVariable{nat}
   	\STATE for $i$=0 to |$res$.nodos| do:
   	\STATE \hspace*{10mm} $res$.nodos[i] $\leftarrow$ false
 	\STATE endFor
@@ -669,6 +670,7 @@
    
   \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{e}{estr\_dicctrie}}{$\alpha$}
   	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
+  	\STATE var $i$: \TipoVariable{nat}
   	\STATE for $i$=0 to |$c$| do:
   	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
 	\STATE endFor
@@ -679,6 +681,7 @@
    
   \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \In{e}{estr\_dicctrie}}{}
   	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
+  	\STATE var $i$: \TipoVariable{nat}
   	\STATE for $i$=0 to |$c$| do:
   	\STATE \hspace*{10mm} if (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] = NULL then:
   	\STATE \hspace*{20mm} var $nuevoNodo$: \TipoVariable{estr\_dicctrie}
@@ -697,9 +700,11 @@
   ~  
    
     \begin{Algoritmo}{iDefinido?}{\In{c}{string}, \In{e}{estr\_dicctrie}}{bool}
+    \STATE var $i$: \TipoVariable{nat}
   	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
   	\STATE while $i$ < |$c$| $\land$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] != NULL do:
   	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
+  	\STATE \hspace*{10mm} $i$++
 	\STATE endWhile
 	\STATE $res$ $\leftarrow$ ($i$ = |$c$|-1 $\land$ (*$nodoActual$).siginficado != NULL)
   \end{Algoritmo}
