@@ -637,10 +637,14 @@
   \Titulo{Representación de diccionario trie}
   
   \begin{Estructura}{dicctrie$(\alpha)$}[estr\_dicctrie]
-    \begin{Tupla}[estr\_dicctrie	]
-      \tupItem{nodos}{arreglo\_estático[256] de puntero(estr\_dicctrie)}
+  	\begin{Tupla}[estr\_dicctrie]
+  		\tupItem{cantClaves}{nat}
+  		\tupItem{nodos}{nodo}
+  	\end{Tupla}
+    	\begin{Tupla}[nodo]
+      \tupItem{nodos}{arreglo\_estático[256] de puntero(nodo)}
       \tupItem{significado}{puntero$(\alpha)$}
-    \end{Tupla}  
+    \end{Tupla}
   \end{Estructura}
   
     \Abs[estr\_dicctrie]{dicc(string, $\alpha$)}[e]{d}
@@ -660,16 +664,17 @@
 
   \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}
   	\STATE var $i$: \TipoVariable{nat}
+  	\STATE $res$.cantClaves $\leftarrow$ 0
   	\STATE for $i$=0 to |$res$.nodos| do:
   	\STATE \hspace*{10mm} $res$.nodos[i] $\leftarrow$ false
 	\STATE endFor
-    \STATE $res$.significado $\leftarrow$ Null
+	\STATE $res$.nodos.significado $\leftarrow$ NULL
   \end{Algoritmo}
 
   ~  
    
   \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{e}{estr\_dicctrie}}{$\alpha$}
-  	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
+  	\STATE var $nodoActual$: \TipoVariable{puntero(nodo)} $\leftarrow$  \NombreFuncion{\&}($e.nodos$)
   	\STATE var $i$: \TipoVariable{nat}
   	\STATE for $i$=0 to |$c$| do:
   	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
@@ -679,8 +684,8 @@
 
   ~  
    
-  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \In{e}{estr\_dicctrie}}{}
-  	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
+  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{e}{estr\_dicctrie}}{}
+  	\STATE var $nodoActual$: \TipoVariable{puntero(nodo)} $\leftarrow$  \NombreFuncion{\&}($e.nodos$)
   	\STATE var $i$: \TipoVariable{nat}
   	\STATE for $i$=0 to |$c$| do:
   	\STATE \hspace*{10mm} if (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] = NULL then:
@@ -695,20 +700,26 @@
 	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
 	\STATE endFor
 	\STATE (*$nodoActual$).significado $\leftarrow$ \NombreFuncion{\&}(\NombreFuncion{Copia}($s$))
+	\STATE $e$.cantClaves++
   \end{Algoritmo}
 
   ~  
    
     \begin{Algoritmo}{iDefinido?}{\In{c}{string}, \In{e}{estr\_dicctrie}}{bool}
     \STATE var $i$: \TipoVariable{nat}
-  	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
+  	\STATE var $nodoActual$: \TipoVariable{puntero(nodo)} $\leftarrow$  \NombreFuncion{\&}($e.nodos$)
   	\STATE while $i$ < |$c$| $\land$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] != NULL do:
   	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
   	\STATE \hspace*{10mm} $i$++
 	\STATE endWhile
 	\STATE $res$ $\leftarrow$ ($i$ = |$c$|-1 $\land$ (*$nodoActual$).siginficado != NULL)
   \end{Algoritmo}
-  
+
+  ~  
+     
+ \begin{Algoritmo}{i\#Claves}{}{nat}
+ 	$res$ $\leftarrow$ $e$.cantClaves
+ \end{Algoritmo} 
 \end{Algoritmos}
 
 \end{document}
