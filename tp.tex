@@ -425,20 +425,74 @@
   ~  
    
   \begin{Algoritmo}{iNombreCategoríaRaíz}{\In{ac}{estr\_acat}}{categoria}
-	\STATE $res \leftarrow ac.raiz\DRef nombre$  
+	\STATE $res$ $\leftarrow$ $ac$.raiz\DRef nombre
   \end{Algoritmo}  
 
   ~
   
   \begin{Algoritmo}{iAgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{estr\_acat}}{}
   	\STATE var $estr\_hija$: \TipoVariable{estr\_datoscat}
-  	\STATE $estr\_hija$ $\leftarrow$ $\langle$\TipoVariable{id}: \NombreFuncion{\#Claves}($ac.categorias$) + 1,
+  	\STATE $estr\_hija$ $\leftarrow$ $\langle$\TipoVariable{id}: \NombreFuncion{\#Claves}($ac$.categorías) + 1,
   	                                          \TipoVariable{nombre}: $hija$, \\
   	                                          \hspace*{22mm}
-  	                                          \TipoVariable{padre}: \NombreFuncion{Obtener}($padre$, $ac.categorias$),
+  	                                          \TipoVariable{padre}: \NombreFuncion{Obtener}($padre$, $ac$.categorías),
   	                                          \TipoVariable{hijos}: \NombreFuncion{Vacío}() $\rangle$
     \STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$)
   \end{Algoritmo}
+
+  ~  
+  
+  \begin{Algoritmo}{iCrearIterCat}{\In{padre}{categoria}, \In{ac}{estr\_acat}}{itConj(puntero(datoscat))}
+  	\STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías)\DRef hijos)
+  \end{Algoritmo}
+
+  ~  
+    
+  \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}
+  	\STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías)\DRef id
+  \end{Algoritmo}
+
+  ~
+
+  \begin{Algoritmo}{iObtenerId}{\In{dc}{estr\_datoscat}}{nat}
+  	\STATE $res$ $\leftarrow$ $dc$.id
+  \end{Algoritmo}
+  
+  ~
+  
+  \begin{Algoritmo}{iObtenerNombre}{\In{dc}{estr\_datoscat}}{nat}
+  	\STATE $res$ $\leftarrow$ $dc$.nombre
+  \end{Algoritmo}
+
+  ~
+    
+  \begin{Algoritmo}{iObtenerPadre}{\In{dc}{estr\_datoscat}}{puntero(datoscat)}
+  	\STATE $res$ $\leftarrow$ $dc$.padre
+  \end{Algoritmo}
+
+  ~
+
+  \begin{Algoritmo}{iObtenerHijos}{\In{dc}{estr\_datoscat}}{conj(puntero(datoscat))}
+  	\STATE $res$ $\leftarrow$ $dc$.hijos
+  \end{Algoritmo}
+
+  ~
+
+  \begin{Algoritmo}{iHayMás?}{\In{it}{itConj(puntero(datoscat))}}{bool}
+  	\STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$)
+  \end{Algoritmo}
+
+  ~
+  
+  \begin{Algoritmo}{iActual}{\In{it}{itConj(puntero(datoscat))}}{puntero(datoscat)}
+  	\STATE $res$ $\leftarrow$ \NombreFuncion{Actual}($it$)
+  \end{Algoritmo}
+  
+  ~
+  
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{itConj(puntero(datoscat))}}{}
+  	\STATE \NombreFuncion{Avanzar}($it$)  
+  \end{Algoritmo}  
   
 \end{Algoritmos}
 
@@ -637,14 +691,10 @@
   \Titulo{Representación de diccionario trie}
   
   \begin{Estructura}{dicctrie$(\alpha)$}[estr\_dicctrie]
-  	\begin{Tupla}[estr\_dicctrie]
-  		\tupItem{cantClaves}{nat}
-  		\tupItem{nodos}{nodo}
-  	\end{Tupla}
-    	\begin{Tupla}[nodo]
-      \tupItem{nodos}{arreglo\_estático[256] de puntero(nodo)}
+    \begin{Tupla}[estr\_dicctrie	]
+      \tupItem{nodos}{arreglo\_estático[256] de puntero(estr\_dicctrie)}
       \tupItem{significado}{puntero$(\alpha)$}
-    \end{Tupla}
+    \end{Tupla}  
   \end{Estructura}
   
     \Abs[estr\_dicctrie]{dicc(string, $\alpha$)}[e]{d}
@@ -663,19 +713,16 @@
 \begin{Algoritmos}
 
   \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}
-  	\STATE var $i$: \TipoVariable{nat}
-  	\STATE $res$.cantClaves $\leftarrow$ 0
   	\STATE for $i$=0 to |$res$.nodos| do:
   	\STATE \hspace*{10mm} $res$.nodos[i] $\leftarrow$ false
 	\STATE endFor
-	\STATE $res$.nodos.significado $\leftarrow$ NULL
+    \STATE $res$.significado $\leftarrow$ Null
   \end{Algoritmo}
 
   ~  
    
   \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{e}{estr\_dicctrie}}{$\alpha$}
-  	\STATE var $nodoActual$: \TipoVariable{puntero(nodo)} $\leftarrow$  \NombreFuncion{\&}($e.nodos$)
-  	\STATE var $i$: \TipoVariable{nat}
+  	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
   	\STATE for $i$=0 to |$c$| do:
   	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
 	\STATE endFor
@@ -684,12 +731,11 @@
 
   ~  
    
-  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{e}{estr\_dicctrie}}{}
-  	\STATE var $nodoActual$: \TipoVariable{puntero(nodo)} $\leftarrow$  \NombreFuncion{\&}($e.nodos$)
-  	\STATE var $i$: \TipoVariable{nat}
+  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \In{e}{estr\_dicctrie}}{}
+  	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
   	\STATE for $i$=0 to |$c$| do:
   	\STATE \hspace*{10mm} if (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] = NULL then:
-  	\STATE \hspace*{20mm} var $nuevoNodo$: \TipoVariable{nodo}
+  	\STATE \hspace*{20mm} var $nuevoNodo$: \TipoVariable{estr\_dicctrie}
 	\STATE \hspace*{20mm} for $j$=0 to |$nuevoNodo.nodos$| do:
 	\STATE \hspace*{30mm} $nuevoNodo$.nodos[$i$] $\leftarrow$ NULL
 	\STATE \hspace*{20mm} endFor
@@ -700,26 +746,18 @@
 	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
 	\STATE endFor
 	\STATE (*$nodoActual$).significado $\leftarrow$ \NombreFuncion{\&}(\NombreFuncion{Copia}($s$))
-	\STATE $e$.cantClaves++
   \end{Algoritmo}
 
   ~  
    
     \begin{Algoritmo}{iDefinido?}{\In{c}{string}, \In{e}{estr\_dicctrie}}{bool}
-    \STATE var $i$: \TipoVariable{nat}
-  	\STATE var $nodoActual$: \TipoVariable{puntero(nodo)} $\leftarrow$  \NombreFuncion{\&}($e.nodos$)
+  	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
   	\STATE while $i$ < |$c$| $\land$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] != NULL do:
   	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
-  	\STATE \hspace*{10mm} $i$++
 	\STATE endWhile
 	\STATE $res$ $\leftarrow$ ($i$ = |$c$|-1 $\land$ (*$nodoActual$).siginficado != NULL)
   \end{Algoritmo}
-
-  ~  
-     
- \begin{Algoritmo}{i\#Claves}{}{nat}
- 	$res$ $\leftarrow$ $e$.cantClaves
- \end{Algoritmo} 
+  
 \end{Algoritmos}
 
 \end{document}
