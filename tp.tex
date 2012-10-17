@@ -657,11 +657,14 @@
  	\STATE $estr\_l$.as[0] $\leftarrow$ 0
  	\STATE $estr\_l$.as[1] $\leftarrow$ 0
  	\STATE $estr\_l$.as[2] $\leftarrow$ 0
+ 	\STATE \NombreFuncion{Definir}($l$, $estr\_l$, $s$.links)
  	\STATE
  	\STATE var $actual$: \TipoVariable{estr\_linkscat}
- 	\STATE var $hayMasCategorias$: \TipoVariable{bool} 	
  	\STATE $actual$ $\leftarrow$ $s$.linksPorCatId[$estr\_l$.cid]
+ 	\STATE 	
+ 	\STATE var $hayMasCategorias$: \TipoVariable{bool} 	
  	\STATE $hayMasCategorias$ $\leftarrow$ \textbf{true}
+ 	\STATE
  	\WHILE{$hayMasCategorias$}
       \STATE \NombreFuncion{AgregarAtrás}($actual$.links, \&$estr\_l$)
  	  \STATE $actual$.últimoAcceso $\leftarrow$ $s$.fechaActual
@@ -673,12 +676,54 @@
  	  \ENDIF
  	\ENDWHILE
   	
+  	\STATE
+  	\STATE DUDA: Al crear la tupla estr\_l y guardar en ésta el nombre del link (el cual es un vector de chars), ¿alcanza con
+  	             hacer $tal\_cosa$ $\leftarrow$ $link$ o hay que hacer una copia del link?
+  	
+  	\STATE
+  	\STATE DUDA: Dentro del while, cuando hago $actual$ $\leftarrow$ $s$.linksPorCatId[...], ¿se está almacenando
+  	             una referencia dentro de $actual$ o se está almacenando una copia?
   	
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}
+    \STATE var $estr\_l$: \TipoVariable{puntero(estr\_link)}
+    \STATE $estr\_l$ $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links)
+	\IF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso}
+	  \STATE $estr\_l$\DRef as[0] $\leftarrow$ $estr\_l$\DRef as[0] + 1
+	\ELSIF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso + 1}
+	  \STATE $estr\_l$\DRef as[2] $\leftarrow$ $estr\_l$\DRef as[1]
+	  \STATE $estr\_l$\DRef as[1] $\leftarrow$ $estr\_l$\DRef as[0]
+	  \STATE $estr\_l$\DRef as[0] $\leftarrow$ 1
+	\ELSIF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso + 2}
+	  \STATE $estr\_l$\DRef as[2] $\leftarrow$ $estr\_l$\DRef as[0]
+	  \STATE $estr\_l$\DRef as[1] $\leftarrow$ 0
+	  \STATE $estr\_l$\DRef as[0] $\leftarrow$ 1
+	\ELSE
+	  \STATE $estr\_l$\DRef as[2] $\leftarrow$ 0
+	  \STATE $estr\_l$\DRef as[1] $\leftarrow$ 0
+	  \STATE $estr\_l$\DRef as[0] $\leftarrow$ 1
+	\ENDIF
+ 	\STATE
+ 	\STATE $s$.fechaActual $\leftarrow$ $f$	
+ 	\STATE
+ 	\STATE var $actual$: \TipoVariable{estr\_linkscat}
+ 	\STATE $actual$ $\leftarrow$ $s$.linksPorCatId[$estr\_l$.cid]
+ 	\STATE
+ 	\STATE var $hayMasCategorias$: \TipoVariable{bool} 	
+ 	\STATE $hayMasCategorias$ $\leftarrow$ \textbf{true}
+  	\STATE
+ 	\WHILE{$hayMasCategorias$}
+ 	  \STATE $actual$.últimoAcceso $\leftarrow$ $s$.fechaActual
+ 	  \STATE $actual$.ordenado? $\leftarrow$ \textbf{false}
+ 	  \IF{\NombreFuncion{ObtenerPadre}($actual$.c) $\igobs$ NULL)}
+ 	    \STATE $hayMasCategorias$ $\leftarrow$ \textbf{false}
+ 	  \ELSE
+ 	    \STATE $actual$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{ObtenerId}(*\NombreFuncion{ObtenerPadre}($actual$.c))]
+ 	  \ENDIF
+ 	\ENDWHILE  
   \end{Algoritmo}
   
   ~  
