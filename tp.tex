@@ -689,7 +689,7 @@
   	\STATE var $i$: \TipoVariable{nat}
   	\STATE for $i$=0 to |$c$| do:
   	\STATE \hspace*{10mm} if (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] = NULL then:
-  	\STATE \hspace*{20mm} var $nuevoNodo$: \TipoVariable{estr\_dicctrie}
+  	\STATE \hspace*{20mm} var $nuevoNodo$: \TipoVariable{nodo}
 	\STATE \hspace*{20mm} for $j$=0 to |$nuevoNodo.nodos$| do:
 	\STATE \hspace*{30mm} $nuevoNodo$.nodos[$i$] $\leftarrow$ NULL
 	\STATE \hspace*{20mm} endFor
