@@ -654,8 +654,52 @@
 
 \begin{Algoritmos}
 
-  Pendiente.
+  \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}
+  	\STATE for $i$=0 to |$res$.nodos| do:
+  	\STATE \hspace*{10mm} $res$.nodos[i] $\leftarrow$ false
+	\STATE endFor
+    \STATE $res$.significado $\leftarrow$ Null
+  \end{Algoritmo}
 
+  ~  
+   
+  \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{e}{estr\_dicctrie}}{$\alpha$}
+  	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
+  	\STATE for $i$=0 to |$c$| do:
+  	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
+	\STATE endFor
+    \STATE $res$ $\leftarrow$ (*$nodoActual$).(*$significado$)
+  \end{Algoritmo}
+
+  ~  
+   
+  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \In{e}{estr\_dicctrie}}{}
+  	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
+  	\STATE for $i$=0 to |$c$| do:
+  	\STATE \hspace*{10mm} if (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] = NULL then:
+  	\STATE \hspace*{20mm} var $nuevoNodo$: \TipoVariable{estr\_dicctrie}
+	\STATE \hspace*{20mm} for $j$=0 to |$nuevoNodo.nodos$| do:
+	\STATE \hspace*{30mm} $nuevoNodo$.nodos[$i$] $\leftarrow$ NULL
+	\STATE \hspace*{20mm} endFor
+	\STATE \hspace*{20mm} $nuevoNodo$.significiado $\leftarrow$ NULL
+	
+	\STATE \hspace*{20mm}(*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] $\leftarrow$ \NombreFuncion{\&}($nuevoNodo$)
+	\STATE \hspace*{10mm} endIf
+	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
+	\STATE endFor
+	\STATE (*$nodoActual$).significado $\leftarrow$ \NombreFuncion{\&}(\NombreFuncion{Copia}($s$))
+  \end{Algoritmo}
+
+  ~  
+   
+    \begin{Algoritmo}{iDefinido?}{\In{c}{string}, \In{e}{estr\_dicctrie}}{bool}
+  	\STATE var $nodoActual$: \TipoVariable{puntero(estr\_dicctrie)} $\leftarrow$  \NombreFuncion{\&}($e$)
+  	\STATE while $i$ < |$c$| $\land$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] != NULL do:
+  	\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
+	\STATE endWhile
+	\STATE $res$ $\leftarrow$ ($i$ = |$c$|-1 $\land$ (*$nodoActual$).siginficado != NULL)
+  \end{Algoritmo}
+  
 \end{Algoritmos}
 
 \end{document}
