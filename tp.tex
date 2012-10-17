@@ -729,11 +729,20 @@
   ~  
   
   \begin{Algoritmo}{i\#Links}{\In{c}{categoría}, \In{s}{estr\_sistema}}{nat}
+	\STATE
+	\STATE PENDIENTE: Agregar un nuevo campo a estr\_linkscat que contenga la cantidad de links de la categoría y sus subcategorías.
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{iCrearIterLinks}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
+    \STATE var $estr\_c$: \TipoVariable{estr\_linkscat}
+  	\STATE $estr\_c$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)]
+  	\STATE
+  	\STATE PENDIENTE: Ordenar links en $estr\_c$.ls
+  	\STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}
+  	\STATE
+    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{s}: $s$, \TipoVariable{c}: $c$, $it$: \NombreFuncion{CrearIt}($estr\_c$.ls)$\rangle$
   \end{Algoritmo}
   
   ~  
