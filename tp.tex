@@ -739,8 +739,12 @@
     \STATE var $estr\_c$: \TipoVariable{estr\_linkscat}
   	\STATE $estr\_c$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)]
   	\STATE
-  	\STATE PENDIENTE: Ordenar links en $estr\_c$.ls
-  	\STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}
+  	\IF{$¬$($estr\_c$.ordenado?)}
+  	  \STATE
+  	  \STATE PENDIENTE: Ordenar links en $estr\_c$.ls
+  	  \STATE
+  	  \STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}
+  	\ENDIF
   	\STATE
     \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{s}: $s$, \TipoVariable{c}: $c$, $it$: \NombreFuncion{CrearIt}($estr\_c$.ls)$\rangle$
   \end{Algoritmo}
@@ -748,26 +752,32 @@
   ~  
   
   \begin{Algoritmo}{iHayMás?}{\In{it}{estr\_iter}}{bool}
+    $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$.it)
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}
+    $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it)\DRef l
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}
+    $res$ $\leftarrow$ \NombreFuncion{ObtenerNombre}(*($s$.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid].c))
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}
+    \STATE
+    \STATE PENDIENTE
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}
+    \NombreFuncion{Avanzar}($it$.it)
   \end{Algoritmo}
   
 \end{Algoritmos}
