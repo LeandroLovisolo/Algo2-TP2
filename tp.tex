@@ -247,6 +247,11 @@
   {$res$ $\igobs$ id($ac$, $c$)}
   [$\Theta(|c|)$]
   [devuelve el $id$ de la categoría $c$.]
+
+  \InterfazFuncion{\#Categorías}{\In{ac}{acat}}{nat}
+  {$res$ $\igobs$ \#(categorias($ac$))}
+  [$\Theta(1)$]
+  [devuelve la cantidad de categorías en $ac$.]
   
   \Titulo{Operaciones de datos de categoría}
           
@@ -453,6 +458,12 @@
   \end{Algoritmo}
 
   ~
+  
+  \begin{Algoritmo}{i\#Categorías}{\In{ac}{estr\_acat}}{nat}
+  	\STATE $res$ $\leftarrow$ \NombreFuncion{\#Claves}($ac$.categorías)
+  \end{Algoritmo}
+
+  ~
 
   \begin{Algoritmo}{iObtenerId}{\In{dc}{estr\_datoscat}}{nat}
   	\STATE $res$ $\leftarrow$ $dc$.id
@@ -624,8 +635,57 @@
 
 \begin{Algoritmos}
 
-  Pendiente.
-
+  \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}
+    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{categorías}: $ac$, \TipoVariable{links}: \NombreFuncion{CrearDiccionario}(),\\
+                        \hspace*{11mm} \TipoVariable{linksPorCatId}: \NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$)),
+                                       \TipoVariable{fechaActual}: 0$\rangle$
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{i\#Links}{\In{c}{categoría}, \In{s}{estr\_sistema}}{nat}
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iCrearIterLinks}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iHayMás?}{\In{it}{estr\_iter}}{bool}
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}
+  \end{Algoritmo}
+  
 \end{Algoritmos}
 
 
