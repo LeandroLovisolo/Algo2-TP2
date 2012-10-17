@@ -142,6 +142,7 @@
 \newenvironmentx{Algoritmo}[3]{%
   \InterfazAlgoritmo{#1}{#2}{#3}
   \begin{addmargin}[2em]{0em}
+    \algsetup{indent=2em}
     \begin{algorithmic}
 }
 {
@@ -639,11 +640,40 @@
     \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{categorías}: $ac$, \TipoVariable{links}: \NombreFuncion{CrearDiccionario}(),\\
                         \hspace*{11mm} \TipoVariable{linksPorCatId}: \NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$)),
                                        \TipoVariable{fechaActual}: 0$\rangle$
+
+    \STATE
+    \STATE PENDIENTE: Inicializar arreglo linksPorCatId.
+                                       
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}
+  	\STATE var $estr\_l$: \TipoVariable{estr\_link}
+  	\STATE $estr\_l$ $\leftarrow$ $\langle$\TipoVariable{l}: $l$,
+  	                                       \TipoVariable{cid}: \NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías),\\
+                            \hspace*{16mm} \TipoVariable{últimoAcceso}: $s$.fechaActual,
+  	                                       \TipoVariable{as}: \NombreFuncion{CrearArreglo}()$\rangle$
+ 	\STATE $estr\_l$.as[0] $\leftarrow$ 0
+ 	\STATE $estr\_l$.as[1] $\leftarrow$ 0
+ 	\STATE $estr\_l$.as[2] $\leftarrow$ 0
+ 	\STATE
+ 	\STATE var $actual$: \TipoVariable{estr\_linkscat}
+ 	\STATE var $hayMasCategorias$: \TipoVariable{bool} 	
+ 	\STATE $actual$ $\leftarrow$ $s$.linksPorCatId[$estr\_l$.cid]
+ 	\STATE $hayMasCategorias$ $\leftarrow$ \textbf{true}
+ 	\WHILE{$hayMasCategorias$}
+      \STATE \NombreFuncion{AgregarAtrás}($actual$.links, \&$estr\_l$)
+ 	  \STATE $actual$.últimoAcceso $\leftarrow$ $s$.fechaActual
+ 	  \STATE $actual$.ordenado? $\leftarrow$ \textbf{false}
+ 	  \IF{\NombreFuncion{ObtenerPadre}($actual$.c) $\igobs$ NULL)}
+ 	    \STATE $hayMasCategorias$ $\leftarrow$ \textbf{false}
+ 	  \ELSE
+ 	    \STATE $actual$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{ObtenerId}(*\NombreFuncion{ObtenerPadre}($actual$.c))]
+ 	  \ENDIF
+ 	\ENDWHILE
+  	
+  	
   \end{Algoritmo}
   
   ~  
