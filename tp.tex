@@ -201,7 +201,19 @@
   {esPermutacion?(Siguientes($res$), hijos($ac$, $padre$))}
   [$\Theta(|padre|)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría $padre$.]
-  
+
+  \InterfazFuncion{CrearIterHijosDeLaRaíz}{\In{ac}{acat}}{itercathijos}
+  {esPermutacion?(Siguientes($res$), hijos($ac$, raíz($ac$)))}
+  [$\Theta(1)$]
+  [devuelve un iterador unidireccional de las categorías hijas directas de la categoría raíz de $ac$.]
+
+  \InterfazFuncion{CrearIterHijosDadoOtroIter}{\In{it}{itercathijos}}{itercathijos}
+  [HayMás?($it$)]
+  {esPermutacion?(Siguientes($res$), hijos(Actual($it$)))}
+  [$\Theta(1)$]
+  [devuelve un iterador unidireccional de las categorías hijas directas de la categoría actual del iterador $it$.]
+
+
   \InterfazFuncion{HayMásHijos?}{\In{it}{itercathijos}}{bool}
   {$res$ $\igobs$ HayMás?($it$)}
   [$\Theta(1)$]
@@ -213,6 +225,14 @@
   [$\Theta(1)$]
   [devuelve el elemento actual del iterador.]
 
+  \InterfazFuncion{IdHijoActual}{\In{it}{itercathijos}}{nat}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ id(Actual($it$), $ac$)}
+  [$\Theta(1)$]
+  [devuelve el id del elemento actual del iterador.]
+
+  DUDA: ¿De dónde saco el árbol de categorías $ac$ para especificar la postcondición de IdHijoActual?
+
   \InterfazFuncion{AvanzarHijo}{\Inout{it}{itercathijos}}{}
   [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$)]
   {$res$ $\igobs$ Avanzar($it_{0}$)}
@@ -221,11 +241,17 @@
 
   \Titulo{Operaciones del iterador de ancestros}
 
-  \InterfazFuncion{CrearIterAncestros}{\In{c}{categoria}, \In{ac}{acat}}{itercatancestros}
-  [está?($c$, $ac$)]
-  {esPermutacion?(Siguientes($res$), ancestros($ac$, $c$))}
-  [$\Theta(|c|)$]
-  [devuelve un iterador unidireccional de la categoría $c$ y sus ancestros.]
+  \InterfazFuncion{CrearIterAncestros}{\In{it}{itercathijos}}{itercatancestros}
+  {esPermutacion?(Siguientes($res$), ancestros($ac$, Actual($it$))}
+  [$\Theta(1)$]
+  [devuelve un iterador unidireccional de la categoría actual de $it$ y sus ancestros.]
+
+  \InterfazFuncion{CrearIterAncestrosDeLaRaíz}{\In{ac}{acat}}{itercatancestros}
+  {Actual($res$) $\igobs$ raíz($ac$)}
+  [$\Theta(1)$]
+  [devuelve un iterador unidireccional de ancestros de la categoría raíz de $ac$.]
+
+  DUDA: ¿Dónde puedo agregar las operaciones ``esPermutacion?'' y ``ancestros''?
 
   \InterfazFuncion{CopiarIterAncestros}{\In{it}{itercatancestros}}{itercatancestros}
   {$res$ $\igobs$ $it$}
@@ -242,6 +268,14 @@
   {$res$ $\igobs$ Actual($it$)}
   [$\Theta(1)$]
   [devuelve el elemento actual del iterador.]
+
+  \InterfazFuncion{IdAncestroActual}{\In{it}{itercatancestros}}{nat}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ id(Actual($it$), $ac$)}
+  [$\Theta(1)$]
+  [devuelve el id del elemento actual del iterador.]  
+
+  DUDA: ¿De dónde saco el árbol de categorías $ac$ para especificar la postcondición de IdAncestroActual?
 
   \InterfazFuncion{AvanzarAncestro}{\Inout{it}{itercatancestros}}{}
   [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$)]
@@ -402,6 +436,18 @@
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos)
   \end{Algoritmo}
 
+  ~
+
+  \begin{Algoritmo}{iCrearIterHijosDeLaRaíz}{\In{ac}{acat}}{itConj(estr\_cat)}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}($ac$.raíz.hijos)
+  \end{Algoritmo}
+
+  ~
+  
+  \begin{Algoritmo}{iCrearIterHijosDadoOtroIter}{\In{it}{itConj(estr\_cat)}}{itConj(estr\_cat)}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it).hijos)
+  \end{Algoritmo}  
+
   ~  
   
   \begin{Algoritmo}{iHayMásHijos?}{\In{it}{itConj(estr\_cat)}}{bool}
@@ -413,6 +459,12 @@
   \begin{Algoritmo}{iHijoActual}{\In{it}{itConj(estr\_cat)}}{categoria}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$).nombre
   \end{Algoritmo}
+
+  ~
+  
+  \begin{Algoritmo}{iIdHijoActual}{\In{it}{itConj(estr\_cat)}}{nat}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$).id
+  \end{Algoritmo}  
   
   ~
   
@@ -422,8 +474,14 @@
   
   ~
   
-  \begin{Algoritmo}{iCrearIterAncestros}{\In{c}{categoria}, \In{ac}{acat}}{puntero(estr\_cat)}
-    \STATE $res$ $\leftarrow$ \&(\NombreFuncion{Obtener}($c$, $ac$.categorías))
+  \begin{Algoritmo}{iCrearIterAncestros}{\In{it}{itConj(estr\_cat)}}{puntero(estr\_cat)}
+    \STATE $res$ $\leftarrow$ \&(\NombreFuncion{Siguiente}(it).padre)
+  \end{Algoritmo}
+ 
+  ~ 
+  
+  \begin{Algoritmo}{iCrearIterAncestrosDeLaRaíz}{\In{ac}{acat}}{puntero(estr\_cat)}
+    \STATE $res$ $\leftarrow$ \&($ac$.raíz)
   \end{Algoritmo}
   
   ~
@@ -442,6 +500,12 @@
   
   \begin{Algoritmo}{iAncestroActual}{\In{it}{puntero(estr\_cat)}}{categoria}
     \STATE $res$ $\leftarrow$ $it$\DRef nombre
+  \end{Algoritmo}
+
+  ~
+  
+  \begin{Algoritmo}{iIdAncestroActual}{\In{it}{puntero(estr\_cat)}}{nat}
+    \STATE $res$ $\leftarrow$ $it$\DRef id
   \end{Algoritmo}
   
   ~
@@ -559,8 +623,8 @@
       \tupItem{as}{arreglo\_estático[3] de fecha}            
     \end{Tupla} \\
     \begin{Tupla}[estr\_linkscat]
-      \tupItem{c}{puntero(datoscat)}
-      \tupItem{ls}{lista(puntero(estr\_link))}
+      \tupItem{itcat}{itcatancestros}
+      \tupItem{ls}{lista(estr\_link)}
       \tupItem{últimoAcceso}{fecha}      
       \tupItem{ordenado?}{bool}            
     \end{Tupla}    
@@ -572,7 +636,7 @@
     \begin{Tupla}[estr\_iter]
       \tupItem{s}{estr\_sistema}
       \tupItem{c}{categoria}
-      \tupItem{it}{itLista(puntero(estr\_link))}
+      \tupItem{it}{itLista(estr\_link)}
     \end{Tupla}
   \end{Estructura}
   
@@ -584,12 +648,28 @@
     \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{categorías}: $ac$, \TipoVariable{links}: \NombreFuncion{CrearDiccionario}(),\\
                         \hspace*{11mm} \TipoVariable{linksPorCatId}: \NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$)),
                                        \TipoVariable{fechaActual}: 0$\rangle$
-
     \STATE
-    \STATE PENDIENTE: Inicializar arreglo linksPorCatId.
-                                       
+    \STATE $s$.linksPorCatId[1] $\leftarrow$
+            $\langle$\TipoVariable{itcat}: \NombreFuncion{CrearIterAncestrosDeLaRaíz}($as$), \TipoVariable{ls}: \NombreFuncion{Vacía}(), \\
+      \hspace*{34mm} \TipoVariable{últimoAcceso}: 0, \TipoVariable{ordenado?}: \textbf{false}$\rangle$
+    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearIterHijosDeLaRaíz($ac$), $s$)}   
   \end{Algoritmo}
   
+  ~
+  
+  DUDA: ¿Está bien crear un auxiliar como a continuación?
+  
+  ~  
+  
+  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itercathijos}, \Inout{s}{estr\_sistema}}{}
+    \WHILE{\NombreFuncion{HayMásHijos?}($it$)}
+      \STATE $s$.linksPorCatId[\NombreFuncion{IdHijoActual}(it)] $\leftarrow$
+              $\langle$\TipoVariable{itcat}: \NombreFuncion{CrearIterAncestros}($it$), \TipoVariable{ls}: \NombreFuncion{Vacía}(), \\
+        \hspace*{62mm} \TipoVariable{últimoAcceso}: 0, \TipoVariable{ordenado?}: \textbf{false}$\rangle$
+      \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearIterHijosDadoOtroIter}($it$), $s$)
+    \ENDWHILE
+  \end{Algoritmo}
+    
   ~  
   
   \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}
