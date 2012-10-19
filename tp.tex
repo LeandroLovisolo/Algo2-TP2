@@ -756,13 +756,13 @@
   ~  
   
   \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}
-    $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it)\DRef l
+    $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it).l
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}
-    $res$ $\leftarrow$ \NombreFuncion{ObtenerNombre}(*($s$.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid].c))
+    $res$ $\leftarrow$ \NombreFuncion{AncestroActual}($s$.linksPorCatId[\NombreFuncion{Siguiente}($it$.it).cid].itcat)
   \end{Algoritmo}
   
   ~  
