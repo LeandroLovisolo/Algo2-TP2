@@ -152,55 +152,6 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% TAD DatosCategoría                                                        %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section{TAD \tadNombre{DatosCategoría}}
-
-\begin{tad}{\tadNombre{DatosCategoría}}
-\tadGeneros{datoscat}
-\tadExporta{datoscat, generadores, observadores básicos, idDC, esRaíz?, padreDC, hijosDC}
-\tadUsa{\tadNombre{Bool, Nat, Categoria, Conjunto(Categoria), ArbolCategorias}}
-
-\tadIgualdadObservacional{dc}{dc'}{datoscat}{nombreDC($dc$) $\igobs$ nombreDC($dc'$) $\land$ \\ acatDC($dc$) $\igobs$ acatDC($dc'$)}
-
-\tadAlinearFunciones{categoriasADatosCat}{conj(categoria)/cs, acat/ac}
-\tadGeneradores
-
-\tadOperacion{crearDatosCat}{categoria/c,acat/ac}{datoscat}{c $\in$ categorias(ac)}
-
-\tadObservadores
-
-\tadOperacion{nombreDC}{datoscat}{categoria}{}
-\tadOperacion{acatDC}{datoscat}{acat}{}
-
-\tadOtrasOperaciones
-
-\tadOperacion{idDC}{datoscat}{nat}{}
-\tadOperacion{esRaíz?}{datoscat}{bool}{}
-\tadOperacion{padreDC}{datoscat/dc}{datoscat}{$\neg$ esRaíz?($dc$)}
-\tadOperacion{hijosDC}{datoscat}{conj(datoscat)}{}
-\tadOperacion{categoríasADatosCat}{conj(categoria)/cs, acat/ac}{conj(datoscat)}{cs $\subseteq$ categorias(ac)}
-
-\tadAlinearAxiomas{nombreDC(crearDatosCat($c$, $ac$))}
-\tadAxiomas[\paratodo{categoria}{c}, \paratodo{conj(categoria)}{cs}, \paratodo{acat}{ac}]
-
-\tadAxioma{nombreDC(crearDatosCat($c$, $ac$))}{$c$}
-\tadAxioma{acatDC(crearDatosCat($c$, $ac$))}{$ac$}
-\tadAxioma{idDC(crearDatosCat($c$, $ac$))}{id($ac$, $c$)}
-\tadAxioma{esRaíz?(crearDatosCat($c$, $ac$))}{$c$ $\igobs$ raíz($ac$)}
-\tadAxioma{padreDC(crearDatosCat($c$, $ac$))}{crearDatosCat(padre($ac$, $c$), $ac$)}
-\tadAxioma{hijosDC(crearDatosCat($c$, $ac$))}{categoriasADatosCat(hijos($ac$, $c$), $ac$)}
-\tadAxioma{categoríasADatosCat($cs$, $ac$)}{\TADIF $\emptyset$?($cs$)
-                                            THEN $\emptyset$
-                                            ELSE Ag(crearDatosCat(dameUno($cs$), $ac$), sinUno($cs$))
-                                            FI}
-
-\end{tad}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Árbol de Categorías                                                       %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -209,9 +160,9 @@
 
 \begin{Interfaz}
 
-  \textbf{se explica con}: \tadNombre{DatosCategoría}, \tadNombre{ÁrbolCategorías}, \tadNombre{Iterador Unidireccional(Categoría)}.
+  \textbf{se explica con}: \tadNombre{ÁrbolCategorías}, \tadNombre{Iterador Unidireccional(Categoría)}.
 
-  \textbf{géneros}: \TipoVariable{acat}, \TipoVariable{datoscat}, \TipoVariable{itercat}.
+  \textbf{géneros}: \TipoVariable{acat}, \TipoVariable{itercathijos}, \TipoVariable{itercatancestros}.
 
   \Titulo{Operaciones básicas de árbol de categorías}
   
@@ -231,18 +182,7 @@
   {$ac$ $\igobs$ agregar($ac_{0}$, $padre$, $hija$)}
   [$\Theta(|padre| + |hija|)$]
   [agrega la categoría $hija$ como hija de la categoría $padre$.]
-
-  \InterfazFuncion{CrearIterCat}{\In{padre}{categoria}, \In{ac}{acat}}{itercat}
-  [está?($padre$, $ac$)]
-  {alias(esPermutacion?(SecuSuby($res$), hijos($ac$, $padre$))) $\land$ vacia?(Anteriores($res$))}
-  [$\Theta(|padre|)$]
-  [devuelve un iterador unidireccional de las categorías hijas directas de la categoría $padre$.]
-
-  DUDA: ¿Puedo tratar a $res$ acá directamente como un itConj($\alpha$) en la expresión SecuSuby($res$)?
-  
-  DUDA: ¿Hay que extender el TAD ÁrbolCategorías como en el apunte de módulos básicos
-        para poder especificar la operación esPermutacion??
-     
+   
   \InterfazFuncion{IdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{acat}}{nat}
   [está?($c$, $ac$)]
   {$res$ $\igobs$ id($ac$, $c$)}
@@ -254,51 +194,56 @@
   [$\Theta(1)$]
   [devuelve la cantidad de categorías en $ac$.]
   
-  \Titulo{Operaciones de datos de categoría}
-          
-  \InterfazFuncion{ObtenerId}{\In{dc}{datoscat}}{nat}
-  {$res$ $\igobs$ idDC($dc$)}
-  [$\Theta(1)$]
-  [devuelve el $id$ de la categoría asociada a $dc$.]  
+  \Titulo{Operaciones del iterador de hijos directos}
 
-  \InterfazFuncion{ObtenerNombre}{\In{dc}{datoscat}}{nat}
-  {$res$ $\igobs$ nombreDC($dc$)}
-  [$\Theta(1)$]
-  [devuelve el nombre de la categoría asociada a $dc$.]  
-
-  \InterfazFuncion{ObtenerPadre}{\In{dc}{datoscat}}{puntero(datoscat)}
-  [$\neg$ esRaíz?($dc$)]
-  {$res$ $\igobs$ padreDC($dc$)}
-  [$\Theta(1)$]
-  [devuelve un puntero a los datos de la categoría padre asociada a $dc$.]  
-
-  DUDA: ¿Está bien la postcondición? $res$ es de tipo puntero(datoscat), mientras que padreDC devuelve datoscat.
-
-  \InterfazFuncion{ObtenerHijos}{\In{dc}{datoscat}}{conj(puntero(datoscat))}
-  {$res$ $\igobs$ hijosDC($dc$)}
-  [$\Theta(1)$]
-  [devuelve un conjunto de punteros a los datos de las categorías hijas directas asociadas a $dc$.]  
-
-  DUDA: ¿Está bien la postcondición? $res$ es de tipo conj(puntero(datoscat)), mientras que hijosDC devuelve conj(datoscat).
-
-  \Titulo{Operaciones de iterador de categorías}
+  \InterfazFuncion{CrearIterHijos}{\In{padre}{categoria}, \In{ac}{acat}}{itercathijos}
+  [está?($padre$, $ac$)]
+  {esPermutacion?(Siguientes($res$), hijos($ac$, $padre$))}
+  [$\Theta(|padre|)$]
+  [devuelve un iterador unidireccional de las categorías hijas directas de la categoría $padre$.]
   
-  \InterfazFuncion{HayMás?}{\In{it}{itercat}}{bool}
+  \InterfazFuncion{HayMásHijos?}{\In{it}{itercathijos}}{bool}
   {$res$ $\igobs$ HayMás?($it$)}
   [$\Theta(1)$]
   [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
 
-  \InterfazFuncion{Actual}{\In{it}{itercat}}{puntero(datoscat)}
+  \InterfazFuncion{HijoActual}{\In{it}{itercathijos}}{categoria}
   [HayMás?($it$)]
   {$res$ $\igobs$ Actual($it$)}
   [$\Theta(1)$]
   [devuelve el elemento actual del iterador.]
 
-  \InterfazFuncion{Avanzar}{\Inout{it}{itercat}}{}
+  \InterfazFuncion{AvanzarHijo}{\Inout{it}{itercathijos}}{}
   [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$)]
   {$res$ $\igobs$ Avanzar($it_{0}$)}
   [$\Theta(1)$]
-  [avanza el iterador a la posición siguiente.]  
+  [avanza el iterador a la posición siguiente.]
+
+  \Titulo{Operaciones del iterador de ancestros}
+
+  \InterfazFuncion{CrearIterAncestros}{\In{c}{categoria}, \In{ac}{acat}}{itercatancestros}
+  [está?($c$, $ac$)]
+  {esPermutacion?(Siguientes($res$), ancestros($ac$, $c$))}
+  [$\Theta(|c|)$]
+  [devuelve un iterador unidireccional de la categoría $c$ y sus ancestros.]
+  
+  \InterfazFuncion{HayMásAncestros?}{\In{it}{itercatancestros}}{bool}
+  {$res$ $\igobs$ HayMás?($it$)}
+  [$\Theta(1)$]
+  [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
+
+  \InterfazFuncion{AncestroActual}{\In{it}{itercatancestros}}{categoria}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ Actual($it$)}
+  [$\Theta(1)$]
+  [devuelve el elemento actual del iterador.]
+
+  \InterfazFuncion{AvanzarAncestro}{\Inout{it}{itercatancestros}}{}
+  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$)]
+  {$res$ $\igobs$ Avanzar($it_{0}$)}
+  [$\Theta(1)$]
+  [avanza el iterador a la posición siguiente.]
+
 
 \end{Interfaz}
 
@@ -310,10 +255,20 @@
 
   \begin{Estructura}{acat}[estr\_acat]
     \begin{Tupla}[estr\_acat]
-      \tupItem{raíz}{puntero(datoscat)}%
-      \tupItem{categorías}{dicctrie(datoscat)}%
+      \tupItem{raíz}{puntero(estr\_datoscat)}%
+      \tupItem{categorías}{dicctrie(estr\_datoscat)}%
     \end{Tupla}
+    \begin{Tupla}[estr\_datoscat]
+      \tupItem{id}{nat}
+      \tupItem{nombre}{categoria}
+      \tupItem{padre}{puntero(estr\_datoscat)}
+      \tupItem{hijos}{conj(puntero(estr\_datoscat))}
+    \end{Tupla}    
   \end{Estructura}
+
+  PENDIENTE: Actualizar y abreviar Rep.
+  
+  ~
 
   Invariante de representación:
 
@@ -361,17 +316,6 @@
 
   \mbox{}
 
-  DUDA: ¿Está bien acceder a los campos de datoscat como si fuera una tupla?
-        Notar que se usa el género datoscat en vez de su estructura de representación estr\_datoscat.
-
-  ~  
-  
-  DUDA: Para acortar el Rep, ¿puedo declarar variables dentro del mismo? Ejemplo:\\
-        \hspace*{20mm} $x$ $\igobs$ obtener($c$, $e$.categorías) $\land$ $¬$($x$\DRef padre $\igobs$ NULL) $\impluego$ \\
-        \hspace*{30mm} (def?($x$\DRef padre\DRef nombre, $e$.categorías) $\yluego$ $x$ $\in$ $x$\DRef padre\DRef hijos)
-
-  ~
-
   \Abs[estr\_acat]{acat}[e]{ac}
     {categorias($ac$) $\igobs$ claves($e$.categorías) $\yluego$ \\
     raíz($ac$) $\igobs$ $e$.raíz\DRef nombre $\land$ \\
@@ -382,34 +326,23 @@
 
   ~
 
-  \Titulo{Representación de datos de categoría}  
+  \Titulo{Representación del iterador de hijos directos}  
   
-  \begin{Estructura}{datoscat}[estr\_datoscat]
-    \begin{Tupla}[estr\_datoscat]
-      \tupItem{id}{nat}
-      \tupItem{nombre}{categoria}
-      \tupItem{padre}{puntero(datoscat)}
-      \tupItem{hijos}{conj(puntero(datoscat))}
-    \end{Tupla}
-  \end{Estructura} 
-
-  DUDA: ¿Hace falta crear un TAD nuevo para poder expresar el Rep y Abs del género datoscat?
-        De ser así, ¿tengo que agregar dicho TAD en la lista 'se explica con'?
-
-  ~
-
-  \Titulo{Representación de iterador de categorías}  
+  \begin{Estructura}{itercathijos}[itConj(datoscat)]
+  \end{Estructura}
   
-  \begin{Estructura}{itercat}[itConj(puntero(datoscat))]
-  \end{Estructura} 
-
-  DUDA: ¿Está bien la estructura de representación elegida?
-
-  DUDA: ¿Qué usamos para expresar el Rep y el Abs en este caso? Dado que se trata de un
-        itConj($\alpha$), suena razonable pensar en usar el Rep y Abs de este iterador
-        definidos en el módulo Conjunto Lineal($\alpha$).
+  PENDIENTE: Rep y Abs.
 
   ~  
+  
+  \Titulo{Representación del iterador de ancestros}  
+  
+  \begin{Estructura}{itercatancestros}[puntero(estr\_datoscat)]
+  \end{Estructura} 
+
+  PENDIENTE: Rep y Abs.
+
+  ~    
 
 \end{Representacion}
 
@@ -446,13 +379,7 @@
     \STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$)
   \end{Algoritmo}
 
-  ~  
-  
-  \begin{Algoritmo}{iCrearIterCat}{\In{padre}{categoria}, \In{ac}{estr\_acat}}{itConj(puntero(datoscat))}
-  	\STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías)\DRef hijos)
-  \end{Algoritmo}
-
-  ~  
+  ~   
     
   \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}
   	\STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías)\DRef id
@@ -466,28 +393,10 @@
 
   ~
 
-  \begin{Algoritmo}{iObtenerId}{\In{dc}{estr\_datoscat}}{nat}
-  	\STATE $res$ $\leftarrow$ $dc$.id
+  \begin{Algoritmo}{iCrearIterCat}{\In{padre}{categoria}, \In{ac}{estr\_acat}}{itConj(puntero(datoscat))}
+  	\STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías)\DRef hijos)
   \end{Algoritmo}
   
-  ~
-  
-  \begin{Algoritmo}{iObtenerNombre}{\In{dc}{estr\_datoscat}}{nat}
-  	\STATE $res$ $\leftarrow$ $dc$.nombre
-  \end{Algoritmo}
-
-  ~
-    
-  \begin{Algoritmo}{iObtenerPadre}{\In{dc}{estr\_datoscat}}{puntero(datoscat)}
-  	\STATE $res$ $\leftarrow$ $dc$.padre
-  \end{Algoritmo}
-
-  ~
-
-  \begin{Algoritmo}{iObtenerHijos}{\In{dc}{estr\_datoscat}}{conj(puntero(datoscat))}
-  	\STATE $res$ $\leftarrow$ $dc$.hijos
-  \end{Algoritmo}
-
   ~
 
   \begin{Algoritmo}{iHayMás?}{\In{it}{itConj(puntero(datoscat))}}{bool}
