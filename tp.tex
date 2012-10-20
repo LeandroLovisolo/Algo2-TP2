@@ -84,20 +84,12 @@
     \addtolength{\lenTupla}{\parindent}%
     \hspace*{3mm}donde \TipoVariable{#1} es \TipoVariable{tupla}$($%
     \begin{minipage}[t]{\linewidth-\lenTupla}%
-    \setboolean{EstructuraHayItems}{false}%
 }{%
     $)$%
     \end{minipage}
 }
 
-\newcommandx{\tupItem}[3][1={\ }]{%
-    %\hspace*{3mm}%
-    \ifthenelse{\boolean{EstructuraHayItems}}{%
-        ,#1%
-    }{}%
-    \emph{#2}: \TipoVariable{#3}%
-    \setboolean{EstructuraHayItems}{true}%
-}
+\newcommandx{\tupItem}[2]{\emph{#1}: \TipoVariable{#2}}
 
 \newcommandx{\RepFc}[3][1={estr},2={e}]{%
   \tadOperacion{Rep}{#1}{bool}{}%
@@ -294,14 +286,16 @@
 
   \begin{Estructura}{acat}[estr\_acat]
     \begin{Tupla}[estr\_acat]
-      \tupItem{raíz}{estr\_cat}%
+      \tupItem{raíz}{estr\_cat},
       \tupItem{categorías}{dicctrie(estr\_cat)}%
     \end{Tupla}
+
     \begin{Tupla}[estr\_cat]
-      \tupItem{id}{nat}
-      \tupItem{nombre}{categoria}
-      \tupItem{padre}{puntero(estr\_cat)}
-      \tupItem{hijos}{conj(estr\_cat)}
+      \tupItem{id}{nat},
+      \tupItem{nombre}{categoria},
+      \tupItem{padre}{puntero(estr\_cat)},
+      \\
+      \tupItem{hijos}{puntero(estr\_cat)}%
     \end{Tupla}    
   \end{Estructura}
 
@@ -367,7 +361,7 @@
 
   \Titulo{Representación del iterador de hijos directos}  
   
-  \begin{Estructura}{itercathijos}[itConj(estr\_cat)]
+  \begin{Estructura}{itercathijos}[itConj(puntero(estr\_cat))]
   \end{Estructura}
   
   PENDIENTE: Rep y Abs.
@@ -611,22 +605,27 @@
   
   \begin{Estructura}{sistema}[estr\_sistema]
     \begin{Tupla}[estr\_sistema]
-      \tupItem{categorías}{acat}
-      \tupItem{links}{dicctrie(estr\_link)}
-      \tupItem{linksPorCatId}{arreglo\_dimensionable de estr\_linkscat}
-      \tupItem{fechaActual}{fecha}
+      \tupItem{categorías}{acat},
+      \tupItem{links}{dicctrie(estr\_link)},
+      \\
+      \tupItem{linksPorCatId}{arreglo\_dimensionable de estr\_linkscat},
+      \\
+      \tupItem{fechaActual}{fecha}%
     \end{Tupla}
+    
     \begin{Tupla}[estr\_link]
-      \tupItem{l}{link}
-      \tupItem{cid}{nat}
-      \tupItem{últimoAcceso}{fecha}
-      \tupItem{as}{arreglo\_estático[3] de fecha}            
-    \end{Tupla} \\
+      \tupItem{l}{link},
+      \tupItem{cid}{nat},
+      \tupItem{últimoAcceso}{fecha},
+      \tupItem{as}{arreglo\_estático[3] de fecha}%
+    \end{Tupla}
+    
     \begin{Tupla}[estr\_linkscat]
-      \tupItem{itcat}{itcatancestros}
-      \tupItem{ls}{lista(estr\_link)}
-      \tupItem{últimoAcceso}{fecha}      
-      \tupItem{ordenado?}{bool}            
+      \tupItem{itcat}{itcatancestros},
+      \tupItem{ls}{lista(estr\_link)},
+      \tupItem{últimoAcceso}{fecha},
+      \\
+      \tupItem{ordenado?}{bool}%            
     \end{Tupla}    
   \end{Estructura}
   
@@ -634,9 +633,9 @@
   
   \begin{Estructura}{iterlinks}[estr\_iter]
     \begin{Tupla}[estr\_iter]
-      \tupItem{s}{estr\_sistema}
-      \tupItem{c}{categoria}
-      \tupItem{it}{itLista(estr\_link)}
+      \tupItem{s}{estr\_sistema},
+      \tupItem{c}{categoria},
+      \tupItem{it}{itLista(estr\_link)}%
     \end{Tupla}
   \end{Estructura}
   
@@ -848,13 +847,14 @@
   \Titulo{Representación de diccionario trie}
   
   \begin{Estructura}{dicctrie$(\alpha)$}[estr\_dicctrie]
-   \begin{Tupla}[estr\_dicctrie]
-   \tupItem{cantClaves}{nat}
-   \tupItem{nodos}{nodo}
-   \end{Tupla}
-     \begin{Tupla}[nodo]
-      \tupItem{nodos}{arreglo\_estático[256] de puntero(nodo)}
-      \tupItem{significado}{puntero$(\alpha)$}
+    \begin{Tupla}[estr\_dicctrie]
+      \tupItem{cantClaves}{nat},
+      \tupItem{nodos}{nodo}%
+    \end{Tupla}
+   
+    \begin{Tupla}[nodo]
+      \tupItem{nodos}{arreglo\_estático[256] de puntero(nodo)},
+      \tupItem{significado}{puntero$(\alpha)$}%
     \end{Tupla}
   \end{Estructura}
   
