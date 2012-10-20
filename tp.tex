@@ -624,7 +624,7 @@
     \end{Tupla} \\
     \begin{Tupla}[estr\_linkscat]
       \tupItem{itcat}{itcatancestros}
-      \tupItem{links}{lista(estr\_link)}
+      \tupItem{ls}{lista(estr\_link)}
       \tupItem{últimoAcceso}{fecha}      
       \tupItem{ordenado?}{bool}            
     \end{Tupla}    
@@ -650,7 +650,7 @@
                                        \TipoVariable{fechaActual}: 0$\rangle$
     \STATE
     \STATE $s$.linksPorCatId[1] $\leftarrow$
-            $\langle$\TipoVariable{itcat}: \NombreFuncion{CrearIterAncestrosDeLaRaíz}($as$), \TipoVariable{links}: \NombreFuncion{Vacía}(), \\
+            $\langle$\TipoVariable{itcat}: \NombreFuncion{CrearIterAncestrosDeLaRaíz}($as$), \TipoVariable{ls}: \NombreFuncion{Vacía}(), \\
       \hspace*{34mm} \TipoVariable{últimoAcceso}: 0, \TipoVariable{ordenado?}: \textbf{false}$\rangle$
     \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearIterHijosDeLaRaíz($ac$), $s$)}   
   \end{Algoritmo}
@@ -664,7 +664,7 @@
   \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itercathijos}, \Inout{s}{estr\_sistema}}{}
     \WHILE{\NombreFuncion{HayMásHijos?}($it$)}
       \STATE $s$.linksPorCatId[\NombreFuncion{IdHijoActual}(it)] $\leftarrow$
-              $\langle$\TipoVariable{itcat}: \NombreFuncion{CrearIterAncestros}($it$), \TipoVariable{links}: \NombreFuncion{Vacía}(), \\
+              $\langle$\TipoVariable{itcat}: \NombreFuncion{CrearIterAncestros}($it$), \TipoVariable{ls}: \NombreFuncion{Vacía}(), \\
         \hspace*{62mm} \TipoVariable{últimoAcceso}: 0, \TipoVariable{ordenado?}: \textbf{false}$\rangle$
       \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearIterHijosDadoOtroIter}($it$), $s$)
     \ENDWHILE
@@ -696,39 +696,48 @@
   ~  
   
   \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}
-    \STATE var $estr\_l$: \TipoVariable{estr\_link}
+    \STATE var $estr\_l$: \TipoVariable{puntero(estr\_link)}
     \STATE $estr\_l$ $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links)
-	\IF{$f$ $\igobs$ $estr\_l$.últimoAcceso}
-	  \STATE $estr\_l$.as[0] $\leftarrow$ $estr\_l$.as[0] + 1
-	\ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 1}
-	  \STATE $estr\_l$.as[2] $\leftarrow$ $estr\_l$.as[1]
-	  \STATE $estr\_l$.as[1] $\leftarrow$ $estr\_l$.as[0]
-	  \STATE $estr\_l$.as[0] $\leftarrow$ 1
-	\ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 2}
-	  \STATE $estr\_l$.as[2] $\leftarrow$ $estr\_l$.as[0]
-	  \STATE $estr\_l$.as[1] $\leftarrow$ 0
-	  \STATE $estr\_l$.as[0] $\leftarrow$ 1
+	\IF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso}
+	  \STATE $estr\_l$\DRef as[0] $\leftarrow$ $estr\_l$\DRef as[0] + 1
+	\ELSIF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso + 1}
+	  \STATE $estr\_l$\DRef as[2] $\leftarrow$ $estr\_l$\DRef as[1]
+	  \STATE $estr\_l$\DRef as[1] $\leftarrow$ $estr\_l$\DRef as[0]
+	  \STATE $estr\_l$\DRef as[0] $\leftarrow$ 1
+	\ELSIF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso + 2}
+	  \STATE $estr\_l$\DRef as[2] $\leftarrow$ $estr\_l$\DRef as[0]
+	  \STATE $estr\_l$\DRef as[1] $\leftarrow$ 0
+	  \STATE $estr\_l$\DRef as[0] $\leftarrow$ 1
 	\ELSE
-	  \STATE $estr\_l$.as[2] $\leftarrow$ 0
-	  \STATE $estr\_l$.as[1] $\leftarrow$ 0
-	  \STATE $estr\_l$.as[0] $\leftarrow$ 1
+	  \STATE $estr\_l$\DRef as[2] $\leftarrow$ 0
+	  \STATE $estr\_l$\DRef as[1] $\leftarrow$ 0
+	  \STATE $estr\_l$\DRef as[0] $\leftarrow$ 1
 	\ENDIF
  	\STATE
  	\STATE $s$.fechaActual $\leftarrow$ $f$	
- 	\STATE 	 	
-    \STATE var $it$: \TipoVariable{itcatancestros}
-    \STATE $it$ $\leftarrow$ \NombreFuncion{CopiarIterAncestros}($s$.linksPorCatId[$estr\_l$.cid].itcat)
  	\STATE
- 	\WHILE{\NombreFuncion{HayMásAncestros?}($it$)}
- 	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$)].últimoAcceso $\leftarrow$ $s$.fechaActual
- 	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$)].ordenado? $\leftarrow$ \textbf{false}
- 	\ENDWHILE
+ 	\STATE var $actual$: \TipoVariable{estr\_linkscat}
+ 	\STATE $actual$ $\leftarrow$ $s$.linksPorCatId[$estr\_l$.cid]
+ 	\STATE
+ 	\STATE var $hayMasCategorias$: \TipoVariable{bool} 	
+ 	\STATE $hayMasCategorias$ $\leftarrow$ \textbf{true}
+  	\STATE
+ 	\WHILE{$hayMasCategorias$}
+ 	  \STATE $actual$.últimoAcceso $\leftarrow$ $s$.fechaActual
+ 	  \STATE $actual$.ordenado? $\leftarrow$ \textbf{false}
+ 	  \IF{\NombreFuncion{ObtenerPadre}($actual$.c) $\igobs$ NULL)}
+ 	    \STATE $hayMasCategorias$ $\leftarrow$ \textbf{false}
+ 	  \ELSE
+ 	    \STATE $actual$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{ObtenerId}(*\NombreFuncion{ObtenerPadre}($actual$.c))]
+ 	  \ENDIF
+ 	\ENDWHILE  
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{i\#Links}{\In{c}{categoría}, \In{s}{estr\_sistema}}{nat}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Longitud}($s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)].links)
+	\STATE
+	\STATE PENDIENTE: Agregar un nuevo campo a estr\_linkscat que contenga la cantidad de links de la categoría y sus subcategorías.
   \end{Algoritmo}
   
   ~  
@@ -739,12 +748,12 @@
   	\STATE
   	\IF{$¬$($estr\_c$.ordenado?)}
   	  \STATE
-  	  \STATE PENDIENTE: Ordenar links en $estr\_c$.links
+  	  \STATE PENDIENTE: Ordenar links en $estr\_c$.ls
   	  \STATE
   	  \STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}
   	\ENDIF
   	\STATE
-    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{s}: $s$, \TipoVariable{c}: $c$, $it$: \NombreFuncion{CrearIt}($estr\_c$.links)$\rangle$
+    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{s}: $s$, \TipoVariable{c}: $c$, $it$: \NombreFuncion{CrearIt}($estr\_c$.ls)$\rangle$
   \end{Algoritmo}
   
   ~  
@@ -756,13 +765,13 @@
   ~  
   
   \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}
-    $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it).l
+    $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it)\DRef l
   \end{Algoritmo}
   
   ~  
   
   \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}
-    $res$ $\leftarrow$ \NombreFuncion{AncestroActual}($s$.linksPorCatId[\NombreFuncion{Siguiente}($it$.it).cid].itcat)
+    $res$ $\leftarrow$ \NombreFuncion{ObtenerNombre}(*($s$.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid].c))
   \end{Algoritmo}
   
   ~  
@@ -850,9 +859,32 @@
   \end{Estructura}
   
     \Abs[estr\_dicctrie]{dicc(string, $\alpha$)}[e]{d}
-    {($\forall c$: string) Definido?($c$, $e$) $\igobs$ def?($c$, $d$) $\land$ \\
-    Definido?($c$,$e$) $\impluego$ (Obtener($c$, $e$) $\igobs$ obtener($c$, $e$))}
-  
+    {($\forall c$: string) estáEnTrie?($c$, $e$.nodos) $\igobs$ def?($c$, $d$) $\land$ \\
+    estáEnTrie?($c$,$e$.nodos) $\impluego$ (obtenerDelTrie($c$, $e$) $\igobs$ obtener($c$, $e$))
+
+estáEnTrie?: ab(puntero(nodo)) x nodo $\longrightarrow$ bool \\
+\hspace*{5mm}estáEnTrie?(s, n) = auxEstáEnTrie(0,s,n)
+\\
+\hspace*{5mm}auxEstáEnTrie?: nat x ab(puntero(nodo)) x nodo $\longrightarrow$ bool \\
+\hspace*{5mm}auxEstáEnTrie?(i, s, n) = if (tam(s)-1 = i) then \\
+\hspace*{50mm}(if $\neg$(n.significado = NULL) then \\
+\hspace*{60mm}True\\
+\hspace*{50mm}else\\
+\hspace*{60mm}False fi) \\
+\hspace*{40mm}else (if (n.nodos[ord(s[i])] = NULL) then \\
+\hspace*{50mm}False \\
+\hspace*{50mm}else \\
+\hspace*{60mm}auxEstáEnTrie?(i+1,  s, (*n.nodos[ord(s[i])]))
+\\
+\hspace*{5mm}obtenerDelTrie: ab(puntero(nodo)) s x nodo n $\longrightarrow$ $\alpha$\hspace*{65mm}\{estáEnTrie?(s,n)\} 
+
+obtenerDelTrie(s,n) = auxObtenerDelTrie(0,s,n)
+
+auxObtenerDelTrie: nat x string x nodo $\longrightarrow$ $\alpha$
+
+auxObtenerDelTrie(i, s, n) = if (tam(s)-1 = i) then n.significado else ObtenerDelTrie(i+1,  s, (*n.nodos[ord(s[i])]))
+
+}
 \end{Representacion}
 
 ~
