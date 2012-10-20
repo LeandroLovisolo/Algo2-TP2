@@ -295,7 +295,7 @@
       \tupItem{nombre}{categoria},
       \tupItem{padre}{puntero(estr\_cat)},
       \\
-      \tupItem{hijos}{puntero(estr\_cat)}%
+      \tupItem{hijos}{conj(puntero(estr\_cat))}%
     \end{Tupla}    
   \end{Estructura}
 
@@ -382,16 +382,13 @@
 \begin{Algoritmos}
 
   \begin{Algoritmo}{iCrearÁrbol}{\In{raiz}{categoria}}{estr\_acat}
-  	\STATE var $raiz\_estr$: \TipoVariable{estr\_cat}
+  	\STATE var $estr\_raiz$: \TipoVariable{estr\_cat}
+    \STATE $estr\_raiz$ $\leftarrow$ $\langle$\TipoVariable{id}: 1, \TipoVariable{nombre}: $raiz$,
+                                              \TipoVariable{padre}: NULL, \TipoVariable{hijos}: \NombreFuncion{Vacío}()$\rangle$
 	\STATE var $categorias$: \TipoVariable{dicctrie(estr\_cat)}
-  	\STATE
-    \STATE $raiz\_estr$ $\leftarrow$ $\langle$\TipoVariable{id}: 1, \TipoVariable{nombre}: $raiz$,
-                                      \TipoVariable{padre}: NULL, \TipoVariable{hijos}: \NombreFuncion{Vacío}()$\rangle$
     \STATE $categorias$ $\leftarrow$ \NombreFuncion{CrearDiccionario}()
-  	\STATE    
-    \STATE \NombreFuncion{Definir}($raiz$, $raiz\_estr$, $categorias$)
-   	\STATE
-  	\STATE $res$ $\leftarrow$ $\langle$\TipoVariable{raiz}: $raiz\_estr$, \TipoVariable{categorias}: $categorias\rangle$
+    \STATE \NombreFuncion{Definir}($raiz$, $estr\_raiz$, $categorias$)
+  	\STATE $res$ $\leftarrow$ $\langle$\TipoVariable{raiz}: $estr\_raiz$, \TipoVariable{categorias}: $categorias\rangle$
   \end{Algoritmo}
 
   ~  
@@ -403,12 +400,14 @@
   ~
   
   \begin{Algoritmo}{iAgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{estr\_acat}}{}
+  	\STATE var $estr\_padre$: \TipoVariable{estr\_cat}  
+  	\STATE $estr\_padre$ $\leftarrow$ \NombreFuncion{Obtener}($padre$, $ac$.categorías)
   	\STATE var $estr\_hija$: \TipoVariable{estr\_cat}
   	\STATE $estr\_hija$ $\leftarrow$ $\langle$\TipoVariable{id}: \NombreFuncion{\#Claves}($ac$.categorías) + 1,
-  	                                          \TipoVariable{nombre}: $hija$, \\
-  	                                          \hspace*{22mm}
-  	                                          \TipoVariable{padre}: \NombreFuncion{Obtener}($padre$, $ac$.categorías),
-  	                                          \TipoVariable{hijos}: \NombreFuncion{Vacío}() $\rangle$
+  	                                          \TipoVariable{nombre}: $hija$,
+  	                                          \TipoVariable{padre}: \&($estr\_padre$),
+  	                                          \TipoVariable{hijos}: \NombreFuncion{Vacío}()$\rangle$
+    \STATE \NombreFuncion{AgregarRápido}($estr\_padre$.hijos, \&($estr\_hija$))
     \STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$)
   \end{Algoritmo}
 
@@ -426,50 +425,50 @@
 
   ~
 
-  \begin{Algoritmo}{iCrearIterHijos}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(estr\_cat)}
+  \begin{Algoritmo}{iCrearIterHijos}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos)
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearIterHijosDeLaRaíz}{\In{ac}{acat}}{itConj(estr\_cat)}
+  \begin{Algoritmo}{iCrearIterHijosDeLaRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}($ac$.raíz.hijos)
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iCrearIterHijosDadoOtroIter}{\In{it}{itConj(estr\_cat)}}{itConj(estr\_cat)}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it).hijos)
+  \begin{Algoritmo}{iCrearIterHijosDadoOtroIter}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it)\DRef hijos)
   \end{Algoritmo}  
 
   ~  
   
-  \begin{Algoritmo}{iHayMásHijos?}{\In{it}{itConj(estr\_cat)}}{bool}
+  \begin{Algoritmo}{iHayMásHijos?}{\In{it}{itConj(puntero(estr\_cat))}}{bool}
     \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$)
   \end{Algoritmo}
   
   ~
   
-  \begin{Algoritmo}{iHijoActual}{\In{it}{itConj(estr\_cat)}}{categoria}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$).nombre
+  \begin{Algoritmo}{iHijoActual}{\In{it}{itConj(puntero(estr\_cat))}}{categoria}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef nombre
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iIdHijoActual}{\In{it}{itConj(estr\_cat)}}{nat}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$).id
+  \begin{Algoritmo}{iIdHijoActual}{\In{it}{itConj(puntero(estr\_cat))}}{nat}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef id
   \end{Algoritmo}  
   
   ~
   
-  \begin{Algoritmo}{iAvanzarHijo}{\Inout{it}{itConj(estr\_cat)}}{}
+  \begin{Algoritmo}{iAvanzarHijo}{\Inout{it}{itConj(puntero(estr\_cat))}}{}
     \STATE \NombreFuncion{Avanzar}($it$)
   \end{Algoritmo}
   
   ~
   
-  \begin{Algoritmo}{iCrearIterAncestros}{\In{it}{itConj(estr\_cat)}}{puntero(estr\_cat)}
-    \STATE $res$ $\leftarrow$ \&(\NombreFuncion{Siguiente}(it).padre)
+  \begin{Algoritmo}{iCrearIterAncestros}{\In{it}{itConj(puntero(estr\_cat))}}{puntero(estr\_cat)}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}(it)
   \end{Algoritmo}
  
   ~ 
