@@ -629,10 +629,8 @@
   \begin{Estructura}{sistema}[estr\_sistema]
     \begin{Tupla}[estr\_sistema]
       \tupItem{categorías}{acat},
-      \tupItem{links}{dicctrie(estr\_link)},
-      \\
-      \tupItem{linksPorCatId}{arreglo\_dimensionable de estr\_linksPorCatId},
-      \\
+      \tupItem{links}{dicctrie(estr\_link)},\\
+      \tupItem{linksPorCatId}{arreglo\_dimensionable de estr\_linksPorCatId},\\
       \tupItem{fechaActual}{fecha}%
     \end{Tupla}
     
@@ -645,9 +643,8 @@
     
     \begin{Tupla}[estr\_linksPorCatId]
       \tupItem{itcat}{itcatancestros},
-      \tupItem{links}{lista(estr\_link)},
+      \tupItem{links}{lista(puntero(estr\_link))},\\
       \tupItem{últimoAcceso}{fecha},
-      \\
       \tupItem{ordenado?}{bool}%            
     \end{Tupla}    
   \end{Estructura}
@@ -658,7 +655,7 @@
     \begin{Tupla}[estr\_iter]
       \tupItem{s}{estr\_sistema},
       \tupItem{c}{categoria},
-      \tupItem{it}{itLista(estr\_link)}%
+      \tupItem{it}{itLista(puntero(estr\_link))}%
     \end{Tupla}
   \end{Estructura}
   
@@ -713,7 +710,7 @@
     \STATE $it$ $\leftarrow$ \NombreFuncion{CopiarIterAncestros}($s$.linksPorCatId[$estr\_l$.cid - 1].itcat)
  	\STATE
  	\WHILE{\NombreFuncion{HayMásAncestros?}($it$)}
-      \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].links, $estr\_l$)
+      \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].links, \&($estr\_l$))
  	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].últimoAcceso $\leftarrow$ $s$.fechaActual
  	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].ordenado? $\leftarrow$ \textbf{false}
  	  \STATE \NombreFuncion{AvanzarAncestro}($it$)
@@ -727,9 +724,9 @@
     \STATE $estr\_l$ $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links)
 	\IF{$f$ $\igobs$ $estr\_l$.últimoAcceso}
 	  \STATE $estr\_l$.as[0] $\leftarrow$ $estr\_l$.as[0] + 1
-	\ELSIF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso + 1}
+	\ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 1}
 	  \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, $estr\_l$.as[0], $estr\_l$.as[1])
-	\ELSIF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso + 2}
+	\ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 2}
 	  \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, $estr\_l$.as[0])
 	\ELSE
 	  \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, 0)
@@ -775,7 +772,7 @@
   	  \STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}
   	\ENDIF
   	\STATE
-    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{s}: $s$, \TipoVariable{c}: $c$, $it$: \NombreFuncion{CrearIt}($estr\_c$.ls)$\rangle$
+    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{s}: $s$, \TipoVariable{c}: $c$, $it$: \NombreFuncion{CrearIt}($estr\_c$.links)$\rangle$
   \end{Algoritmo}
   
   ~  
@@ -793,7 +790,7 @@
   ~  
   
   \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}
-    $res$ $\leftarrow$ \NombreFuncion{AncestroActual}($it$.s.linksPorCatId[\NombreFuncion{Siguiente}($it$.it).cid - 1].itcat))
+    $res$ $\leftarrow$ \NombreFuncion{AncestroActual}($it$.s.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid - 1].itcat))
   \end{Algoritmo}
   
   ~  
