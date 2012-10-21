@@ -631,7 +631,7 @@
       \tupItem{categorías}{acat},
       \tupItem{links}{dicctrie(estr\_link)},
       \\
-      \tupItem{linksPorCatId}{arreglo\_dimensionable de estr\_linkscat},
+      \tupItem{linksPorCatId}{arreglo\_dimensionable de estr\_linksPorCatId},
       \\
       \tupItem{fechaActual}{fecha}%
     \end{Tupla}
@@ -643,7 +643,7 @@
       \tupItem{as}{arreglo\_estático[3] de fecha}%
     \end{Tupla}
     
-    \begin{Tupla}[estr\_linkscat]
+    \begin{Tupla}[estr\_linksPorCatId]
       \tupItem{itcat}{itcatancestros},
       \tupItem{links}{lista(estr\_link)},
       \tupItem{últimoAcceso}{fecha},
@@ -765,7 +765,7 @@
   ~  
   
   \begin{Algoritmo}{iCrearIterLinks}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
-    \STATE var $estr\_c$: \TipoVariable{estr\_linkscat}
+    \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId}
   	\STATE $estr\_c$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1]
   	\STATE
   	\IF{$¬$($estr\_c$.ordenado?)}
