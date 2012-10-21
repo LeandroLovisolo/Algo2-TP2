@@ -705,11 +705,8 @@
              \CampoTupla{l}{$l$},
              \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)},\\
              \CampoTupla{últimoAcceso}{$s$.fechaActual},
-             \CampoTupla{as}{\NombreFuncion{CrearArreglo}()}%
+             \CampoTupla{as}{\NombreFuncion{iCrearArregloDe3Nats}(0, 0, 0)}%
   	       \end{CrearTupla}
- 	\STATE $estr\_l$.as[0] $\leftarrow$ 0
- 	\STATE $estr\_l$.as[1] $\leftarrow$ 0
- 	\STATE $estr\_l$.as[2] $\leftarrow$ 0
  	\STATE \NombreFuncion{Definir}($l$, $estr\_l$, $s$.links)
  	\STATE
     \STATE var $it$: \TipoVariable{itcatancestros}
@@ -731,17 +728,11 @@
 	\IF{$f$ $\igobs$ $estr\_l$.últimoAcceso}
 	  \STATE $estr\_l$.as[0] $\leftarrow$ $estr\_l$.as[0] + 1
 	\ELSIF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso + 1}
-	  \STATE $estr\_l$.as[2] $\leftarrow$ $estr\_l$.as[1]
-	  \STATE $estr\_l$.as[1] $\leftarrow$ $estr\_l$.as[0]
-	  \STATE $estr\_l$.as[0] $\leftarrow$ 1
+	  \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, $estr\_l$.as[0], $estr\_l$.as[1])
 	\ELSIF{$f$ $\igobs$ $estr\_l$\DRef últimoAcceso + 2}
-	  \STATE $estr\_l$.as[2] $\leftarrow$ $estr\_l$.as[0]
-	  \STATE $estr\_l$.as[1] $\leftarrow$ 0
-	  \STATE $estr\_l$.as[0] $\leftarrow$ 1
+	  \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, $estr\_l$.as[0])
 	\ELSE
-	  \STATE $estr\_l$.as[2] $\leftarrow$ 0
-	  \STATE $estr\_l$.as[1] $\leftarrow$ 0
-	  \STATE $estr\_l$.as[0] $\leftarrow$ 1
+	  \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, 0)
 	\ENDIF
  	\STATE
  	\STATE $s$.fechaActual $\leftarrow$ $f$	
@@ -754,6 +745,15 @@
  	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].ordenado? $\leftarrow$ \textbf{false}
  	  \STATE \NombreFuncion{AvanzarAncestro}($it$) 	  
  	\ENDWHILE  	 	
+  \end{Algoritmo}
+  
+  ~
+  
+  \begin{Algoritmo}{iCrearArregloDe3Nats}{\In{a}{nat}, \In{b}{nat}, \In{c}{nat}}{arreglo\_estático[3] de nat}
+    \STATE $\res$ $\leftarrow$ \NombreFuncion{CrearArreglo}()
+    \STATE $\res$[0] $\leftarrow$ $a$
+    \STATE $\res$[1] $\leftarrow$ $b$
+    \STATE $\res$[2] $\leftarrow$ $c$
   \end{Algoritmo}
   
   ~  
