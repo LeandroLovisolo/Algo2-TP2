@@ -130,7 +130,7 @@
   \TipoFuncion{#1}{#2}{#3}%
 }
 
-%Algoritmo(nombre, argumentos, valor retorno) { cuerpo }%
+%Algoritmo(nombre, argumentos, valor retorno) { cuerpo }
 \newenvironmentx{Algoritmo}[3]{%
   \InterfazAlgoritmo{#1}{#2}{#3}
   \begin{addmargin}[2em]{0em}
@@ -141,6 +141,21 @@
     \end{algorithmic}
   \end{addmargin}
 }
+
+%CrearTupla(variable en la que se va a guardar) { cuerpo }
+\newlength{\lenVariable}
+\newenvironmentx{CrearTupla}[1]{%
+    \settowidth{\lenVariable}{#1 $\leftarrow$ $\langle$}%
+    \addtolength{\lenVariable}{\parindent}%
+    #1 $\leftarrow$ $\langle$%
+    \begin{minipage}[t]{\linewidth-\lenTupla}%
+}{%
+    $\rangle$%
+    \end{minipage}%
+}
+
+%CampoTupla(nombre del campo, valor)
+\newcommandx{\CampoTupla}[2]{\TipoVariable{#1}: #2}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -383,12 +398,19 @@
 
   \begin{Algoritmo}{iCrearÁrbol}{\In{raiz}{categoria}}{estr\_acat}
   	\STATE var $estr\_raiz$: \TipoVariable{estr\_cat}
-    \STATE $estr\_raiz$ $\leftarrow$ $\langle$\TipoVariable{id}: 1, \TipoVariable{nombre}: $raiz$,
-                                              \TipoVariable{padre}: NULL, \TipoVariable{hijos}: \NombreFuncion{Vacío}()$\rangle$
+	\STATE \begin{CrearTupla}{$estr\_raiz$}
+	         \CampoTupla{id}{1},
+             \CampoTupla{nombre}{$raiz$},
+             \CampoTupla{padre}{NULL},
+             \CampoTupla{hijos}{\NombreFuncion{Vacío}()}%
+           \end{CrearTupla}
 	\STATE var $categorias$: \TipoVariable{dicctrie(estr\_cat)}
     \STATE $categorias$ $\leftarrow$ \NombreFuncion{CrearDiccionario}()
     \STATE \NombreFuncion{Definir}($raiz$, $estr\_raiz$, $categorias$)
-  	\STATE $res$ $\leftarrow$ $\langle$\TipoVariable{raiz}: $estr\_raiz$, \TipoVariable{categorias}: $categorias\rangle$
+	\STATE \begin{CrearTupla}{$res$}
+	         \CampoTupla{raíz}{$estr\_raiz$},	
+             \CampoTupla{categorías}{$categorias$}%
+           \end{CrearTupla}
   \end{Algoritmo}
 
   ~  
@@ -403,10 +425,12 @@
   	\STATE var $estr\_padre$: \TipoVariable{estr\_cat}  
   	\STATE $estr\_padre$ $\leftarrow$ \NombreFuncion{Obtener}($padre$, $ac$.categorías)
   	\STATE var $estr\_hija$: \TipoVariable{estr\_cat}
-  	\STATE $estr\_hija$ $\leftarrow$ $\langle$\TipoVariable{id}: \NombreFuncion{\#Claves}($ac$.categorías) + 1,
-  	                                          \TipoVariable{nombre}: $hija$,
-  	                                          \TipoVariable{padre}: \&($estr\_padre$),
-  	                                          \TipoVariable{hijos}: \NombreFuncion{Vacío}()$\rangle$
+	\STATE \begin{CrearTupla}{$estr\_hija$}
+	         \CampoTupla{id}{\NombreFuncion{\#Claves}($ac$.categorías) + 1},
+	         \CampoTupla{nombre}{$hija$},
+	         \CampoTupla{padre}{\&($estr\_padre$)},
+	         \CampoTupla{hijos}{\NombreFuncion{Vacío}()$\rangle$}%
+	       \end{CrearTupla}
     \STATE \NombreFuncion{AgregarRápido}($estr\_padre$.hijos, \&($estr\_hija$))
     \STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$)
   \end{Algoritmo}
@@ -643,12 +667,18 @@
 \begin{Algoritmos}
 
   \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}
-    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{categorías}: $ac$, \TipoVariable{links}: \NombreFuncion{CrearDiccionario}(),\\
-                        \hspace*{11mm} \TipoVariable{linksPorCatId}: \NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$)),
-                                       \TipoVariable{fechaActual}: 0$\rangle$
-    \STATE $res$.linksPorCatId[0] $\leftarrow$
-            $\langle$\TipoVariable{itcat}: \NombreFuncion{CrearIterAncestrosDeLaRaíz}($as$), \TipoVariable{ls}: \NombreFuncion{Vacía}(), \\
-      \hspace*{37mm} \TipoVariable{últimoAcceso}: 0, \TipoVariable{ordenado?}: \textbf{false}$\rangle$
+    \STATE \begin{CrearTupla}{$res$}
+             \CampoTupla{categorías}{$ac$},
+             \CampoTupla{links}{\NombreFuncion{CrearDiccionario}()},\\
+             \CampoTupla{linksPorCatId}{\NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$))},
+             \CampoTupla{fechaActual}{0}%
+           \end{CrearTupla} 
+    \STATE \begin{CrearTupla}{$res$.linksPorCatId[0]}
+             \CampoTupla{itcat}{\NombreFuncion{CrearIterAncestrosDeLaRaíz}($as$)},
+             \CampoTupla{links}{\NombreFuncion{Vacía}()},\\
+             \CampoTupla{últimoAcceso}{0},
+             \CampoTupla{ordenado?}{\textbf{false}}%
+           \end{CrearTupla}
     \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearIterHijosDeLaRaíz($ac$), $res$)}   
   \end{Algoritmo}
   
@@ -656,10 +686,14 @@
   
   \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itercathijos}, \Inout{s}{estr\_sistema}}{}
     \WHILE{\NombreFuncion{HayMásHijos?}($it$)}
-      \STATE $s$.linksPorCatId[\NombreFuncion{IdHijoActual}(it) - 1] $\leftarrow$
-              $\langle$\TipoVariable{itcat}: \NombreFuncion{CrearIterAncestros}($it$), \TipoVariable{ls}: \NombreFuncion{Vacía}(), \\
-        \hspace*{67mm} \TipoVariable{últimoAcceso}: 0, \TipoVariable{ordenado?}: \textbf{false}$\rangle$
+      \STATE \begin{CrearTupla}{$s$.linksPorCatId[\NombreFuncion{IdHijoActual}($it$) - 1]}
+               \CampoTupla{itcat}{\NombreFuncion{CrearIterAncestros}($it$)},
+               \CampoTupla{links}{\NombreFuncion{Vacía}()},\\
+               \CampoTupla{últimoAcceso}{0},
+               \CampoTupla{ordenado?}{\textbf{false}}%
+             \end{CrearTupla}
       \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearIterHijosDadoOtroIter}($it$), $s$)
+      \STATE \NombreFuncion{AvanzarHijo}($it$)
     \ENDWHILE
   \end{Algoritmo}
     
@@ -667,10 +701,12 @@
   
   \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}
   	\STATE var $estr\_l$: \TipoVariable{estr\_link}
-  	\STATE $estr\_l$ $\leftarrow$ $\langle$\TipoVariable{l}: $l$,
-  	                                       \TipoVariable{cid}: \NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías),\\
-                            \hspace*{16mm} \TipoVariable{últimoAcceso}: $s$.fechaActual,
-  	                                       \TipoVariable{as}: \NombreFuncion{CrearArreglo}()$\rangle$
+  	\STATE \begin{CrearTupla}{$estr\_l$}
+             \CampoTupla{l}{$l$},
+             \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)},\\
+             \CampoTupla{últimoAcceso}{$s$.fechaActual},
+             \CampoTupla{as}{\NombreFuncion{CrearArreglo}()}%
+  	       \end{CrearTupla}
  	\STATE $estr\_l$.as[0] $\leftarrow$ 0
  	\STATE $estr\_l$.as[1] $\leftarrow$ 0
  	\STATE $estr\_l$.as[2] $\leftarrow$ 0
@@ -683,6 +719,7 @@
       \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].links, $estr\_l$)
  	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].últimoAcceso $\leftarrow$ $s$.fechaActual
  	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].ordenado? $\leftarrow$ \textbf{false}
+ 	  \STATE \NombreFuncion{AvanzarAncestro}($it$)
  	\ENDWHILE
   \end{Algoritmo}
   
@@ -715,6 +752,7 @@
  	\WHILE{\NombreFuncion{HayMásAncestros?}($it$)}
  	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].últimoAcceso $\leftarrow$ $s$.fechaActual
  	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].ordenado? $\leftarrow$ \textbf{false}
+ 	  \STATE \NombreFuncion{AvanzarAncestro}($it$) 	  
  	\ENDWHILE  	 	
   \end{Algoritmo}
   
