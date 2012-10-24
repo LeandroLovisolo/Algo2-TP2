@@ -250,16 +250,14 @@
   \Titulo{Operaciones del iterador de ancestros}
 
   \InterfazFuncion{CrearIterAncestros}{\In{it}{itercathijos}}{itercatancestros}
-  {esPermutacion?(Siguientes($res$), ancestros($ac$, Actual($it$))}
+  {$res$ $\igobs$ $\langle$iter: CrearItUni(ancestros($it$.acat, Actual($it$.iter))), acat: $it$.acat$\rangle$}
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de la categoría actual de $it$ y sus ancestros.]
 
   \InterfazFuncion{CrearIterAncestrosDeLaRaíz}{\In{ac}{acat}}{itercatancestros}
-  {Actual($res$) $\igobs$ raíz($ac$)}
+  {$res$ $\igobs$ $\langle$iter: CrearItUni(ancestros($ac$, raíz($ac$))), acat: $ac\rangle$}
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de ancestros de la categoría raíz de $ac$.]
-
-  DUDA: ¿Dónde puedo agregar las operaciones ``esPermutacion?'' y ``ancestros''?
 
   \InterfazFuncion{CopiarIterAncestros}{\In{it}{itercatancestros}}{itercatancestros}
   {$res$ $\igobs$ $it$}
@@ -267,27 +265,25 @@
   [devuelve una copia del iterador de ancestros $it$.]
   
   \InterfazFuncion{HayMásAncestros?}{\In{it}{itercatancestros}}{bool}
-  {$res$ $\igobs$ HayMás?($it$)}
+  {$res$ $\igobs$ HayMás?($it$.iter)}
   [$\Theta(1)$]
   [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
 
   \InterfazFuncion{AncestroActual}{\In{it}{itercatancestros}}{categoria}
   [HayMás?($it$)]
-  {$res$ $\igobs$ Actual($it$)}
+  {$res$ $\igobs$ Actual($it$.iter)}
   [$\Theta(1)$]
   [devuelve el elemento actual del iterador.]
 
   \InterfazFuncion{IdAncestroActual}{\In{it}{itercatancestros}}{nat}
   [HayMás?($it$)]
-  {$res$ $\igobs$ id(Actual($it$), $ac$)}
+  {$res$ $\igobs$ id(Actual($it$.iter), $it$.acat)}
   [$\Theta(1)$]
   [devuelve el id del elemento actual del iterador.]  
 
-  DUDA: ¿De dónde saco el árbol de categorías $ac$ para especificar la postcondición de IdAncestroActual?
-
   \InterfazFuncion{AvanzarAncestro}{\Inout{it}{itercatancestros}}{}
-  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$)]
-  {$res$ $\igobs$ Avanzar($it_{0}$)}
+  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it_{0}$.iter)]
+  {$it$ $\igobs$ $\langle$iter: Avanzar($it_{0}$.iter), acat: $it_{0}$.acat$\rangle$}
   [$\Theta(1)$]
   [avanza el iterador a la posición siguiente.]
 
