@@ -289,26 +289,29 @@
 
   \Titulo{Especificación de las operaciones auxiliares utilizadas en la interfaz}
   
-  \begin{tad}{\tadNombre{Árbol Extendido}}
+  {
+    \offinterlineskip
+    \begin{tad}{\tadNombre{Árbol Extendido}}
+      \tadExtiende{\tadNombre{ÁrbolCategorías}}
 
-    \tadExtiende{\tadNombre{ÁrbolCategorías}}
+      \tadTitulo{otras operaciones (no exportadas)}{}
 
-    \tadTitulo{otras operaciones (no exportadas)}{}
+      \tadAlinearFunciones{aliasingHijos}{tupla(itUni(categoría){, }acat),categoría}
+      \tadOperacion{conjASecu}{conj(categoría)}{secu(categoría)}{}
+      \tadOperacion{secuAConj}{secu(categoría)}{conj(categoría)}{}  
+      \tadOperacion{aliasingHijos}{tupla(itUni(categoría){, }acat),categoría}{bool}{}
+      \tadOperacion{ancestros}{acat,categoría}{secu(categoría)}{}
 
-    \tadAlinearFunciones{aliasingHijos}{tupla(itUni(categoría){, }acat),categoría}
-    \tadOperacion{conjASecu}{conj(categoría)}{secu(categoría)}{}
-    \tadOperacion{secuAConj}{secu(categoría)}{conj(categoría)}{}  
-    \tadOperacion{aliasingHijos}{tupla(itUni(categoría){, }acat),categoría}{bool}{}
-    \tadOperacion{ancestros}{acat,categoría}{secu(categoría)}{}
-
-    \tadAxiomas[\paratodo{categoría}{c}, \paratodo{acat}{ac}, \paratodo{conj(categoría)}{cc}, \paratodo{secu(categoría)}{sc}, \paratodo{tupla(itUni(categoría){, }acat)}{t}]  
+      \tadAxiomas[\paratodo{categoría}{c}, \paratodo{acat}{ac}, \paratodo{conj(categoría)}{cc},
+                  \paratodo{secu(categoría)}{sc}, \paratodo{tupla(itUni(categoría){, }acat)}{t}]  
   
-    \tadAlinearAxiomas{aliasingHijos($t$, $c$)}
-    \tadAxioma{conjASecu($cc$)}{\TADIF $\emptyset$?($cc$) THEN \secuencia{} ELSE \secuencia{dameUno($cc$)}[conjASecu(sinUno($cc$))] FI}
-    \tadAxioma{secuAConj($sc$)}{\TADIF vacía?($sc$) THEN $\emptyset$ ELSE Ag(prim($sc$), secuAConj(fin($sc$))) FI} 
-    \tadAxioma{aliasingHijos($t$, $c$)}{alias(secuAConj(Siguientes($\Pi_1$($t$))) $\subseteq$ hijos($\Pi_2$($t$), $c$))}
-    \tadAxioma{ancestros($ac$, $c$)}{\TADIF raíz($ac$) $\igobs$ $c$ THEN \secuencia{$c$} ELSE \secuencia{$c$}[ancestros($ac$, padre($ac$, $c$))] FI}  
-  \end{tad}
+      \tadAlinearAxiomas{aliasingHijos($t$, $c$)}
+      \tadAxioma{conjASecu($cc$)}{\TADIF $\emptyset$?($cc$) THEN \secuencia{} ELSE \secuencia{dameUno($cc$)}[conjASecu(sinUno($cc$))] FI}
+      \tadAxioma{secuAConj($sc$)}{\TADIF vacía?($sc$) THEN $\emptyset$ ELSE Ag(prim($sc$), secuAConj(fin($sc$))) FI} 
+      \tadAxioma{aliasingHijos($t$, $c$)}{alias(secuAConj(Siguientes($\Pi_1$($t$))) $\subseteq$ hijos($\Pi_2$($t$), $c$))}
+      \tadAxioma{ancestros($ac$, $c$)}{\TADIF raíz($ac$) $\igobs$ $c$ THEN \secuencia{$c$} ELSE \secuencia{$c$}[ancestros($ac$, padre($ac$, $c$))] FI}  
+    \end{tad}
+  }
   
 \end{Interfaz}
 
