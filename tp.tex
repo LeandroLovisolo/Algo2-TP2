@@ -243,10 +243,9 @@
 
   \InterfazFuncion{AvanzarHijo}{\Inout{it}{itercathijos}}{}
   [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it_{0}$.iter)]
-  {$it$ $\igobs$ $\langle$iter: Avanzar($it_{0}$.iter), acat: $it_{0}.acat\rangle$ $\land$ aliasingHijos($it$, padre($it_{0}$.acat, Actual($it_{0}$.iter)))}
+  {$it$ $\igobs$ $\langle$iter: Avanzar($it_{0}$.iter), acat: $it_{0}.acat\rangle$}
   [$\Theta(1)$]
   [avanza el iterador a la posición siguiente.]
-  [Siguientes($it$.iter) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría padre de las categorías que itera $it$.]
 
   \Titulo{Operaciones del iterador de ancestros}
 
