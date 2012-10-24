@@ -205,46 +205,48 @@
 
   \InterfazFuncion{CrearIterHijos}{\In{padre}{categoria}, \In{ac}{acat}}{itercathijos}
   [está?($padre$, $ac$)]
-  {esPermutacion?(Siguientes($res$), hijos($ac$, $padre$))}
+  {$res$ $\igobs$ $\langle$iter: CrearItUni(conjASecu(hijos($ac$, $padre$))), acat: $ac\rangle$ $\land$ aliasingHijos($res$, $padre$)}
   [$\Theta(|padre|)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría $padre$.]
+  [Siguientes($res$.iter) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría $padre$.]
 
   \InterfazFuncion{CrearIterHijosDeLaRaíz}{\In{ac}{acat}}{itercathijos}
-  {esPermutacion?(Siguientes($res$), hijos($ac$, raíz($ac$)))}
+  {$res$ $\igobs$ $\langle$iter: CrearItUni(conjASecu(hijos($ac$, raíz($ac$))), acat: $ac\rangle$ $\land$ aliasingHijos($res$, raíz($ac$))}
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría raíz de $ac$.]
+  [Siguientes($res$.iter) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría raíz.]
 
   \InterfazFuncion{CrearIterHijosDadoOtroIter}{\In{it}{itercathijos}}{itercathijos}
-  [HayMás?($it$)]
-  {esPermutacion?(Siguientes($res$), hijos(Actual($it$)))}
+  [HayMás?($it$.iter)]
+  {$res$ $\igobs$ $\langle$iter: CrearItUni(conjASecu(hijos($it$.acat, Actual($it$.iter)))), acat: $it$.acat$\rangle$ $\land$ \\
+  \hspace*{13mm} aliasingHijos($res$, Actual($it$.iter))}  
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría actual del iterador $it$.]
-
+  [Siguientes($res$.iter) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría actual del iterador $it$.]
 
   \InterfazFuncion{HayMásHijos?}{\In{it}{itercathijos}}{bool}
-  {$res$ $\igobs$ HayMás?($it$)}
+  {$res$ $\igobs$ HayMás?($it$.iter)}
   [$\Theta(1)$]
   [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
 
   \InterfazFuncion{HijoActual}{\In{it}{itercathijos}}{categoria}
-  [HayMás?($it$)]
-  {$res$ $\igobs$ Actual($it$)}
+  [HayMás?($it$.iter)]
+  {$res$ $\igobs$ Actual($it$.iter)}
   [$\Theta(1)$]
   [devuelve el elemento actual del iterador.]
 
   \InterfazFuncion{IdHijoActual}{\In{it}{itercathijos}}{nat}
-  [HayMás?($it$)]
-  {$res$ $\igobs$ id(Actual($it$), $ac$)}
+  [HayMás?($it$.iter)]
+  {$res$ $\igobs$ id(Actual($it$.iter), $it$.acat)}
   [$\Theta(1)$]
   [devuelve el id del elemento actual del iterador.]
 
-  DUDA: ¿De dónde saco el árbol de categorías $ac$ para especificar la postcondición de IdHijoActual?
-
   \InterfazFuncion{AvanzarHijo}{\Inout{it}{itercathijos}}{}
-  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$)]
-  {$res$ $\igobs$ Avanzar($it_{0}$)}
+  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it_{0}$.iter)]
+  {$it$ $\igobs$ $\langle$iter: Avanzar($it_{0}$.iter), acat: $it_{0}.acat\rangle$ $\land$ aliasingHijos($it$, padre($it_{0}$.acat, Actual($it_{0}$.iter)))}
   [$\Theta(1)$]
   [avanza el iterador a la posición siguiente.]
+  [Siguientes($it$.iter) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría padre de las categorías que itera $it$.]
 
   \Titulo{Operaciones del iterador de ancestros}
 
