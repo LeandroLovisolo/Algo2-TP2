@@ -796,9 +796,52 @@
   \begin{Algoritmo}{i\#Links}{\In{c}{categoría}, \In{s}{estr\_sistema}}{nat}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Longitud}($s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1].links)
   \end{Algoritmo}
+
   
   ~  
   
+  \begin{Algoritmo}{iCrearIterLinks2}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
+    \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId}
+  	\STATE $estr\_c$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1]
+  	\STATE
+  	\STATE $maxPointer$: \TipoVariable{puntero($estr\_link$)}
+  	\STATE $itRecorreredor$: \TipoVariable{itLista(puntero($estr\_link$))} $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links)
+  	\STATE $itLista$:  \TipoVariable{itLista(puntero($estr\_link$))} $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links)
+  	\IF{$¬$($estr\_c$.ordenado?)}
+  	  \WHILE{\NombreFuncion{HaySiguiente}($itLista$)}
+  	  	\STATE $itRecorreredor$ $\leftarrow$ \NombreFuncion{Copia}($itLista$)
+  	  	\STATE \NombreFuncion{Avanzar($itRecorreredor$)}
+  	  \WHILE{\NombreFuncion{HaySiguiente}($itRecorreredor$)} \IF{(AccesosRecientes2(*(\NombreFuncion{Siguiente}($itRecorredor$)), $estr\_c$.últimoAcceso) > \\ (AccesosRecientes2(*($maxPointer$), $estr\_c$.últimoAcceso)}
+  	  	\STATE $maxPointer$ $\leftarrow$ \NombreFuncion{Siguiente}($itRecorredor$)
+  	  	\ENDIF
+		\STATE \NombreFuncion{Avanzar($itRecorredor$)}
+	  \ENDWHILE  	  	
+  	  \STATE \NombreFuncion{Siguiente}($itLista$) $\leftarrow$ $maxPointer$
+  	  \STATE \NombreFuncion{Avanzar($itLista$)}
+  	\ENDWHILE
+  	\STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}
+  	\ENDIF
+  	\STATE
+    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{s}: $s$, \TipoVariable{c}: $c$, $it$: \NombreFuncion{CrearIt}($estr\_c$.links)$\rangle$
+  \end{Algoritmo}  
+  
+  
+  ~  
+
+  \begin{Algoritmo}{iAccesosRecientes2}{\In{estr\_l}{estr\_link}, \In{ultimoAccesoASistema}{nat}}{nat}
+    \IF{$ultimoAccesoASistema$ $\igobs$ $estr\_l$.últimoAcceso}
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] + $estr\_l$.as[2]
+    \ELSIF{$ultimoAccesoASistema$ $\igobs$ $estr\_l$.últimoAcceso + 1}
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1]
+    \ELSIF{$ultimoAccesoASistema$ $\igobs$ $estr\_l$.últimoAcceso + 2}          
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0]
+    \ELSE
+      \STATE $res$ $\leftarrow$ 0
+    \ENDIF
+  \end{Algoritmo}
+  
+  ~  
+ 
   \begin{Algoritmo}{iCrearIterLinks}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
     \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId}
   	\STATE $estr\_c$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1]
