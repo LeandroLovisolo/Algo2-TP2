@@ -632,6 +632,30 @@
   {$it$ $\igobs$ $\langle$iter: Avanzar($it_{0}$), sis: $it_{0}$.sis$\rangle$}
   [$\Theta(1)$]
   [avanza el iterador a la posición siguiente.]  
+
+  \Titulo{Especificación de las operaciones auxiliares utilizadas en la interfaz}
+  
+  {
+    \offinterlineskip
+    \begin{tad}{\tadNombre{Sistema Extendido}}
+      \tadExtiende{\tadNombre{LinkLinkIt}}
+
+      \tadTitulo{otras operaciones (no exportadas)}{}
+
+      \tadAlinearFunciones{terminanIgual}{tupla(itUni(link){, }lli),categoría}
+      \tadOperacion{aliasingLinks}{tupla(itUni(link){, }lli),categoría}{bool}{}
+      \tadOperacion{terminanIgual}{secu(link),secu(link)}{bool}{}
+
+      \tadAxiomas[\paratodo{categoría}{c}, \paratodo{secu(link)}{ls, ls'}, \paratodo{tupla(itUni(link){, }lli)}{t}]  
+  
+      \tadAlinearAxiomas{terminanIgual($ls$, $ls'$)}
+	  \tadAxioma{aliasingLinks($t$, $c$)}{alias(terminanIgual(Siguientes($\Pi_1$($t$)), linksOrdenadosPorAccesos($\Pi_2$($t$), $c$)))}
+      \tadAxioma{terminanIgual($ls$, $ls'$)}{\TADIF vacía?($ls$) $\lor$ vacía?($ls'$)
+                                             THEN \textbf{true}
+                                             ELSE ult($ls$) $\igobs$ ult($ls'$) $\land$ terminanIgual(com($ls$), com($ls'$))
+                                             FI}
+    \end{tad}
+  }
   
 \end{Interfaz}
 
