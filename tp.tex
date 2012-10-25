@@ -692,7 +692,7 @@
   \begin{Estructura}{iterlinks}[estr\_iter]
     \begin{Tupla}[estr\_iter]
       \tupItem{s}{estr\_sistema},
-      \tupItem{c}{categoria},
+      \tupItem{cid}{nat},
       \tupItem{it}{itLista(puntero(estr\_link))}%
     \end{Tupla}
   \end{Estructura}
@@ -802,15 +802,95 @@
   \begin{Algoritmo}{iCrearIterLinks}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
     \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId}
   	\STATE $estr\_c$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1]
-  	\STATE
   	\IF{$¬$($estr\_c$.ordenado?)}
-  	  \STATE
-  	  \STATE PENDIENTE: Ordenar links en $estr\_c$.ls
-  	  \STATE
-  	  \STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}
+      \STATE \NombreFuncion{iOrdenarLinks}($estr\_c$)
   	\ENDIF
-  	\STATE
-    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{s}: $s$, \TipoVariable{c}: $c$, $it$: \NombreFuncion{CrearIt}($estr\_c$.links)$\rangle$
+    \STATE \begin{CrearTupla}{$res$}
+             \CampoTupla{s}{$s$},
+             \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)},
+             \CampoTupla{it}{\NombreFuncion{CrearIt}($estr\_c$.links)}%
+  	       \end{CrearTupla}   
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iOrdenarLinks}{\Inout{estr\_c}{estr\_linksPorCatId}}{}
+    \STATE var $arr$: \TipoVariable{arreglo\_dimensionable de puntero(estr\_link)}
+    \STATE $arr$ $\leftarrow$ \NombreFuncion{CrearArreglo}(\NombreFuncion{iConvertirListaDeLinksAArreglo}($estr\_c$.links))
+    \STATE var $i$: \TipoVariable{nat}    
+    \STATE $i$ $\leftarrow$ 0
+    \WHILE{$i$ $<$ \NombreFuncion{Longitud}($estr\_c$.links)}
+      \STATE var $max$: \TipoVariable{nat}
+      \STATE $max$ $\leftarrow$ \NombreFuncion{iIndiceLinkConMásAccesos}($arr$, $i$, $estr\_c$)
+      \STATE var $maxPtr$: \TipoVariable{puntero(estr\_link)}
+      \STATE $maxPtr$ $\leftarrow$ $arr$[$max$]
+      \STATE $arr$[$max$] $\leftarrow$ $arr$[$i$]
+      \STATE $arr$[$i$] $\leftarrow$ $maxPtr$
+      \STATE $i$ $\leftarrow$ $i$ + 1
+    \ENDWHILE
+  	\STATE $estr\_c$.links $\leftarrow$ \NombreFuncion{iConvertirArregloAListaDeLinks}($arr$, \NombreFuncion{Longitud}($estr\_c$.links))
+  	\STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}
+  \end{Algoritmo}  
+  
+  ~
+  
+  \begin{Algoritmo}{iConvertirListaDeLinksAArreglo}{\In{links}{lista(puntero(estr\_link))}}{arreglo\_dimensionable de puntero(estr\_link)}    
+    \STATE var $arr$: \TipoVariable{arreglo\_dimensionable de puntero(estr\_link)}
+    \STATE $arr$ $\leftarrow$ \NombreFuncion{CrearArreglo}(\NombreFuncion{Longitud}($links$))
+    \STATE var $it$: \TipoVariable{itLista(puntero(estr\_link))}
+    \STATE $it$ $\leftarrow$ \NombreFuncion{CrearIt}($links$)
+    \STATE var $i$: \TipoVariable{nat}
+    \STATE $i$ $\leftarrow$ 0
+    \WHILE{\NombreFuncion{HaySiguiente}($it$)}
+      \STATE $arr$[$i$] $\leftarrow$ \NombreFuncion{Siguiente}($it$)
+      \STATE $i$ $\leftarrow$ $i$ + 1
+      \STATE \NombreFuncion{Avanzar}($it$)
+    \ENDWHILE
+    \STATE $res$ $\leftarrow$ $arr$
+  \end{Algoritmo}
+  
+  ~  
+  
+  \begin{Algoritmo}{iIndiceLinkConMásAccesos}{\In{arr}{arreglo\_dimensionable de puntero(estr\_link))}, \In{desde}{nat}, \In{estr\_c}{estr\_linksPorCatId}}{nat}
+    \STATE var $max$: \TipoVariable{nat}
+    \STATE $max$ $\leftarrow$ $desde$
+    \STATE var $i$: \TipoVariable{nat}
+    \STATE $i$ $\leftarrow$ $desde$
+    \WHILE{$i$ $<$ \NombreFuncion{Longitud}($estr\_c$.links)}
+      \IF{\NombreFuncion{iAccesosRecientes}(*($arr$[$i$]), $estr\_c$) $>$ \NombreFuncion{iAccesosRecientes}(*($arr$[$max$]), $estr\_c$)}
+        \STATE $max$ $\leftarrow$ $i$
+      \ENDIF
+      \STATE $i$ $\leftarrow$ $i$ + 1
+    \ENDWHILE
+    \STATE $res$ $\leftarrow$ $max$
+  \end{Algoritmo}
+  
+  ~
+  
+  \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{estr\_c}{estr\_linksPorCatId}}{nat}
+    \IF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso}
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] + $estr\_l$.as[2]
+    \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 1}
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[1] + $estr\_l$.as[2]
+    \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 2}          
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[2]
+    \ELSE
+      \STATE $res$ $\leftarrow$ 0
+    \ENDIF
+  \end{Algoritmo}
+    
+  ~  
+  
+  \begin{Algoritmo}{iConvertirArregloAListaDeLinks}{\In{arr}{arreglo\_dimensionable de puntero(estr\_link)}, \In{n}{nat}}{lista(puntero(estr\_link))}    
+  	\STATE var $links$: \TipoVariable{lista(puntero(estr\_link))}
+  	\STATE $links$ $\leftarrow$ \NombreFuncion{Vacía}()
+  	\STATE var $i$: \TipoVariable{nat}
+  	\STATE $i$ $\leftarrow$ $0$
+  	\WHILE{$i$ $<$ $n$}
+  	  \STATE \NombreFuncion{AgregarAtras}($links$, $arr$[$i$])
+  	  \STATE $i$ $\leftarrow$ $i$ + 1
+  	\ENDWHILE
+    \STATE $res$ $\leftarrow$ $links$
   \end{Algoritmo}
   
   ~  
@@ -834,8 +914,7 @@
   ~  
   
   \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}
-    \STATE
-    \STATE PENDIENTE
+    \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*Actual($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1])
   \end{Algoritmo}
   
   ~  
