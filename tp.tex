@@ -258,11 +258,6 @@
   {$res$ $\igobs$ $\langle$iter: CrearItUni(ancestros($ac$, raíz($ac$))), acat: $ac\rangle$}
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de ancestros de la categoría raíz de $ac$.]
-
-  \InterfazFuncion{CopiarIterAncestros}{\In{it}{itercatancestros}}{itercatancestros}
-  {$res$ $\igobs$ $it$}
-  [$\Theta(1)$]
-  [devuelve una copia del iterador de ancestros $it$.]
   
   \InterfazFuncion{HayMásAncestros?}{\In{it}{itercatancestros}}{bool}
   {$res$ $\igobs$ HayMás?($it$.iter)}
@@ -522,13 +517,7 @@
   \begin{Algoritmo}{iCrearIterAncestrosDeLaRaíz}{\In{ac}{acat}}{puntero(estr\_cat)}
     \STATE $res$ $\leftarrow$ \&($ac$.raíz)
   \end{Algoritmo}
-  
-  ~
-  
-  \begin{Algoritmo}{iCopiarIterAncestros}{\In{it}{puntero(estr\_cat)}}{puntero(estr\_cat)}
-    \STATE $res$ $\leftarrow$ \&(*$it$)
-  \end{Algoritmo}
-  
+   
   ~
   
   \begin{Algoritmo}{iHayMásAncestros?}{\In{it}{puntero(estr\_cat)}}{bool}
@@ -745,7 +734,7 @@
  	\STATE \NombreFuncion{Definir}($l$, $estr\_l$, $s$.links)
  	\STATE
     \STATE var $it$: \TipoVariable{itcatancestros}
-    \STATE $it$ $\leftarrow$ \NombreFuncion{CopiarIterAncestros}($s$.linksPorCatId[$estr\_l$.cid - 1].itcat)
+    \STATE $it$ $\leftarrow$ \NombreFuncion{Copiar}($s$.linksPorCatId[$estr\_l$.cid - 1].itcat)
  	\STATE
  	\WHILE{\NombreFuncion{HayMásAncestros?}($it$)}
       \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].links, \&($estr\_l$))
@@ -773,7 +762,7 @@
  	\STATE $s$.fechaActual $\leftarrow$ $f$	
  	\STATE
     \STATE var $it$: \TipoVariable{itcatancestros}
-    \STATE $it$ $\leftarrow$ \NombreFuncion{CopiarIterAncestros}($s$.linksPorCatId[$estr\_l$.cid - 1].itcat)
+    \STATE $it$ $\leftarrow$ \NombreFuncion{Copiar}($s$.linksPorCatId[$estr\_l$.cid - 1].itcat)
  	\STATE
  	\WHILE{\NombreFuncion{HayMásAncestros?}($it$)}
  	  \STATE $s$.linksPorCatId[\NombreFuncion{IdAncestroActual}($it$) - 1].últimoAcceso $\leftarrow$ $s$.fechaActual
@@ -803,42 +792,64 @@
   \begin{Algoritmo}{iCrearIterLinks}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
     \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId}
   	\STATE $estr\_c$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1]
-  	\STATE
-  	\STATE $maxPointer$: \TipoVariable{puntero($estr\_link$)}
-  	\STATE $itRecorreredor$: \TipoVariable{itLista(puntero($estr\_link$))} $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links)
-  	\STATE $itLista$:  \TipoVariable{itLista(puntero($estr\_link$))} $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links)
   	\IF{$¬$($estr\_c$.ordenado?)}
-  	  \WHILE{\NombreFuncion{HaySiguiente}($itLista$)}
-  	  	\STATE $itRecorreredor$ $\leftarrow$ \NombreFuncion{Copia}($itLista$)
-  	  	\STATE \NombreFuncion{Avanzar($itRecorreredor$)}
-  	  \WHILE{\NombreFuncion{HaySiguiente}($itRecorreredor$)} \IF{(AccesosRecientes(*(\NombreFuncion{Siguiente}($itRecorredor$)), $estr\_c$.últimoAcceso) > \\ (AccesosRecientes(*($maxPointer$), $estr\_c$.últimoAcceso)}
-  	  	\STATE $maxPointer$ $\leftarrow$ \NombreFuncion{Siguiente}($itRecorredor$)
-  	  	\ENDIF
-		\STATE \NombreFuncion{Avanzar($itRecorredor$)}
-	  \ENDWHILE  	  	
-  	  \STATE \NombreFuncion{Siguiente}($itLista$) $\leftarrow$ $maxPointer$
-  	  \STATE \NombreFuncion{Avanzar($itLista$)}
-  	\ENDWHILE
-  	\STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}
+      \STATE \NombreFuncion{iOrdenarLinks}($estr\_c$)
   	\ENDIF
-  	\STATE
-    \STATE $res$ $\leftarrow$ $\langle$\TipoVariable{s}: $s$, \TipoVariable{c}: $c$, $it$: \NombreFuncion{CrearIt}($estr\_c$.links)$\rangle$
+    \STATE \begin{CrearTupla}{$res$}
+	         \CampoTupla{s}{$s$},
+             \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)},
+             \CampoTupla{it}{\NombreFuncion{CrearIt}($estr\_c$.links)}%
+           \end{CrearTupla}           
   \end{Algoritmo}  
   
+  ~
+  
+  \begin{Algoritmo}{iOrdenarLinks}{\In{estr\_c}{estr\_linksPorCatId}}{}
+    \STATE var $it$: \TipoVariable{itLista(puntero(estr\_link))}
+    \STATE $it$ $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links)  	
+  	\WHILE{\NombreFuncion{HaySiguiente}($it$)}
+      \STATE var $it'$: \TipoVariable{itLista(puntero(estr\_link))}
+      \STATE $it'$ $\leftarrow$ \NombreFuncion{Copiar}($it$)
+      \STATE var $itMax$: \TipoVariable{itLista(puntero(estr\_link))}      
+      \STATE $itMax$ $\leftarrow$ \NombreFuncion{Copiar}($it'$)
+      \WHILE{\NombreFuncion{HaySiguiente}($it'$)}
+        \IF{\NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it'$), $estr\_c$) $>$
+            \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($itMax$), $estr\_c$)}
+          \STATE $itMax$ $\leftarrow$ \NombreFuncion{Copiar}($it'$)
+  	  	\ENDIF
+		\STATE \NombreFuncion{Avanzar($it'$)}
+	  \ENDWHILE
+	  \STATE \NombreFuncion{iIntercamabiar}($it$, $itMax$)  	
+  	  \STATE \NombreFuncion{Avanzar($it$)}
+  	\ENDWHILE
+  	\STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}  
+  \end{Algoritmo}  
   
   ~  
 
-  \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{ultimoAccesoASistema}{nat}}{nat}
-    \IF{$ultimoAccesoASistema$ $\igobs$ $estr\_l$.últimoAcceso}
+  \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{estr\_c}{estr\_linksPorCatId}}{nat}
+    \IF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso}
       \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] + $estr\_l$.as[2]
-    \ELSIF{$ultimoAccesoASistema$ $\igobs$ $estr\_l$.últimoAcceso + 1}
+    \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 1}
       \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1]
-    \ELSIF{$ultimoAccesoASistema$ $\igobs$ $estr\_l$.últimoAcceso + 2}          
+    \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 2}          
       \STATE $res$ $\leftarrow$ $estr\_l$.as[0]
     \ELSE
       \STATE $res$ $\leftarrow$ 0
     \ENDIF
   \end{Algoritmo}
+  
+  ~
+  
+  \begin{Algoritmo}{iIntercambiar}{\Inout{it}{itLista(puntero(estr\_link))}, \Inout{it'}{itLista(puntero(estr\_link))}}{}
+    \STATE var $ptr$: \TipoVariable{puntero(estr\_link)}
+    \STATE $ptr$ $\leftarrow$ \NombreFuncion{Siguiente}($it'$)
+    \STATE \NombreFuncion{EliminarSiguiente}($it'$)
+    \STATE \NombreFuncion{AgregarComoSiguiente}($it'$, \NombreFuncion{Siguiente}($it$))
+    \STATE \NombreFuncion{EliminarSiguiente}($it$)
+    \STATE \NombreFuncion{AgregarComoSiguiente}($it$, $ptr$)
+  \end{Algoritmo}
+      
   
   ~  
   
@@ -861,7 +872,7 @@
   ~  
   
   \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*Actual($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1])
+    \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Actual}($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1])
   \end{Algoritmo}
   
   ~  
