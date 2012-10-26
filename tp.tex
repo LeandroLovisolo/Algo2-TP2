@@ -901,9 +901,9 @@
     [función de copia de $\alpha$'s]
   }
 
-  \textbf{se explica con}: \tadNombre{Diccionario(String, $\alpha$)}, \tadNombre{Iterador Unidireccional($\alpha$)}.
+  \textbf{se explica con}: \tadNombre{Diccionario(String, $\alpha$)}.
 
-  \textbf{géneros}: \TipoVariable{dicctrie$(\alpha)$}, \TipoVariable{iterdicctrie($\alpha$)}.
+  \textbf{géneros}: \TipoVariable{dicctrie$(\alpha)$}.
 
   \Titulo{Operaciones básicas de diccionario trie}
   
@@ -911,11 +911,6 @@
   {$res$ $\igobs$ vacío()}
   [$\Theta(1)$]
   [crea un nuevo diccionario vacío.]
-
-  \InterfazFuncion{Definido?}{\In{c}{string}, \In{d}{dicctrie$(\alpha)$}}{bool}
-  {$res$ $\igobs$ def?($c$, $d$)}
-  [$\Theta(|c|)$]
-  [devuelve \textbf{true} si y sólo si $c$ está definido en el diccionario.]
 
   \InterfazFuncion{Definir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{dicctrie$(\alpha)$}}{}
   [$d$ $\igobs$ $d_{0}$]
@@ -943,13 +938,13 @@
   
   \begin{Estructura}{dicctrie$(\alpha)$}[estr\_dicctrie]
     \begin{Tupla}[estr\_dicctrie]
-      \tupItem{cantClaves}{nat},
-      \tupItem{nodos}{nodo}%
+      \tupItem{raíz}{nodo},
+      \tupItem{\#Claves}{nat}%
     \end{Tupla}
    
     \begin{Tupla}[nodo]
-      \tupItem{nodos}{arreglo\_estático[256] de puntero(nodo)},
-      \tupItem{significado}{puntero$(\alpha)$}%
+      \tupItem{significado}{puntero$(\alpha)$},    
+      \tupItem{hijos}{arreglo\_estático[256] de puntero(nodo)}%
     \end{Tupla}
   \end{Estructura}
   
@@ -987,63 +982,58 @@ auxObtenerDelTrie(i, s, n) = if (tam(s)-1 = i) then n.significado else ObtenerDe
 \begin{Algoritmos}
 
   \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}
-   \STATE var $i$: \TipoVariable{nat}
-   \STATE $res$.cantClaves $\leftarrow$ 0
-   \STATE for $i$=0 to |$res$.nodos| do:
-   \STATE \hspace*{10mm} $res$.nodos[i] $\leftarrow$ false
-\STATE endFor
-\STATE $res$.nodos.significado $\leftarrow$ NULL
+    \STATE \begin{CrearTupla}{$res$}
+             \CampoTupla{raíz}{\NombreFuncion{iNuevoNodo}()},
+             \CampoTupla{\#Claves}{$0$}%
+           \end{CrearTupla}
   \end{Algoritmo}
 
   ~
-   
-  \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{e}{estr\_dicctrie}}{$\alpha$}
-   \STATE var $nodoActual$: \TipoVariable{puntero(nodo)} $\leftarrow$ \NombreFuncion{\&}($e.nodos$)
-   \STATE var $i$: \TipoVariable{nat}
-   \STATE for $i$=0 to |$c$| do:
-   \STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
-\STATE endFor
-    \STATE $res$ $\leftarrow$ (*$nodoActual$).(*$significado$)
-  \end{Algoritmo}
 
-  ~
-   
-  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{e}{estr\_dicctrie}}{}
-   \STATE var $nodoActual$: \TipoVariable{puntero(nodo)} $\leftarrow$ \NombreFuncion{\&}($e.nodos$)
-   \STATE var $i$: \TipoVariable{nat}
-   \STATE for $i$=0 to |$c$| do:
-   \STATE \hspace*{10mm} if (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] = NULL then:
-   \STATE \hspace*{20mm} var $nuevoNodo$: \TipoVariable{nodo}
-\STATE \hspace*{20mm} for $j$=0 to |$nuevoNodo.nodos$| do:
-\STATE \hspace*{30mm} $nuevoNodo$.nodos[$i$] $\leftarrow$ NULL
-\STATE \hspace*{20mm} endFor
-\STATE \hspace*{20mm} $nuevoNodo$.significiado $\leftarrow$ NULL
-
-\STATE \hspace*{20mm}(*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] $\leftarrow$ \NombreFuncion{\&}($nuevoNodo$)
-\STATE \hspace*{10mm} endIf
-\STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
-\STATE endFor
-\STATE (*$nodoActual$).significado $\leftarrow$ \NombreFuncion{\&}(\NombreFuncion{Copia}($s$))
-\STATE $e$.cantClaves++
-  \end{Algoritmo}
-
-  ~
-   
-    \begin{Algoritmo}{iDefinido?}{\In{c}{string}, \In{e}{estr\_dicctrie}}{bool}
+  \begin{Algoritmo}{iNuevoNodo}{}{nodo}
+    \STATE \begin{CrearTupla}{$res$}
+             \CampoTupla{significado}{NULL},
+             \CampoTupla{hijos}{\NombreFuncion{CrearArreglo}()}%
+           \end{CrearTupla}
     \STATE var $i$: \TipoVariable{nat}
-   \STATE var $nodoActual$: \TipoVariable{puntero(nodo)} $\leftarrow$ \NombreFuncion{\&}($e.nodos$)
-   \STATE while $i$ < |$c$| $\land$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])] != NULL do:
-   \STATE \hspace*{10mm} $nodoActual$ $\leftarrow$ (*$nodoActual$).nodos[\NombreFuncion{ord}($c$[$i$])]
-   \STATE \hspace*{10mm} $i$++
-\STATE endWhile
-\STATE $res$ $\leftarrow$ ($i$ = |$c$|-1 $\land$ (*$nodoActual$).siginficado != NULL)
+    \FOR{$i$ $\leftarrow$ $0$ to $255$}
+      \STATE $res$.hijos[$i$] $\leftarrow$ NULL
+    \ENDFOR 
   \end{Algoritmo}
 
   ~
-     
- \begin{Algoritmo}{i\#Claves}{}{nat}
-  $res$ $\leftarrow$ $e$.cantClaves
- \end{Algoritmo}
+   
+  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}
+    \STATE var $actual$: \TipoVariable{puntero(nodo)}
+    \STATE $actual$ $\leftarrow$ \&($d$.raíz)
+    \STATE var $i$: \TipoVariable{nat}
+    \FOR{$i$ $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
+      \IF{$actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\igobs$ NULL}
+        \STATE $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\leftarrow$ \&(\NombreFuncion{iNuevoNodo}())
+      \ENDIF
+        \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])]
+    \ENDFOR
+    \STATE $actual$\DRef significado $\leftarrow$ \&(Copiar($s$))
+    \STATE $d$.\#Claves $\leftarrow$ $d$.\#Claves $+$ $1$
+  \end{Algoritmo}
+  
+  ~
+
+  \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\alpha$}
+    \STATE var $actual$: \TipoVariable{puntero(nodo)}
+    \STATE $actual$ $\leftarrow$ \&($d$.raíz)
+    \STATE var $i$: \TipoVariable{nat}
+    \FOR{$i$ $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
+      \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])]
+    \ENDFOR   
+    \STATE $res$ $\leftarrow$ *($actual$\DRef $significado$)
+  \end{Algoritmo}
+
+  ~
+  
+  \begin{Algoritmo}{i\#Claves}{\In{d}{estr\_dicctrie}}{nat}
+    $res$ $\leftarrow$ $d$.\#Claves
+  \end{Algoritmo}
 
 \end{Algoritmos}
 
