@@ -256,10 +256,11 @@
       \tadTitulo{otras operaciones (no exportadas)}{}
 
       \tadAlinearFunciones{categoríasATuplas}{conj(categoría)/cc,acat/ac}
-      \tadOperacion{tuplasHijos}{categoría/c,acat/ac}{secu(tupla(categoría{, }nat))}{$c$ $\in$ categorías($ac$)}
+      \tadOperacion{tuplasHijos}{categoría/c,acat/ac}{secu(tupla(categoría{, }nat))}{está?($c$, $ac$)}
+      \tadAlinearFunciones{categoríasATuplas}{conj(categoría)/cc,acat/ac}
       \tadOperacion{categoríasATuplas}{conj(categoría)/cc,acat/ac}{secu(tupla(categoría{, }nat))}{$cc$ $\subseteq$ categorías($ac$)}
       \tadAlinearFunciones{categoríasATuplas}{secu(tupla(categoría{, }nat)), secu(tupla(categoría{, }nat))}
-      \tadOperacion{iteraLosHijos}{itUni(tupla(categoría{, }nat)),categoría,acat}{bool}{}
+      \tadOperacion{iteraLosHijos}{itUni(tupla(categoría{, }nat)),categoría/c,acat/ac}{bool}{está?($c$, $ac$)}
       \tadOperacion{terminanIgual}{secu(tupla(categoría{, }nat)), secu(tupla(categoría{, }nat))}{bool}{}  
 
       \tadAxiomas[\paratodo{categoría}{c}, \paratodo{acat}{ac}, \paratodo{conj(categoría)}{cc}, \paratodo{secu(categoría)}{sc},\\
@@ -508,31 +509,31 @@
 
   \InterfazFuncion{CrearIterLinks}{\In{c}{categoría}, \In{s}{sistema}}{iterlinks}
   [está?($c$, categorías($s$))]
-  {$res$ $\igobs$ $\langle$iter: CrearItUni(linksOrdenadosPorAccesos($s$, $c$)), sis: $s\rangle$ $\land$ alias(iteraLinksCorrectos($res$, $c$))}  
+  {$res$ $\igobs$ CrearItUni(tuplasLinks($c$, $s$)) $\land$ alias(iteraLinksCorrectos($res$, $c$, $s$))}  
   [$\Theta$(|$c$| + $n^2$), donde $n$ representa long(linksOrdenadosPorAccesos($s$, $c$)).]
   [devuelve un iterador unidireccional de los links de la categoría $c$ y todas sus subcategorías ordenados de mayor a menor cantidad de accesos recientes.]
-  [Siguientes($res$.iter) podrá cambiar si se agregan links a la categoría $c$ o alguna subcategoría y/o si se registran accesos a links de dichas categorías.]  
+  [Siguientes($res$) podrá cambiar si se agregan links a la categoría $c$ o alguna subcategoría y/o si se registran accesos a links de dichas categorías.]  
    
   \InterfazFuncion{HayMás?}{\In{it}{iterlinks}}{bool}
-  {$res$ $\igobs$ HayMás?($it$.iter)}
+  {$res$ $\igobs$ HayMás?($it$)}
   [$\Theta(1)$]
   [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
 
   \InterfazFuncion{LinkActual}{\In{it}{iterlinks}}{link}
-  [HayMás?($it$.iter)]
-  {$res$ $\igobs$ Actual($it$.iter)}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ $\Pi_1$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve el link actual del iterador.]
 
   \InterfazFuncion{CategoríaLinkActual}{\In{it}{iterlinks}}{categoria}
-  [HayMás?($it$.iter)]
-  {$res$ $\igobs$ categoríaLink($it$.sis, Actual($it$.iter))}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ $\Pi_2$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve la categoría del link actual del iterador.]
 
   \InterfazFuncion{AccesosRecientesLinkActual}{\In{it}{iterlinks}}{nat}
-  [HayMás?($it$.iter)]
-  {$res$ $\igobs$ accesosRecientes($it$.sis, categoríaLink($it$.sis, Actual($it$.iter)), Actual($it$.iter))}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ $\Pi_3$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve la cantidad de accesos del link actual del iterador durante los días de la intersección
    entre los tres días ``recientes'' del link $l$ y los tres días ``recientes'' del link que tuvo
@@ -540,8 +541,8 @@
    de todas sus subcategorías.]
 
   \InterfazFuncion{Avanzar}{\Inout{it}{iterlinks}}{}
-  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$.iter)]
-  {$it$ $\igobs$ $\langle$iter: Avanzar($it_{0}$), sis: $it_{0}$.sis$\rangle$}
+  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$)]
+  {$it$ $\igobs$ Avanzar($it_{0}$)}
   [$\Theta(1)$]
   [avanza el iterador a la posición siguiente.]  
 
@@ -554,17 +555,32 @@
 
       \tadTitulo{otras operaciones (no exportadas)}{}
 
-      \tadAlinearFunciones{iteraLinksCorrectos}{tupla(itUni(link){, }lli),categoría}
-      \tadOperacion{iteraLinksCorrectos}{tupla(itUni(link){, }lli),categoría}{bool}{}
-      \tadOperacion{terminanIgual}{secu(link),secu(link)}{bool}{}
+      \tadOperacion{tuplasLinks}{categoría/c,lli/s}{secu(tupla(link{, }categoría{, }nat))}{está?($c$, categorías($s$))}
+      \tadOperacion{linksATuplas}{secu(link)/sl,categoría/c,lli/s}{secu(tupla(link{, }categoría{, }nat))}{estánEnSistema?($sl$, $s$) $\land$ está?($c$, categorías($s$))}
+      \tadOperacion{estánEnSistema?}{secu(link),link}{bool}{}
+      \tadOperacion{iteraLinksCorrectos}{itUni(tupla(link{, }categoría{, }nat)),categoría/c,lli/s}{bool}{está?($c$, categorías($s$))}
+      \tadOperacion{terminanIgual}{secu(tupla(link{, }categoría{, }nat)),secu(tupla(link{, }categoría{, }nat))}{bool}{}
 
-      \tadAxiomas[\paratodo{categoría}{c}, \paratodo{secu(link)}{ls, ls'}, \paratodo{tupla(itUni(link){, }lli)}{t}]  
+      \tadAxiomas[\paratodo{categoría}{c}, \paratodo{lli}{s}, \paratodo{secu(link)}{sl}, \paratodo{itUni(tupla(link, categoría, nat))}{it},\\
+                  \paratodo{secu(tupla(link, categoría, nat))}{st, st'}]  
   
-      \tadAlinearAxiomas{iteraLinksCorrectos($t$, $c$)}
-	  \tadAxioma{iteraLinksCorrectos($t$, $c$)}{terminanIgual(Siguientes($\Pi_1$($t$)), linksOrdenadosPorAccesos($\Pi_2$($t$), $c$))}
-      \tadAxioma{terminanIgual($ls$, $ls'$)}{\TADIF vacía?($ls$) $\lor$ vacía?($ls'$)
+      \tadAlinearAxiomas{iteraLinksCorrectos($it$, $c$, $s$)}
+      \tadAxioma{tuplasLinks($c$, $s$)}{linksATuplas(linksOrdenadosPorAccesos($s$, $c$), $c$, $s$)}
+      \tadAxioma{linksATuplas($sl$, $c$, $s$)}{\TADIF vacía?($sl$)
+                                               THEN \secuencia{}
+                                               ELSE \secuencia{$\langle$prim($sl$){, }
+                                                                        categoríaLink($s${, }prim($sl$)){, }
+                                                                        accesosRecientes($s${, }$c${, }prim($sl$))$\rangle$}
+                                                              [linksATuplas(fin($sl$), $c$, $s$)]
+                                               FI}
+      \tadAxioma{estánEnSistema?($sl$, $s$)}{\TADIF vacía($sl$)
                                              THEN \textbf{true}
-                                             ELSE ult($ls$) $\igobs$ ult($ls'$) $\land$ terminanIgual(com($ls$), com($ls'$))
+                                             ELSE prim($sl$) $\in$ links($s$) $\land$ estánEnSistema?(fin($sl$), $s$)
+                                             FI}
+	  \tadAxioma{iteraLinksCorrectos($it$, $c$, $s$)}{terminanIgual(Siguientes($it$), tuplasLinks($c$, $s$))}
+      \tadAxioma{terminanIgual($st$, $st'$)}{\TADIF vacía?($st$) $\lor$ vacía?($st'$)
+                                             THEN \textbf{true}
+                                             ELSE ult($st$) $\igobs$ ult($st'$) $\land$ terminanIgual(com($st$), com($st'$))
                                              FI}
     \end{tad}
   }
