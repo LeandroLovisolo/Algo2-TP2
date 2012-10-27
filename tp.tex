@@ -169,7 +169,7 @@
 
   \textbf{se explica con}: \tadNombre{ÁrbolCategorías}, \tadNombre{Iterador Unidireccional(Categoría)}.
 
-  \textbf{géneros}: \TipoVariable{acat}, \TipoVariable{itcat}.
+  \textbf{géneros}: \TipoVariable{acat}, \TipoVariable{itcats}.
 
   \Titulo{Operaciones básicas de árbol de categorías}
   
@@ -203,44 +203,44 @@
   
   \Titulo{Operaciones del iterador de categorías}
 
-  \InterfazFuncion{CrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itcat}
+  \InterfazFuncion{CrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itcats}
   [está?($padre$, $ac$)]
   {$res$ $\igobs$ CrearItUni(tuplasHijos($padre$, $ac$)) $\land$ alias(iteraLosHijos($res$, $padre$, $ac$))}
   [$\Theta(|padre|)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría $padre$.]
   [Siguientes($res$) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría $padre$.]
 
-  \InterfazFuncion{CrearItRaíz}{\In{ac}{acat}}{itcat}
+  \InterfazFuncion{CrearItRaíz}{\In{ac}{acat}}{itcats}
   {$res$ $\igobs$ CrearItUni(tuplasHijos(raíz($ac$), $ac$)) $\land$ alias(iteraLosHijos($res$, raíz($ac$), $ac$))}
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría raíz de $ac$.]
   [Siguientes($res$) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría raíz.]
 
-  \InterfazFuncion{CrearItDadoOtroIt}{\In{it}{itcat}, \In{ac}{acat}}{itcat}
+  \InterfazFuncion{CrearItDadoOtroIt}{\In{it}{itcats}, \In{ac}{acat}}{itcats}
   [HayMás?($it$)]
   {$res$ $\igobs$ CrearItUni(tuplasHijos($\Pi_1$(Actual($it$)), $ac$)) $\land$ alias(iteraLosHijos($res$, $\Pi_1$(Actual($it$)), $ac$))}
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría actual del iterador $it$.]
   [Siguientes($res$) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría actual del iterador $it$.]
 
-  \InterfazFuncion{HayMás?}{\In{it}{itcat}}{bool}
+  \InterfazFuncion{HayMás?}{\In{it}{itcats}}{bool}
   {$res$ $\igobs$ HayMás?($it$)}
   [$\Theta(1)$]
   [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
 
-  \InterfazFuncion{CategoríaActual}{\In{it}{itcat}}{categoria}
+  \InterfazFuncion{CategoríaActual}{\In{it}{itcats}}{categoria}
   [HayMás?($it$)]
   {$res$ $\igobs$ $\Pi_1$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve el elemento actual del iterador.]
 
-  \InterfazFuncion{IdCategoríaActual}{\In{it}{itcat}}{nat}
+  \InterfazFuncion{IdCategoríaActual}{\In{it}{itcats}}{nat}
   [HayMás?($it$)]
   {$res$ $\igobs$ $\Pi_2$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve el id del elemento actual del iterador.]
 
-  \InterfazFuncion{Avanzar}{\Inout{it}{itcat}}{}
+  \InterfazFuncion{Avanzar}{\Inout{it}{itcats}}{}
   [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it_{0}$)]
   {$it$ $\igobs$ Avanzar($it_{0}$)}
   [$\Theta(1)$]
@@ -364,7 +364,7 @@
 
   \Titulo{Representación del iterador de categorías}  
   
-  \begin{Estructura}{itcat}[itConj(puntero(estr\_cat))]
+  \begin{Estructura}{itcats}[itConj(puntero(estr\_cat))]
   \end{Estructura}
   
   PENDIENTE: Rep y Abs.
@@ -648,7 +648,7 @@
   
   ~  
   
-  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcat}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}
+  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcats}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}
     \WHILE{\NombreFuncion{HayMás?}($it$)}
       \STATE \begin{CrearTupla}{$s$.linksPorCatId[\NombreFuncion{IdCategoríaActual}($it$) - 1]}
                \CampoTupla{cat}{\NombreFuncion{CategoríaActual}($it$)},
