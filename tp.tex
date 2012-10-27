@@ -309,40 +309,55 @@
   \textbf{Invariante de representación:}
 
   \begin{enumerate}
-    \item raíz tiene que estar en el diccionario de categorías.
-    \item raíz tiene que tener id 1.
-    \item para todas las categorías en el diccionario:
+    \item La raíz tiene que estar en el diccionario de categorías.
+    \item La raíz tiene que tener id 1.
+    \item Para todas las categorías en el diccionario:
     \begin{enumerate}
-      \item el nombre de la categoría deber ser igual a su clave en el diccionario.
-      \item el id de la categoría debe estar en rango.      
-      \item dos categorías no pueden tener el mismo id.
-      \item para todos los hijos de la categoría:
+      \item El nombre de la categoría deber ser igual a su clave en el diccionario.
+      \item El id de la categoría debe estar en rango.      
+      \item Dos categorías no pueden tener el mismo id.
+      \item Para todos los hijos de la categoría:
       \begin{enumerate}
-        \item el hijo no puede ser nulo.
-        \item el hijo tiene que estar en el diccionario de categorías.
+        \item El hijo no puede ser nulo.
+        \item El hijo tiene que estar en el diccionario de categorías.
       \end{enumerate}        
     \end{enumerate}
   \end{enumerate}
 
   \Rep[estr\_acat][e]{ \\
-      def?($e$.raíz.nombre, $e$.categorías) $\land$ \hfill 1. \\
-      $e$.raíz.id $\igobs$ 1 $\land$ \hfill 2. \\
-      ($\forall c$: categoria)(def?($c$, $e$.categorías) $\impluego$ ( \hfill 3. \\
-        \margen $cat$.nombre $\igobs$ $c$ $\land$ \hfill 3. a) \\
-        \margen 1 $\leq$ $cat$.id $\land$ $cat$.id $\leq$ \#(claves($e$.categorías)) $\land$ \hfill 3. b) \\
-        \margen ($\forall c'$: categoria)(def?($c'$, $e$.categorías) $\impluego$ ($cat$.id $\igobs$ $cat'$.id $\ssi$
-                                                                                  $c$ $\igobs$ $c'$)) $\land$ \hfill 3. c) \\
-        \margen ($\forall h$: puntero(estr\_cat))($h$ $\in$ $cat$.hijos $\impluego$ ( \hfill 3. d) \\
+    def?($e$.raíz.nombre, $e$.categorías) $\land$ \hfill 1. \\
+    $e$.raíz.id $\igobs$ 1 $\land$ \hfill 2. \\
+    ($\forall c$: categoria)(def?($c$, $e$.categorías) $\impluego$ ( \hfill 3. \\
+      \margen $cat$.nombre $\igobs$ $c$ $\land$ \hfill 3. a) \\
+      \margen 1 $\leq$ $cat$.id $\land$ $cat$.id $\leq$ \#(claves($e$.categorías)) $\land$ \hfill 3. b) \\
+      \margen ($\forall c'$: categoria)(def?($c'$, $e$.categorías) $\impluego$ ($cat$.id $\igobs$ $cat'$.id $\ssi$
+                                                                                $c$ $\igobs$ $c'$)) $\land$ \hfill 3. c) \\
+      \margen ($\forall h$: puntero(estr\_cat))($h$ $\in$ $cat$.hijos $\impluego$ ( \hfill 3. d) \\
         \margen\margen $¬$($h$ $\igobs$ NULL) $\yluego$ \hfill 3. d) 1) \\
-        \margen\margen def?($h$\DRef nombre, $e$.categorías) \hfill 3. d) 2) \\
-        \margen )) \\
-      )), donde $cat$ es obtener($c$, $e$.categorías) y $cat'$ es obtener($c'$, $e$.categorías).
+        \margen\margen def?($h$\DRef nombre, $e$.categorías) $\yluego$ $h$ $\igobs$ \&(obtener($h$\DRef nombre, $e$.categorías)) \hfill 3. d) 2) \\
+      \margen )) \\
+    )), donde $cat$ es obtener($c$, $e$.categorías) y $cat'$ es obtener($c'$, $e$.categorías).
   }
 
   \mbox{}
 
-  \Abs[estr\_acat]{acat}[e]{ac}
-    {categorias($ac$) $\igobs$ claves($e$.categorías) $\yluego$ \\
+  ~
+ 
+  \textbf{Función de abstracción:}
+  
+  \begin{enumerate}
+    \item El conjunto de categorías del árbol debe ser igual al conjunto de claves del diccionario de la estructura.
+    \item La raíz del árbol debe ser igual a la raíz de la estructura.
+    \item Para todas las categorías en el árbol:
+    \begin{enumerate}
+      \item El id en el árbol y la estructura deben coincidir.
+      \item Los hijos de la categoría en la estructura deben tener como padre a la categoría en el árbol.
+    \end{enumerate}
+  \end{enumerate}
+
+
+  \Abs[estr\_acat]{acat}[e]{ac}{
+    categorias($ac$) $\igobs$ claves($e$.categorías) $\yluego$ \\
     raíz($ac$) $\igobs$ $e$.raíz\DRef nombre $\land$ \\
     ($\forall c$: categoria)($c$ $\in$ claves($e$.categorías) $\impluego$ ( \\
     \hspace*{5mm} padre($ac$, $c$) $\igobs$ obtener($c$, $e$.categorías)\DRef padre\DRef nombre $\land$ \\
