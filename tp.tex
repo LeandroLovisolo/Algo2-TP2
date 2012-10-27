@@ -157,6 +157,8 @@
 %CampoTupla(nombre del campo, valor)
 \newcommandx{\CampoTupla}[2]{\TipoVariable{#1}: #2}
 
+%margen
+\newcommandx{\margen}{\hspace*{5mm}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Árbol de Categorías                                                       %%
@@ -291,63 +293,50 @@
 
   \begin{Estructura}{acat}[estr\_acat]
     \begin{Tupla}[estr\_acat]
-      \tupItem{raíz}{estr\_cat},
+      \tupItem{raíz}{estr\_cat},\\
       \tupItem{categorías}{dicctrie(estr\_cat)}%
     \end{Tupla}
 
     \begin{Tupla}[estr\_cat]
-      \tupItem{id}{nat},
-      \tupItem{nombre}{categoria},
+      \tupItem{id}{nat},\\
+      \tupItem{nombre}{categoria},\\
       \tupItem{hijos}{conj(puntero(estr\_cat))}%
     \end{Tupla}    
   \end{Estructura}
-
-  PENDIENTE: Actualizar y abreviar Rep.
-  
+ 
   ~
 
-  Invariante de representación:
+  \textbf{Invariante de representación:}
 
   \begin{enumerate}
-    \item raíz no puede ser nulo.
     \item raíz tiene que estar en el diccionario de categorías.
     \item raíz tiene que tener id 1.
     \item para todas las categorías en el diccionario:
     \begin{enumerate}
-      \item la categoría no puede ser nula.
       \item el nombre de la categoría deber ser igual a su clave en el diccionario.
       \item el id de la categoría debe estar en rango.      
-      \item dos categorías no pueden tener el mismo id.      
-      \item los hijos de la categoría tienen que estar en el diccionario de categorías.
-      \item el padre es nulo si y sólo si la categoría es la raíz.
-      \item si el padre no es nulo, tiene que estar en el diccionario de categorías.
-      \item si el padre no es nulo, la categoría está entre los hijos del padre.
-      \item si el padre no es nulo, el id de la categoría debe ser superior al del padre.
+      \item dos categorías no pueden tener el mismo id.
+      \item para todos los hijos de la categoría:
+      \begin{enumerate}
+        \item el hijo no puede ser nulo.
+        \item el hijo tiene que estar en el diccionario de categorías.
+      \end{enumerate}        
     \end{enumerate}
   \end{enumerate}
 
   \Rep[estr\_acat][e]{ \\
-      (1) \hspace*{0mm} $¬$($e$.raíz $\igobs$ NULL) $\yluego$ \\
-      (2) \hspace*{0mm} def?($e$.raíz\DRef nombre, $e$.categorías) $\yluego$
-                        obtener($e$.raíz\DRef nombre, $e$.categorías) $\igobs$ $e$.raíz $\land$ \\      
-      (3) \hspace*{0mm} $e$.raíz\DRef id $\igobs$ 1 $\land$ \\
-      (4) \hspace*{0mm} ($\forall c$: categoria)(def?($c$, $e$.categorías) $\impluego$ ( \\
-      (4a) \hspace*{5mm} $¬$(obtener($c$, $e$.categorías) $\igobs$ NULL) $\yluego$ \\
-      (4b) \hspace*{5mm} obtener($c$, $e$.categorías)\DRef nombre $\igobs$ $c$ $\yluego$ \\
-      (4c) \hspace*{5mm} 1 $\leq$ obtener($c$, $e$.categorías)\DRef id $\land$
-                        obtener($c$, $e$.categorías)\DRef id $\leq$ \#(claves($e$.categorías)) $\land$ \\
-      (4d) \hspace*{5mm} ($\forall c'$: categoría)(obtener($c$, $e$.categorías)\DRef id $\igobs$
-                                                  obtener($c'$, $e$.categorías)\DRef id $\ssi$
-                                                  $c$ $\igobs$ $c'$) $\land$ \\
-      (4e) \hspace*{5mm} ($\forall h$: puntero(datoscat))($h$ $\in$ obtener($c$, $e$.categorías)\DRef hijos $\impluego$ \\
-          \hspace*{20mm} def?($h$\DRef nombre, $e$.categorías)) $\yluego$ \\
-      (4f) \hspace*{5mm} obtener($c$, $e$.categorías)\DRef padre $\igobs$ NULL $\ssi$ $c$ $\igobs$ $e$.raíz\DRef nombre $\yluego$ \\      
-      (4g) \hspace*{5mm} $¬$(obtener($c$, $e$.categorías)\DRef padre $\igobs$ NULL) $\impluego$ \\
-          \hspace*{20mm} def?(obtener($c$, $e$.categorías)\DRef padre\DRef nombre, $e$.categorías) $\yluego$ \\
-      (4h) \hspace*{5mm} $¬$(obtener($c$, $e$.categorías)\DRef padre $\igobs$ NULL) $\impluego$ \\
-          \hspace*{20mm} obtener($c$, $e$.categorías) $\in$ obtener($c$, $e$.categorías)\DRef padre\DRef hijos) $\land$ \\ 
-      (4i) \hspace*{5mm} $¬$(obtener($c$, $e$.categorías)\DRef padre $\igobs$ NULL) $\impluego$ \\
-          \hspace*{20mm} obtener($c$, $e$.categorías)\DRef padre\DRef id < \ obtener($c$, $e$.categorías)\DRef id))
+      def?($e$.raíz.nombre, $e$.categorías) $\land$ \hfill 1. \\
+      $e$.raíz.id $\igobs$ 1 $\land$ \hfill 2. \\
+      ($\forall c$: categoria)(def?($c$, $e$.categorías) $\impluego$ ( \hfill 3. \\
+        \margen $cat$.nombre $\igobs$ $c$ $\land$ \hfill 3. a) \\
+        \margen 1 $\leq$ $cat$.id $\land$ $cat$.id $\leq$ \#(claves($e$.categorías)) $\land$ \hfill 3. b) \\
+        \margen ($\forall c'$: categoria)(def?($c'$, $e$.categorías) $\impluego$ ($cat$.id $\igobs$ $cat'$.id $\ssi$
+                                                                                  $c$ $\igobs$ $c'$)) $\land$ \hfill 3. c) \\
+        \margen ($\forall h$: puntero(estr\_cat))($h$ $\in$ $cat$.hijos $\impluego$ ( \hfill 3. d) \\
+        \margen\margen $¬$($h$ $\igobs$ NULL) $\yluego$ \hfill 3. d) 1) \\
+        \margen\margen def?($h$\DRef nombre, $e$.categorías) \hfill 3. d) 2) \\
+        \margen )) \\
+      )), donde $cat$ es obtener($c$, $e$.categorías) y $cat'$ es obtener($c'$, $e$.categorías).
   }
 
   \mbox{}
