@@ -203,20 +203,20 @@
   
   \Titulo{Operaciones del iterador de categorías}
 
-  \InterfazFuncion{CrearIter}{\In{padre}{categoria}, \In{ac}{acat}}{itcat}
+  \InterfazFuncion{CrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itcat}
   [está?($padre$, $ac$)]
   {$res$ $\igobs$ CrearItUni(tuplasHijos($padre$, $ac$)) $\land$ alias(iteraLosHijos($res$, $padre$, $ac$))}
   [$\Theta(|padre|)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría $padre$.]
   [Siguientes($res$) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría $padre$.]
 
-  \InterfazFuncion{CrearIterRaíz}{\In{ac}{acat}}{itcat}
+  \InterfazFuncion{CrearItRaíz}{\In{ac}{acat}}{itcat}
   {$res$ $\igobs$ CrearItUni(tuplasHijos(raíz($ac$), $ac$)) $\land$ alias(iteraLosHijos($res$, raíz($ac$), $ac$))}
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría raíz de $ac$.]
   [Siguientes($res$) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría raíz.]
 
-  \InterfazFuncion{CrearIterDadoOtroIter}{\In{it}{itcat}, \In{ac}{acat}}{itcat}
+  \InterfazFuncion{CrearItDadoOtroIt}{\In{it}{itcat}, \In{ac}{acat}}{itcat}
   [HayMás?($it$)]
   {$res$ $\igobs$ CrearItUni(tuplasHijos($\Pi_1$(Actual($it$)), $ac$)) $\land$ alias(iteraLosHijos($res$, $\Pi_1$(Actual($it$)), $ac$))}
   [$\Theta(1)$]
@@ -426,19 +426,19 @@
 
   ~
 
-  \begin{Algoritmo}{iCrearIter}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}
+  \begin{Algoritmo}{iCrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos)
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearIterRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}
+  \begin{Algoritmo}{iCrearItRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}($ac$.raíz.hijos)
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iCrearIterDadoOtroIter}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}
+  \begin{Algoritmo}{iCrearItDadoOtroIt}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it)\DRef hijos)
   \end{Algoritmo}  
 
@@ -507,7 +507,7 @@
 
   \Titulo{Operaciones de iterador de links}
 
-  \InterfazFuncion{CrearIterLinks}{\In{c}{categoría}, \In{s}{sistema}}{iterlinks}
+  \InterfazFuncion{CrearIt}{\In{c}{categoría}, \In{s}{sistema}}{iterlinks}
   [está?($c$, categorías($s$))]
   {$res$ $\igobs$ CrearItUni(tuplasLinks($c$, $s$)) $\land$ alias(iteraLinksCorrectos($res$, $c$, $s$))}  
   [$\Theta$(|$c$| + $n^2$), donde $n$ representa long(linksOrdenadosPorAccesos($s$, $c$)).]
@@ -643,7 +643,7 @@
              \CampoTupla{últimoAcceso}{0},
              \CampoTupla{ordenado?}{\textbf{false}}%
            \end{CrearTupla}
-    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearIterRaíz($ac$), 1, $res$)}   
+    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearItRaíz($ac$), 1, $res$)}   
   \end{Algoritmo}
   
   ~  
@@ -657,7 +657,7 @@
                \CampoTupla{últimoAcceso}{0},
                \CampoTupla{ordenado?}{\textbf{false}}%
              \end{CrearTupla}
-      \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearIterDadoOtroIter}($it$), \NombreFuncion{IdCategoríaActual}($it$), $s$)
+      \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearItDadoOtroIt}($it$), \NombreFuncion{IdCategoríaActual}($it$), $s$)
       \STATE \NombreFuncion{Avanzar}($it$)
     \ENDWHILE
   \end{Algoritmo}
@@ -730,7 +730,7 @@
   
   ~  
   
-  \begin{Algoritmo}{iCrearIterLinks}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
+  \begin{Algoritmo}{iCrearIt}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
     \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId}
   	\STATE $estr\_c$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1]
   	\IF{$¬$($estr\_c$.ordenado?)}
