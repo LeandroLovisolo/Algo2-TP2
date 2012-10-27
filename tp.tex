@@ -297,8 +297,6 @@
     \begin{Tupla}[estr\_cat]
       \tupItem{id}{nat},
       \tupItem{nombre}{categoria},
-      \tupItem{padre}{puntero(estr\_cat)},
-      \\
       \tupItem{hijos}{conj(puntero(estr\_cat))}%
     \end{Tupla}    
   \end{Estructura}
@@ -381,7 +379,6 @@
 	\STATE \begin{CrearTupla}{$estr\_raiz$}
 	         \CampoTupla{id}{1},
              \CampoTupla{nombre}{$raiz$},
-             \CampoTupla{padre}{NULL},
              \CampoTupla{hijos}{\NombreFuncion{Vacío}()}%
            \end{CrearTupla}
 	\STATE var $categorias$: \TipoVariable{dicctrie(estr\_cat)}
@@ -408,11 +405,10 @@
 	\STATE \begin{CrearTupla}{$estr\_hija$}
 	         \CampoTupla{id}{\NombreFuncion{\#Claves}($ac$.categorías) + 1},
 	         \CampoTupla{nombre}{$hija$},
-	         \CampoTupla{padre}{\&($estr\_padre$)},
 	         \CampoTupla{hijos}{\NombreFuncion{Vacío}()$\rangle$}%
 	       \end{CrearTupla}
-    \STATE \NombreFuncion{AgregarRápido}($estr\_padre$.hijos, \&($estr\_hija$))
-    \STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$)
+	\STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$)	       
+    \STATE \NombreFuncion{AgregarRápido}($estr\_padre$.hijos, \&(\NombreFuncion{Obtener}($padre$, $hija$)))
   \end{Algoritmo}
 
   ~   
