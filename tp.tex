@@ -169,7 +169,7 @@
 
   \textbf{se explica con}: \tadNombre{ÁrbolCategorías}, \tadNombre{Iterador Unidireccional(Categoría)}.
 
-  \textbf{géneros}: \TipoVariable{acat}, \TipoVariable{itercathijos}, \TipoVariable{itercatancestros}.
+  \textbf{géneros}: \TipoVariable{acat}, \TipoVariable{itcat}.
 
   \Titulo{Operaciones básicas de árbol de categorías}
   
@@ -201,84 +201,48 @@
   [$\Theta(1)$]
   [devuelve la cantidad de categorías en $ac$.]
   
-  \Titulo{Operaciones del iterador de hijos directos}
+  \Titulo{Operaciones del iterador de categorías}
 
-  \InterfazFuncion{CrearIterHijos}{\In{padre}{categoria}, \In{ac}{acat}}{itercathijos}
+  \InterfazFuncion{CrearIter}{\In{padre}{categoria}, \In{ac}{acat}}{itcat}
   [está?($padre$, $ac$)]
-  {$res$ $\igobs$ $\langle$iter: CrearItUni(conjASecu(hijos($ac$, $padre$))), acat: $ac\rangle$ $\land$ aliasingHijos($res$, $padre$)}
+  {$res$ $\igobs$ CrearItUni(tuplasHijos($padre$, $ac$)) $\land$ alias(iteraLosHijos($res$, $padre$, $ac$))}
   [$\Theta(|padre|)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría $padre$.]
-  [Siguientes($res$.iter) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría $padre$.]
+  [Siguientes($res$) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría $padre$.]
 
-  \InterfazFuncion{CrearIterHijosDeLaRaíz}{\In{ac}{acat}}{itercathijos}
-  {$res$ $\igobs$ $\langle$iter: CrearItUni(conjASecu(hijos($ac$, raíz($ac$))), acat: $ac\rangle$ $\land$ aliasingHijos($res$, raíz($ac$))}
+  \InterfazFuncion{CrearIterRaíz}{\In{ac}{acat}}{itcat}
+  {$res$ $\igobs$ CrearItUni(tuplasHijos(raíz($ac$), $ac$)) $\land$ alias(iteraLosHijos($res$, raíz($ac$), $ac$))}
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría raíz de $ac$.]
-  [Siguientes($res$.iter) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría raíz.]
+  [Siguientes($res$) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría raíz.]
 
-  \InterfazFuncion{CrearIterHijosDadoOtroIter}{\In{it}{itercathijos}}{itercathijos}
-  [HayMás?($it$.iter)]
-  {$res$ $\igobs$ $\langle$iter: CrearItUni(conjASecu(hijos($it$.acat, Actual($it$.iter)))), acat: $it$.acat$\rangle$ $\land$ \\
-  \hspace*{13mm} aliasingHijos($res$, Actual($it$.iter))}  
+  \InterfazFuncion{CrearIterDadoOtroIter}{\In{it}{itcat}, \In{ac}{acat}}{itcat}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ CrearItUni(tuplasHijos($\Pi_1$(Actual($it$)), $ac$)) $\land$ alias(iteraLosHijos($res$, $\Pi_1$(Actual($it$)), $ac$))}
   [$\Theta(1)$]
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría actual del iterador $it$.]
-  [Siguientes($res$.iter) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría actual del iterador $it$.]
+  [Siguientes($res$) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría actual del iterador $it$.]
 
-  \InterfazFuncion{HayMásHijos?}{\In{it}{itercathijos}}{bool}
-  {$res$ $\igobs$ HayMás?($it$.iter)}
+  \InterfazFuncion{HayMás?}{\In{it}{itcat}}{bool}
+  {$res$ $\igobs$ HayMás?($it$)}
   [$\Theta(1)$]
   [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
 
-  \InterfazFuncion{HijoActual}{\In{it}{itercathijos}}{categoria}
-  [HayMás?($it$.iter)]
-  {$res$ $\igobs$ Actual($it$.iter)}
+  \InterfazFuncion{CategoríaActual}{\In{it}{itcat}}{categoria}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ $\Pi_1$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve el elemento actual del iterador.]
 
-  \InterfazFuncion{IdHijoActual}{\In{it}{itercathijos}}{nat}
-  [HayMás?($it$.iter)]
-  {$res$ $\igobs$ id(Actual($it$.iter), $it$.acat)}
+  \InterfazFuncion{IdCategoríaActual}{\In{it}{itcat}}{nat}
+  [HayMás?($it$)]
+  {$res$ $\igobs$ $\Pi_2$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve el id del elemento actual del iterador.]
 
-  \InterfazFuncion{AvanzarHijo}{\Inout{it}{itercathijos}}{}
-  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it_{0}$.iter)]
-  {$it$ $\igobs$ $\langle$iter: Avanzar($it_{0}$.iter), acat: $it_{0}.acat\rangle$}
-  [$\Theta(1)$]
-  [avanza el iterador a la posición siguiente.]
-
-  \Titulo{Operaciones del iterador de ancestros}
-
-  \InterfazFuncion{CrearIterAncestros}{\In{it}{itercathijos}}{itercatancestros}
-  {$res$ $\igobs$ $\langle$iter: CrearItUni(ancestros($it$.acat, Actual($it$.iter))), acat: $it$.acat$\rangle$}
-  [$\Theta(1)$]
-  [devuelve un iterador unidireccional de la categoría actual de $it$ y sus ancestros.]
-
-  \InterfazFuncion{CrearIterAncestrosDeLaRaíz}{\In{ac}{acat}}{itercatancestros}
-  {$res$ $\igobs$ $\langle$iter: CrearItUni(ancestros($ac$, raíz($ac$))), acat: $ac\rangle$}
-  [$\Theta(1)$]
-  [devuelve un iterador unidireccional de ancestros de la categoría raíz de $ac$.]
-  
-  \InterfazFuncion{HayMásAncestros?}{\In{it}{itercatancestros}}{bool}
-  {$res$ $\igobs$ HayMás?($it$.iter)}
-  [$\Theta(1)$]
-  [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
-
-  \InterfazFuncion{AncestroActual}{\In{it}{itercatancestros}}{categoria}
-  [HayMás?($it$)]
-  {$res$ $\igobs$ Actual($it$.iter)}
-  [$\Theta(1)$]
-  [devuelve el elemento actual del iterador.]
-
-  \InterfazFuncion{IdAncestroActual}{\In{it}{itercatancestros}}{nat}
-  [HayMás?($it$)]
-  {$res$ $\igobs$ id(Actual($it$.iter), $it$.acat)}
-  [$\Theta(1)$]
-  [devuelve el id del elemento actual del iterador.]  
-
-  \InterfazFuncion{AvanzarAncestro}{\Inout{it}{itercatancestros}}{}
-  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it_{0}$.iter)]
-  {$it$ $\igobs$ $\langle$iter: Avanzar($it_{0}$.iter), acat: $it_{0}$.acat$\rangle$}
+  \InterfazFuncion{Avanzar}{\Inout{it}{itcat}}{}
+  [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it_{0}$)]
+  {$it$ $\igobs$ Avanzar($it_{0}$)}
   [$\Theta(1)$]
   [avanza el iterador a la posición siguiente.]
 
@@ -291,20 +255,28 @@
 
       \tadTitulo{otras operaciones (no exportadas)}{}
 
-      \tadAlinearFunciones{aliasingHijos}{tupla(itUni(categoría){, }acat),categoría}
-      \tadOperacion{conjASecu}{conj(categoría)}{secu(categoría)}{}
-      \tadOperacion{secuAConj}{secu(categoría)}{conj(categoría)}{}  
-      \tadOperacion{aliasingHijos}{tupla(itUni(categoría){, }acat),categoría}{bool}{}
-      \tadOperacion{ancestros}{acat,categoría}{secu(categoría)}{}
+      \tadAlinearFunciones{categoríasATuplas}{conj(categoría)/cc,acat/ac}
+      \tadOperacion{tuplasHijos}{categoría/c,acat/ac}{secu(tupla(categoría{, }nat))}{$c$ $\in$ categorías($ac$)}
+      \tadOperacion{categoríasATuplas}{conj(categoría)/cc,acat/ac}{secu(tupla(categoría{, }nat))}{$cc$ $\subseteq$ categorías($ac$)}
+      \tadAlinearFunciones{categoríasATuplas}{secu(tupla(categoría{, }nat)), secu(tupla(categoría{, }nat))}
+      \tadOperacion{iteraLosHijos}{itUni(tupla(categoría{, }nat)),categoría,acat}{bool}{}
+      \tadOperacion{terminanIgual}{secu(tupla(categoría{, }nat)), secu(tupla(categoría{, }nat))}{bool}{}  
 
-      \tadAxiomas[\paratodo{categoría}{c}, \paratodo{acat}{ac}, \paratodo{conj(categoría)}{cc},
-                  \paratodo{secu(categoría)}{sc}, \paratodo{tupla(itUni(categoría){, }acat)}{t}]  
+      \tadAxiomas[\paratodo{categoría}{c}, \paratodo{acat}{ac}, \paratodo{conj(categoría)}{cc}, \paratodo{secu(categoría)}{sc},\\
+                  \paratodo{secu(tupla(categoría{, }nat))}{st, st'}, \paratodo{itUni(tupla(categoría{, }nat))}{it}]  
   
-      \tadAlinearAxiomas{aliasingHijos($t$, $c$)}
-      \tadAxioma{conjASecu($cc$)}{\TADIF $\emptyset$?($cc$) THEN \secuencia{} ELSE \secuencia{dameUno($cc$)}[conjASecu(sinUno($cc$))] FI}
-      \tadAxioma{secuAConj($sc$)}{\TADIF vacía?($sc$) THEN $\emptyset$ ELSE Ag(prim($sc$), secuAConj(fin($sc$))) FI} 
-      \tadAxioma{aliasingHijos($t$, $c$)}{alias(secuAConj(Siguientes($\Pi_1$($t$))) $\subseteq$ hijos($\Pi_2$($t$), $c$))}
-      \tadAxioma{ancestros($ac$, $c$)}{\TADIF raíz($ac$) $\igobs$ $c$ THEN \secuencia{$c$} ELSE \secuencia{$c$}[ancestros($ac$, padre($ac$, $c$))] FI}  
+      \tadAlinearAxiomas{aliasingHijos($it$, $c$, $ac$)}
+      \tadAxioma{tuplasHijos($c$, $ac$)}{catsATuplas(hijos($ac$, $c$), $ac$)}      
+      \tadAxioma{catsATuplas($cc$, $ac$)}{\TADIF $\emptyset$?($cc$)
+                                          THEN \secuencia{}
+                                          ELSE \secuencia{$\langle$dameUno($cc$){, }id($ac${, }dameUno($cc$))$\rangle$}
+                                                         [categoríasATuplas(sinUno($cc$), $ac$)]
+                                          FI}
+      \tadAxioma{iteraLosHijos($it$, $c$, $ac$)}{terminanIgual(Siguientes($it$), tuplasHijos($c$, $ac$))}
+      \tadAxioma{terminanIgual($st$, $st'$)}{\TADIF vacía?($st$) $\lor$ vacía($st'$)
+                                             THEN \textbf{true}
+                                             ELSE ult($st$) $\igobs$ ult($st'$) $\land$ terminanIgual(com($st$), com($st'$))
+                                             FI}       
     \end{tad}
   }
   
@@ -391,20 +363,11 @@
 
   ~
 
-  \Titulo{Representación del iterador de hijos directos}  
+  \Titulo{Representación del iterador de categorías}  
   
-  \begin{Estructura}{itercathijos}[itConj(puntero(estr\_cat))]
+  \begin{Estructura}{itcat}[itConj(puntero(estr\_cat))]
   \end{Estructura}
   
-  PENDIENTE: Rep y Abs.
-
-  ~  
-  
-  \Titulo{Representación del iterador de ancestros}  
-  
-  \begin{Estructura}{itercatancestros}[puntero(estr\_cat)]
-  \end{Estructura} 
-
   PENDIENTE: Rep y Abs.
 
   ~    
@@ -466,80 +429,44 @@
 
   ~
 
-  \begin{Algoritmo}{iCrearIterHijos}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}
+  \begin{Algoritmo}{iCrearIter}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos)
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearIterHijosDeLaRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}
+  \begin{Algoritmo}{iCrearIterRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}($ac$.raíz.hijos)
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iCrearIterHijosDadoOtroIter}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}
+  \begin{Algoritmo}{iCrearIterDadoOtroIter}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it)\DRef hijos)
   \end{Algoritmo}  
 
   ~  
   
-  \begin{Algoritmo}{iHayMásHijos?}{\In{it}{itConj(puntero(estr\_cat))}}{bool}
+  \begin{Algoritmo}{iHayMás?}{\In{it}{itConj(puntero(estr\_cat))}}{bool}
     \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$)
   \end{Algoritmo}
   
   ~
   
-  \begin{Algoritmo}{iHijoActual}{\In{it}{itConj(puntero(estr\_cat))}}{categoria}
+  \begin{Algoritmo}{iCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{categoria}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef nombre
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iIdHijoActual}{\In{it}{itConj(puntero(estr\_cat))}}{nat}
+  \begin{Algoritmo}{iIdCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{nat}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef id
   \end{Algoritmo}  
   
   ~
   
-  \begin{Algoritmo}{iAvanzarHijo}{\Inout{it}{itConj(puntero(estr\_cat))}}{}
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{itConj(puntero(estr\_cat))}}{}
     \STATE \NombreFuncion{Avanzar}($it$)
-  \end{Algoritmo}
-  
-  ~
-  
-  \begin{Algoritmo}{iCrearIterAncestros}{\In{it}{itConj(puntero(estr\_cat))}}{puntero(estr\_cat)}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}(it)
-  \end{Algoritmo}
- 
-  ~ 
-  
-  \begin{Algoritmo}{iCrearIterAncestrosDeLaRaíz}{\In{ac}{acat}}{puntero(estr\_cat)}
-    \STATE $res$ $\leftarrow$ \&($ac$.raíz)
-  \end{Algoritmo}
-   
-  ~
-  
-  \begin{Algoritmo}{iHayMásAncestros?}{\In{it}{puntero(estr\_cat)}}{bool}
-    \STATE $res$ $\leftarrow$ $it$ $\igobs$ NULL
-  \end{Algoritmo}
-  
-  ~
-  
-  \begin{Algoritmo}{iAncestroActual}{\In{it}{puntero(estr\_cat)}}{categoria}
-    \STATE $res$ $\leftarrow$ $it$\DRef nombre
-  \end{Algoritmo}
-
-  ~
-  
-  \begin{Algoritmo}{iIdAncestroActual}{\In{it}{puntero(estr\_cat)}}{nat}
-    \STATE $res$ $\leftarrow$ $it$\DRef id
-  \end{Algoritmo}
-  
-  ~
-  
-  \begin{Algoritmo}{iAvanzarAncestro}{\Inout{it}{puntero(estr\_cat)}}{}
-    \STATE $it$ $\leftarrow$ $it$\DRef padre
   \end{Algoritmo}
 
 \end{Algoritmos}
@@ -585,7 +512,7 @@
 
   \InterfazFuncion{CrearIterLinks}{\In{c}{categoría}, \In{s}{sistema}}{iterlinks}
   [está?($c$, categorías($s$))]
-  {$res$ $\igobs$ $\langle$iter: CrearItUni(linksOrdenadosPorAccesos($s$, $c$)), sis: $s\rangle$ $\land$ aliasingLinks($res$, $c$)}  
+  {$res$ $\igobs$ $\langle$iter: CrearItUni(linksOrdenadosPorAccesos($s$, $c$)), sis: $s\rangle$ $\land$ alias(iteraLinksCorrectos($res$, $c$))}  
   [$\Theta$(|$c$| + $n^2$), donde $n$ representa long(linksOrdenadosPorAccesos($s$, $c$)).]
   [devuelve un iterador unidireccional de los links de la categoría $c$ y todas sus subcategorías ordenados de mayor a menor cantidad de accesos recientes.]
   [Siguientes($res$.iter) podrá cambiar si se agregan links a la categoría $c$ o alguna subcategoría y/o si se registran accesos a links de dichas categorías.]  
@@ -631,14 +558,14 @@
 
       \tadTitulo{otras operaciones (no exportadas)}{}
 
-      \tadAlinearFunciones{terminanIgual}{tupla(itUni(link){, }lli),categoría}
-      \tadOperacion{aliasingLinks}{tupla(itUni(link){, }lli),categoría}{bool}{}
+      \tadAlinearFunciones{iteraLinksCorrectos}{tupla(itUni(link){, }lli),categoría}
+      \tadOperacion{iteraLinksCorrectos}{tupla(itUni(link){, }lli),categoría}{bool}{}
       \tadOperacion{terminanIgual}{secu(link),secu(link)}{bool}{}
 
       \tadAxiomas[\paratodo{categoría}{c}, \paratodo{secu(link)}{ls, ls'}, \paratodo{tupla(itUni(link){, }lli)}{t}]  
   
-      \tadAlinearAxiomas{terminanIgual($ls$, $ls'$)}
-	  \tadAxioma{aliasingLinks($t$, $c$)}{alias(terminanIgual(Siguientes($\Pi_1$($t$)), linksOrdenadosPorAccesos($\Pi_2$($t$), $c$)))}
+      \tadAlinearAxiomas{iteraLinksCorrectos($t$, $c$)}
+	  \tadAxioma{iteraLinksCorrectos($t$, $c$)}{terminanIgual(Siguientes($\Pi_1$($t$)), linksOrdenadosPorAccesos($\Pi_2$($t$), $c$))}
       \tadAxioma{terminanIgual($ls$, $ls'$)}{\TADIF vacía?($ls$) $\lor$ vacía?($ls'$)
                                              THEN \textbf{true}
                                              ELSE ult($ls$) $\igobs$ ult($ls'$) $\land$ terminanIgual(com($ls$), com($ls'$))
@@ -704,22 +631,22 @@
              \CampoTupla{últimoAcceso}{0},
              \CampoTupla{ordenado?}{\textbf{false}}%
            \end{CrearTupla}
-    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearIterHijosDeLaRaíz($ac$), 1, $res$)}   
+    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearIterRaíz($ac$), 1, $res$)}   
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itercathijos}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}
-    \WHILE{\NombreFuncion{HayMásHijos?}($it$)}
-      \STATE \begin{CrearTupla}{$s$.linksPorCatId[\NombreFuncion{IdHijoActual}($it$) - 1]}
-               \CampoTupla{cat}{\NombreFuncion{HijoActual}($it$)},
-               \CampoTupla{idPadre}{$idPadre$},
-               \CampoTupla{links}{\NombreFuncion{Vacía}()},\\
+  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcat}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}
+    \WHILE{\NombreFuncion{HayMás?}($it$)}
+      \STATE \begin{CrearTupla}{$s$.linksPorCatId[\NombreFuncion{IdCategoríaActual}($it$) - 1]}
+               \CampoTupla{cat}{\NombreFuncion{CategoríaActual}($it$)},
+               \CampoTupla{idPadre}{$idPadre$},\\
+               \CampoTupla{links}{\NombreFuncion{Vacía}()},
                \CampoTupla{últimoAcceso}{0},
                \CampoTupla{ordenado?}{\textbf{false}}%
              \end{CrearTupla}
-      \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearIterHijosDadoOtroIter}($it$), \NombreFuncion{IdHijoActual}($it$), $s$)
-      \STATE \NombreFuncion{AvanzarHijo}($it$)
+      \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearIterDadoOtroIter}($it$), \NombreFuncion{IdCategoríaActual}($it$), $s$)
+      \STATE \NombreFuncion{Avanzar}($it$)
     \ENDWHILE
   \end{Algoritmo}
     
