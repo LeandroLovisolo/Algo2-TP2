@@ -478,7 +478,7 @@
 \begin{Interfaz}
   \textbf{se explica con}: \tadNombre{LinkLinkIt}, \tadNombre{Iterador Unidireccional(Link)}.
 
-  \textbf{géneros}: \TipoVariable{sistema}, \TipoVariable{iterlinks}.
+  \textbf{géneros}: \TipoVariable{sistema}, \TipoVariable{itlinks}.
 
   \Titulo{Operaciones básicas del sistema}
   
@@ -507,31 +507,31 @@
 
   \Titulo{Operaciones de iterador de links}
 
-  \InterfazFuncion{CrearIt}{\In{c}{categoría}, \In{s}{sistema}}{iterlinks}
+  \InterfazFuncion{CrearIt}{\In{c}{categoría}, \In{s}{sistema}}{itlinks}
   [está?($c$, categorías($s$))]
   {$res$ $\igobs$ CrearItUni(tuplasLinks($c$, $s$)) $\land$ alias(iteraLinksCorrectos($res$, $c$, $s$))}  
   [$\Theta$(|$c$| + $n^2$), donde $n$ representa long(linksOrdenadosPorAccesos($s$, $c$)).]
   [devuelve un iterador unidireccional de los links de la categoría $c$ y todas sus subcategorías ordenados de mayor a menor cantidad de accesos recientes.]
   [Siguientes($res$) podrá cambiar si se agregan links a la categoría $c$ o alguna subcategoría y/o si se registran accesos a links de dichas categorías.]  
    
-  \InterfazFuncion{HayMás?}{\In{it}{iterlinks}}{bool}
+  \InterfazFuncion{HayMás?}{\In{it}{itlinks}}{bool}
   {$res$ $\igobs$ HayMás?($it$)}
   [$\Theta(1)$]
   [devuelve \textbf{true} si y sólo si en el iterador todavía quedan elementos para avanzar.]
 
-  \InterfazFuncion{LinkActual}{\In{it}{iterlinks}}{link}
+  \InterfazFuncion{LinkActual}{\In{it}{itlinks}}{link}
   [HayMás?($it$)]
   {$res$ $\igobs$ $\Pi_1$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve el link actual del iterador.]
 
-  \InterfazFuncion{CategoríaLinkActual}{\In{it}{iterlinks}}{categoria}
+  \InterfazFuncion{CategoríaLinkActual}{\In{it}{itlinks}}{categoria}
   [HayMás?($it$)]
   {$res$ $\igobs$ $\Pi_2$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve la categoría del link actual del iterador.]
 
-  \InterfazFuncion{AccesosRecientesLinkActual}{\In{it}{iterlinks}}{nat}
+  \InterfazFuncion{AccesosRecientesLinkActual}{\In{it}{itlinks}}{nat}
   [HayMás?($it$)]
   {$res$ $\igobs$ $\Pi_3$(Actual($it$))}
   [$\Theta(1)$]
@@ -540,7 +540,7 @@
    último acceso entre los links de la categoría $c$ con la que se creó este iterador, y los links
    de todas sus subcategorías.]
 
-  \InterfazFuncion{Avanzar}{\Inout{it}{iterlinks}}{}
+  \InterfazFuncion{Avanzar}{\Inout{it}{itlinks}}{}
   [$it$ $\igobs$ $it_{0}$ $\land$ HayMás?($it$)]
   {$it$ $\igobs$ Avanzar($it_{0}$)}
   [$\Theta(1)$]
@@ -617,7 +617,7 @@
   
   \Titulo{Representación de iterador de links}  
   
-  \begin{Estructura}{iterlinks}[estr\_iter]
+  \begin{Estructura}{itlinks}[estr\_iter]
     \begin{Tupla}[estr\_iter]
       \tupItem{s}{estr\_sistema},
       \tupItem{cid}{nat},
