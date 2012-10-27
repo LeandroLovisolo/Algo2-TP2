@@ -357,11 +357,14 @@
 
 
   \Abs[estr\_acat]{acat}[e]{ac}{
-    categorias($ac$) $\igobs$ claves($e$.categorías) $\yluego$ \\
-    raíz($ac$) $\igobs$ $e$.raíz\DRef nombre $\land$ \\
-    ($\forall c$: categoria)($c$ $\in$ claves($e$.categorías) $\impluego$ ( \\
-    \hspace*{5mm} padre($ac$, $c$) $\igobs$ obtener($c$, $e$.categorías)\DRef padre\DRef nombre $\land$ \\
-    \hspace*{5mm} id($ac$, $c$) $\igobs$ obtener($c$, $e$.categorías)\DRef id))
+    categorias($ac$) $\igobs$ claves($e$.categorías) $\yluego$ \hfill 1. \\
+    raíz($ac$) $\igobs$ $e$.raíz.nombre $\land$ \hfill 2. \\
+    ($\forall c$: categoria)($c$ $\in$ categorías($ac$) $\impluego$ ( \hfill 3. \\
+      \margen id($ac$, $c$) $\igobs$ obtener($c$, $e$.categorías).id $\land$ \hfill 3. a) \\
+      \margen ($\forall h$: puntero(estr\_cat))($h$ $\in$ obtener($c$, $e$.categorías).hijos) $\impluego$ \hfill 3. b) \\
+        \margen\margen padre($ac$, $h$\DRef nombre) $\igobs$ $c$ \\
+      \margen ) \\
+    ))
   }
 
   ~
