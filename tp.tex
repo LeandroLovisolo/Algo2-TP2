@@ -629,26 +629,122 @@
   
   \begin{Estructura}{sistema}[estr\_sistema]
     \begin{Tupla}[estr\_sistema]
-      \tupItem{categorías}{acat},
+      \tupItem{categorías}{acat},\\
       \tupItem{links}{dicctrie(estr\_link)},\\
       \tupItem{linksPorCatId}{arreglo\_dimensionable de estr\_linksPorCatId},\\
       \tupItem{fechaActual}{fecha}%
     \end{Tupla}
     
     \begin{Tupla}[estr\_link]
-      \tupItem{l}{link},
-      \tupItem{cid}{nat},
-      \tupItem{últimoAcceso}{fecha},
+      \tupItem{l}{link},\\
+      \tupItem{cid}{nat},\\
+      \tupItem{últimoAcceso}{fecha},\\
       \tupItem{as}{arreglo\_estático[3] de fecha}%
     \end{Tupla}
     
     \begin{Tupla}[estr\_linksPorCatId]
-      \tupItem{idPadre}{nat},
+      \tupItem{cat}{categoria},\\
+      \tupItem{idPadre}{nat},\\
       \tupItem{links}{lista(puntero(estr\_link))},\\
-      \tupItem{últimoAcceso}{fecha},
+      \tupItem{últimoAcceso}{fecha},\\
       \tupItem{ordenado?}{bool}%            
     \end{Tupla}    
   \end{Estructura}
+  
+  \textbf{Invariante de representación:}
+
+  \begin{enumerate}
+    \item Para todos los links en el diccionario de links:
+    \begin{enumerate}
+      \item El nombre del link debe coincidir con la clave.
+      \item El id de su categoría debe corresponderse con el id de una categoría en el árbol.
+      \item La fecha del último acceso debe ser menor o igual a la fecha actual del sistema.
+    \end{enumerate}
+    \item $linksPorCatId$ debe tener tantos elementos como categorías hayan en el árbol.
+    \item Para cada elemento en $linksPorCatId$:
+    \begin{enumerate}
+      \item La categoría debe estar en el árbol.
+      \item El índice del elemento debe ser igual al id de la categoría en el árbol $-$ $1$.
+      \item $idPadre$ debe ser igual al id del padre de la categoría en el árbol,
+            o cero si la categoría es la raíz.
+      \item La lista de punteros de estr\_link no puede tener elementos repetidos.
+      \item Para cada elemento en la lista de punteros de estr\_link:
+      \begin{enumerate}
+        \item El elemento no puede ser un puntero nulo.
+        \item El elemento tiene que apuntar a un link en el diccionario de links.
+        \item El elemento tiene que estar en la lista de links del elemento en la posición
+              $idPadre - 1$ del arreglo $linksPorCatId$, a menos que $idPadre$ sea cero.
+      \end{enumerate}
+      \item La fecha del último acceso debe ser menor o igual a la fecha actual del sistema.
+      \item $ordenado?$ implica que la lista de links está ordenada según
+            linksOrdenadosPorAccesos($s$,~$cat$), donde $s$ es el sistema actual y
+            $cat$ es el campo $cat$ del elemento actual.
+    \end{enumerate}
+    \item Al menos un link en el diccionario de links tiene como fecha de último acceso
+          la fecha actual del sistema.
+  \end{enumerate}
+
+  \Rep[estr\_sistema][s]{\\
+    ($\forall l$: link)(def?($l$, $s$.links) $\impluego$ ( \hfill 1. \\
+      \margen $estr\_l$.l $\igobs$ $l$ $\land$ \hfill 1. a) \\
+      \margen ($\exists c$: categoría)(está?($c$, $s$.categorías) $\yluego$ $estr\_l$.cid $\igobs$ id($s$.categorías. $c$)) $\land$ \hfill 1. b) \\
+      \margen $estr\_l$.últimoAcceso $\leq$ $s$.fechaActual \hfill 1. c) \\
+    )) $\land$ \\
+    tam($s$.linksPorCatId) $\igobs$ \#(categorias($s$.categorías)) $\land$ \hfill 2. \\
+    ($\forall i$: nat)($i$ $<$ tam($s$.linksPorCatId) $\impluego$ ( \hfill 3. \\
+      \margen está?($estr\_c$.cat, $s$.categorías) $\yluego$ \hfill 3. a) \\
+      \margen $i$ $\igobs$ id($s$.categorías, $estr\_c$.cat) $-$ $1$ $\land$ \hfill 3. b) \\
+      \margen $estr\_c$.idPadre $\igobs$ \hfill 3. c) \\
+        \margen\margen (\textbf{if} $estr\_c$.cat $\igobs$ raíz($s$.categorías) \\
+        \margen\margen \phantom{(}\textbf{then} $0$ \\
+        \margen\margen \phantom{(}\textbf{else} id($s$.categorías, padre($s$.categorías, $estr\_c$.cat)) \\
+        \margen\margen \phantom{(}\textbf{fi}) $\land$ \\
+      \margen SinRepetidos($estr\_c$.links) $\land$ \hfill 3. d) \\
+      \margen ($\forall l$: puntero(estr\_link))(está?($l$, $estr\_c$.links) $\impluego$ ( \hfill 3. e) \\
+        \margen\margen $¬$($l$ $\igobs$ NULL) $\yluego$ \hfill 3. e) 1) \\
+        \margen\margen def?($l$\DRef l, $s$.links) $\yluego$ $l$ $\igobs$ \&(obtener($l$\DRef l, $s$.links)) $\land$ \hfill 3. e) 2) \\
+        \margen\margen $¬$($estr\_c$.idPadre $\igobs$ 0) $\impluego$ está?($l$, $s$.linksPorCatId[$estr\_c$.idPadre $-$ $1$].links) \hfill 3. e) 3) \\
+      \margen )) $\land$ \\
+      \margen $estr\_c$.últimoAcceso $\leq$ $s$.fechaActual $\land$ \hfill 3. f) \\
+      \margen $estr\_c$.ordenado? $\impluego$ LinksOrdenados?($estr\_c$) \hfill 3. g) \\
+    )) $\land$ \\
+    ($\exists l$: link)(def?($l$, $s$.links) $\yluego$ obtener($l$, $s$.links).últimoAcceso $\igobs$ $s$.fechaActual), \hfill 4. \\
+    donde $estr\_l$ es obtener($l$, $s$.links) y $estr\_c$ es $s$.linksPorCatId[$i$].
+  }
+
+  \mbox{}
+  
+  ~
+  
+  \tadOperacion{SinRepetidos}{secu(puntero(estr\_link))}{bool}{}
+  \tadAxioma{SinRepetidos($sp$)}{\TADIF vacía?($sp$)
+                                 THEN \textbf{true}
+                                 ELSE $¬$(está?(prim($sp$), fin($sp$))) $\land$ SinRepetidos(fin($sp$))
+                                 FI}
+  ~
+  
+  \tadOperacion{LinksOrdenados?}{estr\_linksPorCatId}{bool}{}
+  \tadAxioma{LinksOrdenados?($estr\_c$)}{\textbf{true} $\ssi$ los links están ordenados según linksOrdenadosPorAccesos($s$, $estr\_c$.cat),
+                                         donde $s$ es el sistema al cual pertenece $estr\_c$.}
+  
+  ~  
+  
+  DUDA: ¿Podemos expresar este auxiliar en castellano?  
+  
+  ~
+  
+  \textbf{Función de abstracción:}
+  
+  \begin{enumerate}
+    \item Los elementos siguientes del iterador deben ser las tuplas (categoría, nat) que se correspondan
+          con los elementos siguientes de la instancia de itConj(puntero(estr\_cat)).
+  \end{enumerate}
+
+  \Abs[itConj(puntero(estr\_cat))]{itUni(tupla(categoría, nat))}[itconj]{it}{%
+    Siguientes($it$) $\igobs$ SecuDeTuplas(Siguientes($itconj$)) \hfill 1.
+  }
+  
+  ~
   
   \Titulo{Representación de iterador de links}  
   
