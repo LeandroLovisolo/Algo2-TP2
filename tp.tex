@@ -1202,51 +1202,36 @@
   }    
   
   ~
+
+  \textbf{FunciÛn de abstracciÛn:}
   
+  \begin{enumerate}
+    \item El diccionario tiene la misma cantidad de claves que la estructura.
+    \item Para cada clave del diccionario:
+    \begin{enumerate}
+      \item La clave est· definida en la estructura.
+      \item El significado de la clave en el diccionario es el mismo que en la estructura.
+    \end{enumerate}
+  \end{enumerate}
+
+  \Abs[estr\_dicctrie]{dicc(string, $\alpha$)}[e]{d}{
+    \#(claves($d$)) $\igobs$ $e$.\#Claves $\yluego$ \hfill 1. \\
+    ($\forall c$: string)(def?($c$, $d$) $\impluego$ ( \hfill 2. \\
+      \margen $¨$(ObtenerDeLaEstructura($c$, $e$.raÌz) $\igobs$ NULL) $\yluego$ \hfill 2. a) \\
+      \margen obtener($c$, $d$) $\igobs$ ObtenerDeLaEstructura($c$, $e$.raÌz) \hfill 2. b) \\
+    ))
+  }
+
   ~
   
-  ~
-  
-  ~
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    \Abs[estr\_dicctrie]{dicc(string, $\alpha$)}[e]{d}
-    {($\forall c$: string) est·EnTrie?($c$, $e$.nodos) $\igobs$ def?($c$, $d$) $\land$ \\
-    est·EnTrie?($c$,$e$.nodos) $\impluego$ (obtenerDelTrie($c$, $e$) $\igobs$ obtener($c$, $e$))
-
-est·EnTrie?: ab(puntero(nodo)) x nodo $\longrightarrow$ bool \\
-\hspace*{5mm}est·EnTrie?(s, n) = auxEst·EnTrie(0,s,n)
-\\
-\hspace*{5mm}auxEst·EnTrie?: nat x ab(puntero(nodo)) x nodo $\longrightarrow$ bool \\
-\hspace*{5mm}auxEst·EnTrie?(i, s, n) = if (tam(s)-1 = i) then \\
-\hspace*{50mm}(if $\neg$(n.significado = NULL) then \\
-\hspace*{60mm}True\\
-\hspace*{50mm}else\\
-\hspace*{60mm}False fi) \\
-\hspace*{40mm}else (if (n.nodos[ord(s[i])] = NULL) then \\
-\hspace*{50mm}False \\
-\hspace*{50mm}else \\
-\hspace*{60mm}auxEst·EnTrie?(i+1,  s, (*n.nodos[ord(s[i])]))
-\\
-\hspace*{5mm}obtenerDelTrie: ab(puntero(nodo)) s x nodo n $\longrightarrow$ $\alpha$\hspace*{65mm}\{est·EnTrie?(s,n)\} 
-
-obtenerDelTrie(s,n) = auxObtenerDelTrie(0,s,n)
-
-auxObtenerDelTrie: nat x string x nodo $\longrightarrow$ $\alpha$
-
-auxObtenerDelTrie(i, s, n) = if (tam(s)-1 = i) then n.significado else ObtenerDelTrie(i+1,  s, (*n.nodos[ord(s[i])]))
-
-}
+  \tadOperacion{ObtenerDeLaEstructura}{string,estr\_nodo}{bool}{}
+  \tadAxioma{ObtenerDeLaEstructura($c$, $n$)}{\TADIF vacÌa?($c$)
+                                              THEN $n$.significado
+                                              ELSE {\TADIF $n$.hijos[Ord(prim($c$))] $\igobs$ NULL
+                                                    THEN NULL
+                                                    ELSE ObtenerDeLaEstructura(fin($c$), $n$.hijos[Ord(prim($c$))])
+                                                    FI}
+                                              FI}
 \end{Representacion}
 
 ~
