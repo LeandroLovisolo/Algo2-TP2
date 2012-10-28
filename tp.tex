@@ -1090,13 +1090,13 @@
   
   \begin{Estructura}{dicctrie$(\alpha)$}[estr\_dicctrie]
     \begin{Tupla}[estr\_dicctrie]
-      \tupItem{raíz}{nodo},
+      \tupItem{raíz}{estr\_nodo},
       \tupItem{\#Claves}{nat}%
     \end{Tupla}
    
-    \begin{Tupla}[nodo]
+    \begin{Tupla}[estr\_nodo]
       \tupItem{significado}{puntero$(\alpha)$},    
-      \tupItem{hijos}{arreglo\_estático[256] de puntero(nodo)}%
+      \tupItem{hijos}{arreglo\_estático[256] de puntero(estr\_nodo)}%
     \end{Tupla}
   \end{Estructura}
   
@@ -1142,7 +1142,7 @@ auxObtenerDelTrie(i, s, n) = if (tam(s)-1 = i) then n.significado else ObtenerDe
 
   ~
 
-  \begin{Algoritmo}{iNuevoNodo}{}{nodo}
+  \begin{Algoritmo}{iNuevoNodo}{}{estr\_nodo}
     \STATE \begin{CrearTupla}{$res$}
              \CampoTupla{significado}{NULL},
              \CampoTupla{hijos}{\NombreFuncion{CrearArreglo}()}%
@@ -1156,7 +1156,7 @@ auxObtenerDelTrie(i, s, n) = if (tam(s)-1 = i) then n.significado else ObtenerDe
   ~
    
   \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}
-    \STATE var $actual$: \TipoVariable{puntero(nodo)}
+    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)}
     \STATE $actual$ $\leftarrow$ \&($d$.raíz)
     \STATE var $i$: \TipoVariable{nat}
     \FOR{$i$ $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
@@ -1172,7 +1172,7 @@ auxObtenerDelTrie(i, s, n) = if (tam(s)-1 = i) then n.significado else ObtenerDe
   ~
 
   \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\alpha$}
-    \STATE var $actual$: \TipoVariable{puntero(nodo)}
+    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)}
     \STATE $actual$ $\leftarrow$ \&($d$.raíz)
     \STATE var $i$: \TipoVariable{nat}
     \FOR{$i$ $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
