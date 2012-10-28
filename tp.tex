@@ -736,12 +736,38 @@
   \textbf{Función de abstracción:}
   
   \begin{enumerate}
-    \item Los elementos siguientes del iterador deben ser las tuplas (categoría, nat) que se correspondan
-          con los elementos siguientes de la instancia de itConj(puntero(estr\_cat)).
+    \item El árbol de categorías del sistema debe ser igual al de la estructura.
+    \item El conjunto de links del sistema debe ser igual al conjunto de clave del diccionario de links de la estructura.
+    \item La fecha actual del sistema debe ser igual a la fecha actual de la estructura.
+    \item Para cada link en el sistema:
+    \begin{enumerate}
+      \item La categoría del link en el sistema debe ser igual a la categoría del link en el diccionario de la estructura.
+      \item La fecha de último acceso del link en el sistema debe ser igual a la fecha de último acceso del link en el diccionario de la estructura.
+      \item Los accesos recientes por día del link en el sistema deben coincidir con los elementos del arreglo de accesos recientes del link
+            en el diccionario de la estructura.
+    \end{enumerate}
   \end{enumerate}
 
-  \Abs[itConj(puntero(estr\_cat))]{itUni(tupla(categoría, nat))}[itconj]{it}{%
-    Siguientes($it$) $\igobs$ SecuDeTuplas(Siguientes($itconj$)) \hfill 1.
+  \Abs[estr\_sistema]{lli}[e]{s}{%
+    categorias($s$) $\igobs$ $e$.categorías $\land$ \hfill 1. \\
+    links($s$) $\igobs$ claves($e$.links) $\land$ \hfill 2. \\
+    fechaActual($s$) $\igobs$ $e$.fechaActual $\land$ \hfill 3. \\
+    ($\forall l$: link)($l$ $\in$ links($s$) $\impluego$ ( \hfill 4. \\
+      \margen categoriaLink($s$, $l$) $\igobs$ $s$.linksPorCatId[obtener($l$, $e$.links).cid $-$ $1$].cat $\land$ \hfill 4. a) \\
+      \margen fechaUltimoAcceso($s$, $l$) $\igobs$ obtener($l$, $e$.links).últimoAcceso $\land$ \hfill 4. b) \\
+      \margen MismosAccesos($l$, $s$, $e$) \hfill 4. c) \\
+    ))
+  }
+  
+  ~
+  
+  \tadOperacion{MismosAccesos}{link/l,lli/s,estr\_sistema/e}{bool}{$l$ $\in$ links($s$) $\land$ def?($l$, $e$.links)}
+  \tadAxioma{MismosAccesos($l$, $s$, $e$)}{
+    accesosRecientesDia($s$, $l$, fechaUltimoAcceso($s$, $l$)) $\igobs$ obtener($l$, $e$.links).as[0] $\land$ \\
+    fechaUltimoAcceso($s$, $l$) $\geq$ 1 $\impluego$ \\
+      \margen accesosRecientesDia($s$, $l$, fechaUltimoAcceso($s$, $l$) $-$ $1$) $\igobs$ obtener($l$, $e$.links).as[1] $\land$ \\
+    fechaUltimoAcceso($s$, $l$) $\geq$ 2 $\impluego$ \\
+      \margen accesosRecientesDia($s$, $l$, fechaUltimoAcceso($s$, $l$) $-$ $2$) $\igobs$ obtener($l$, $e$.links).as[2]
   }
   
   ~
