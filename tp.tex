@@ -320,6 +320,8 @@
       \begin{enumerate}
         \item El hijo no puede ser nulo.
         \item El hijo tiene que estar en el diccionario de categorías.
+        \item El hijo no puede estar en el conjunto de hijos de otra categoría.
+        \item El hijo debe tener un id superior al de la categoría padre.
       \end{enumerate}        
     \end{enumerate}
   \end{enumerate}
@@ -334,7 +336,10 @@
                                                                                 $c$ $\igobs$ $c'$)) $\land$ \hfill 3. c) \\
       \margen ($\forall h$: puntero(estr\_cat))($h$ $\in$ $cat$.hijos $\impluego$ ( \hfill 3. d) \\
         \margen\margen $¬$($h$ $\igobs$ NULL) $\yluego$ \hfill 3. d) 1) \\
-        \margen\margen def?($h$\DRef nombre, $e$.categorías) $\yluego$ $h$ $\igobs$ \&(obtener($h$\DRef nombre, $e$.categorías)) \hfill 3. d) 2) \\
+        \margen\margen def?($h$\DRef nombre, $e$.categorías) $\yluego$ $h$ $\igobs$ \&(obtener($h$\DRef nombre, $e$.categorías)) $ \land$ \hfill 3. d) 2) \\
+        \margen\margen ($\forall c'$: categoria)(def?($c'$, $e$.categorías) $\impluego$ ($h$ $\in$ $cat'$.hijos $\ssi$
+                                                                                         $c$ $\igobs$ $c'$)) $\land$ \hfill 3. d) 3) \\
+        \margen\margen $h$\DRef id $>$ $cat$.id \hfill 3. d) 4) \\
       \margen )) \\
     )), donde $cat$ es obtener($c$, $e$.categorías) y $cat'$ es obtener($c'$, $e$.categorías).
   }
