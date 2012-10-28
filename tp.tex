@@ -547,7 +547,7 @@
   {$res$ $\igobs$ CrearItUni(tuplasLinks($c$, $s$)) $\land$ alias(iteraLinksCorrectos($res$, $c$, $s$))}  
   [$\Theta$(|$c$| + $n^2$), donde $n$ representa long(linksOrdenadosPorAccesos($s$, $c$)).]
   [devuelve un iterador unidireccional de los links de la categoría $c$ y todas sus subcategorías ordenados de mayor a menor cantidad de accesos recientes.]
-  [Siguientes($res$) podrá cambiar si se agregan links a la categoría $c$ o alguna subcategoría y/o si se registran accesos a links de dichas categorías.]  
+  [El iterador podrá invalidarse si se agregan links a la categoría $c$ o alguna subcategoría y/o si se registran accesos a links de dichas categorías.]  
    
   \InterfazFuncion{HayMás?}{\In{it}{itlinks}}{bool}
   {$res$ $\igobs$ HayMás?($it$)}
@@ -676,9 +676,6 @@
               $idPadre - 1$ del arreglo $linksPorCatId$, a menos que $idPadre$ sea cero.
       \end{enumerate}
       \item La fecha del último acceso debe ser menor o igual a la fecha actual del sistema.
-      \item $ordenado?$ implica que la lista de links está ordenada según
-            linksOrdenadosPorAccesos($s$,~$cat$), donde $s$ es el sistema actual y
-            $cat$ es el campo $cat$ del elemento actual.
     \end{enumerate}
     \item Al menos un link en el diccionario de links tiene como fecha de último acceso
           la fecha actual del sistema.
@@ -705,8 +702,7 @@
         \margen\margen def?($l$\DRef l, $s$.links) $\yluego$ $l$ $\igobs$ \&(obtener($l$\DRef l, $s$.links)) $\land$ \hfill 3. e) 2) \\
         \margen\margen $¬$($estr\_c$.idPadre $\igobs$ 0) $\impluego$ está?($l$, $s$.linksPorCatId[$estr\_c$.idPadre $-$ $1$].links) \hfill 3. e) 3) \\
       \margen )) $\land$ \\
-      \margen $estr\_c$.últimoAcceso $\leq$ $s$.fechaActual $\land$ \hfill 3. f) \\
-      \margen $estr\_c$.ordenado? $\impluego$ LinksOrdenados?($estr\_c$) \hfill 3. g) \\
+      \margen $estr\_c$.últimoAcceso $\leq$ $s$.fechaActual \hfill 3. f) \\
     )) $\land$ \\
     ($\exists l$: link)(def?($l$, $s$.links) $\yluego$ obtener($l$, $s$.links).últimoAcceso $\igobs$ $s$.fechaActual), \hfill 4. \\
     donde $estr\_l$ es obtener($l$, $s$.links) y $estr\_c$ es $s$.linksPorCatId[$i$].
@@ -721,16 +717,7 @@
                                  THEN \textbf{true}
                                  ELSE $¬$(está?(prim($sp$), fin($sp$))) $\land$ SinRepetidos(fin($sp$))
                                  FI}
-  ~
-  
-  \tadOperacion{LinksOrdenados?}{estr\_linksPorCatId}{bool}{}
-  \tadAxioma{LinksOrdenados?($estr\_c$)}{\textbf{true} $\ssi$ los links están ordenados según linksOrdenadosPorAccesos($s$, $estr\_c$.cat),
-                                         donde $s$ es el sistema al cual pertenece $estr\_c$.}
-  
-  ~  
-  
-  DUDA: ¿Podemos expresar este auxiliar en castellano?  
-  
+                                 
   ~
   
   \textbf{Función de abstracción:}
@@ -763,12 +750,12 @@
   
   \tadOperacion{MismosAccesos}{link/l,lli/s,estr\_sistema/e}{bool}{$l$ $\in$ links($s$) $\land$ def?($l$, $e$.links)}
   \tadAxioma{MismosAccesos($l$, $s$, $e$)}{
-    accesosRecientesDia($s$, $l$, fechaUltimoAcceso($s$, $l$)) $\igobs$ obtener($l$, $e$.links).as[0] $\land$ \\
-    fechaUltimoAcceso($s$, $l$) $\geq$ 1 $\impluego$ \\
-      \margen accesosRecientesDia($s$, $l$, fechaUltimoAcceso($s$, $l$) $-$ $1$) $\igobs$ obtener($l$, $e$.links).as[1] $\land$ \\
-    fechaUltimoAcceso($s$, $l$) $\geq$ 2 $\impluego$ \\
-      \margen accesosRecientesDia($s$, $l$, fechaUltimoAcceso($s$, $l$) $-$ $2$) $\igobs$ obtener($l$, $e$.links).as[2]
+    ($\forall n$: nat)($n$ $\leq$ 2 $\impluego$ \\
+      \margen accesosRecientesDia($s$, $l$, fechaUltimoAcceso($s$, $l$) $-$ $n$) $\igobs$ \\
+      \margen obtener($l$, $e$.links).as[$n$])
   }
+  
+  ~
   
   ~
   
