@@ -103,9 +103,9 @@
 
 \newcommandx{\Abs}[5][1={estr},3={e}]{%
   \tadOperacion{Abs}{#1/#3}{#2}{Rep($#3$)}%
-  \settominwidth{\hangindent}{Abs($#3$) \igobs #4: #2 $\mid$ }%
+  \settominwidth{\hangindent}{Abs($#3$) \igobs $#4$: #2 $\mid$ \phantom{}}%
   \addtolength{\hangindent}{\parindent}%
-  Abs($#3$) \igobs #4: #2 $\mid$ #5%
+  Abs($#3$) \igobs $#4$: #2 $\mid$ #5%
 }%
 
 \newcommandx{\AbsFc}[4][1={estr},3={e}]{%
@@ -356,7 +356,7 @@
   \end{enumerate}
 
 
-  \Abs[estr\_acat]{acat}[e]{ac}{
+  \Abs[estr\_acat]{acat}[e]{ac}{%
     categorias($ac$) $\igobs$ claves($e$.categorías) $\yluego$ \hfill 1. \\
     raíz($ac$) $\igobs$ $e$.raíz.nombre $\land$ \hfill 2. \\
     ($\forall c$: categoria)($c$ $\in$ categorías($ac$) $\impluego$ ( \hfill 3. \\
