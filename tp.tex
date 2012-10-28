@@ -1099,6 +1099,127 @@
     \end{Tupla}
   \end{Estructura}
   
+  \textbf{Invariante de representación:}
+
+  \begin{enumerate}
+    \item El árbol no debe tener ciclos.
+    \item El árbol no debe tener nodos repetidos.
+    \item Los nodos terminales tienen significado no nulo.
+    \item La cantidad de claves debe coincidir con la cantidad de significados.
+  \end{enumerate}
+
+  \Rep[estr\_dicctrie][e]{ \\
+    NoHayCiclos($e$.raíz, $\emptyset$) $\yluego$ \hfill 1. \\
+    SinRepetidos(Aplanar($e$.raíz)) $\land$ \hfill 2. \\
+    NodoTerminalTieneSignificado($e$.raíz) $\land$ \hfill 3. \\
+    $e$.\#Claves $\igobs$ ContarSignificados($e$.raíz) \hfill 4.
+  }
+  
+  \mbox{}
+
+  ~
+  
+  \tadOperacion{NoHayCiclos}{estr\_nodo, conj(estr\_nodo)}{bool}{}
+  \tadAxioma{NoHayCiclos($e$, $ancestros$)}{$¬$($e$ $\in$ $ancestros$) $\yluego$ NoHayCiclosEnLosHijos($e$, Ag($e$, $ancestros$), 0)}
+
+  ~
+
+  \tadOperacion{NoHayCiclosEnLosHijos}{estr\_nodo, conj(estr\_nodo), nat}{bool}{}
+  \tadAxioma{NoHayCiclosEnLosHijos($e$, $ancestros$, $n$)}{
+    ($¬$($e$.hijos[$n$] $\igobs$ NULL) $\impluego$ \\
+      \margen NoHayCiclos(*($e$.hijos[$n$]), $ancestros$)) $\yluego$ \\
+    ($n$ $<$ 255 $\impluego$ NoHayCiclosEnLosHijos($e$, $ancestros$, $n$ $+$ 1))
+  }  
+  
+  ~
+  
+  ~
+  
+  \tadOperacion{Aplanar}{estr\_nodo/e}{secu(estr\_nodo)}{NoHayCiclos($e$, $\emptyset$)}
+  \tadAxioma{Aplanar($e$)}{\secuencia{$e$} \& AplanarHijos($e$, 0)}
+  
+  ~
+
+  \tadOperacion{AplanarHijos}{estr\_nodo/e,nat}{secu(estr\_nodo)}{NoHayCiclos($e$, $\emptyset$)}
+  \tadAxioma{AplanarHijos($e$, $n$)}{
+    (\TADIF e.hijos[$n$] $\igobs$ NULL
+     THEN \secuencia{}
+     ELSE Aplanar(*(e.hijos[$n$]))
+     FI) \& \\
+    (\TADIF $n$ $<$ 255
+     THEN AplanarHijos($e$, $n$ $+$ 1)
+     ELSE \secuencia{}
+     FI)}
+  
+  ~
+
+  ~  
+  
+  \tadOperacion{SinRepetidos}{secu(estr\_nodo)}{bool}{}
+  \tadAxioma{SinRepetidos($sn$)}{\TADIF vacía?($sn$) THEN \textbf{true} ELSE $¬$(está?(prim($sn$), fin($sn$))) $\land$ SinRepetidos(fin($sn$)) FI}
+
+  ~  
+  
+  \tadOperacion{NodoTerminalTieneSignificado}{estr\_nodo/e}{bool}{NoHayCiclos($e$, $\emptyset$)}
+  \tadAxioma{NodoTerminalTieneSignificado($e$)}{\TADIF EsTerminal($e$, 0)
+                                                THEN $¬$(significado($e$) $\igobs$ NULL)
+                                                ELSE NodoHijoTerminalTieneSignificado($e$, 0)
+                                                FI}
+  
+  ~
+  
+  ~
+  
+  \tadOperacion{EsTerminal?}{estr\_nodo/e,nat}{bool}{}    
+  \tadAxioma{EsTerminal?($e$, $n$)}{$e$.hijos[$n$] $\igobs$ NULL $\yluego$ ($n$ $<$ 255 $\impluego$ EsTerminal?($e$, $n$ $+$ 1))}  
+  
+  ~
+  
+  \tadOperacion{NodoHijoTerminalTieneSignificado}{estr\_nodo/e,nat}{bool}{NoHayCiclos($e$, $\emptyset$)}    
+  \tadAxioma{NodoHijoTerminalTieneSignificado($e$, $n$)}{
+    ($¬$($e$.hijos[$n$] $\igobs$ NULL) $\impluego$ \\
+      \margen NodoTerminalTieneSignificado(*($e$.hijos[$n$]))) $\yluego$ \\
+    ($n$ $<$ 255 $\impluego$ NodoHijoTerminalTieneSignificado($e$, $n$ $+$ 1))  
+  }
+  
+  ~
+  
+  \tadOperacion{ContarSignificados}{estr\_nodo}{nat}{}
+  \tadAxioma{ContarSignificados($e$)}{(\TADIF e.significado $\igobs$ NULL THEN 0 ELSE 1 FI) $+$ ContarSignificadosDeLosHijos($e$, 0)}
+
+  ~
+
+  \tadOperacion{ContarSignificadosDeLosHijos}{estr\_nodo,nat}{nat}{}
+  \tadAxioma{ContarSignificadosDeLosHijos($e$, $n$)}{
+    (\TADIF $e$.hijos[$n$] $\igobs$ NULL
+     THEN 0 \phantom{xxxxxxxx}
+     ELSE ContarSignificados(*($e$.hijos[$n$]))
+     FI) $+$ \\
+    (\TADIF $n$ $<$ 255
+     THEN ContarSignificadosDeLosHijos($e$, $n$ $+$ 1) \phantom{xxxxxxxx}
+     ELSE 0
+     FI)
+  }    
+  
+  ~
+  
+  ~
+  
+  ~
+  
+  ~
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     \Abs[estr\_dicctrie]{dicc(string, $\alpha$)}[e]{d}
     {($\forall c$: string) estáEnTrie?($c$, $e$.nodos) $\igobs$ def?($c$, $d$) $\land$ \\
     estáEnTrie?($c$,$e$.nodos) $\impluego$ (obtenerDelTrie($c$, $e$) $\igobs$ obtener($c$, $e$))
