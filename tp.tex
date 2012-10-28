@@ -398,7 +398,7 @@
 
   ~
   
-  \tadOperacion{SecuDeTuplas}{secu(puntero(estr\_cat))}{secu(tupla(categoria, nat))}{}
+  \tadOperacion{SecuDeTuplas}{secu(puntero(estr\_cat))/sp}{secu(tupla(categoria, nat))}{$¬$(está?(NULL, $sp$)}
   \tadAxioma{SecuDeTuplas($sp$)}{\TADIF vacía?($sp$)
                                  THEN \secuencia{}
                                  ELSE \secuencia{$\langle$prim($sp$)\DRef nombre{, }prim($sp$)\DRef id$\rangle$}[fin($sp$)]
@@ -781,7 +781,75 @@
       \tupItem{it}{itLista(puntero(estr\_link))}%
     \end{Tupla}
   \end{Estructura}
+
+  ~
+
+  \textbf{Invariante de representación:}
+
+  \begin{enumerate}
+    \item $s$ representa un sistema válido.
+    \item $cid$ debe ser el id de una categoría en el sistema.
+    \item La secuencia subyacente del iterador debe ser la secuencia de links en la categoría
+          con id $cid$ y sus subcategorías.
+  \end{enumerate}
+
+  \Rep[estr\_iter][e]{ \\
+    Rep($e$.s) $\land$ \hfill 1. \\
+    1 $\leq$ $e$.cid $\land$ $e$.cid $\leq$ \#(categorias($e$.s.categorías)) $\land$ \hfill 2. \\
+    SecuSuby($e$.it) $\igobs$ $e$.s.linksPorCatId[$e$.cid $-$ $1$].links \hfill 3.
+  }
+
+  \mbox{}
+
+  ~
+
+  \textbf{Función de abstracción:}
   
+  \begin{enumerate}
+    \item Los elementos siguientes del iterador deben ser las tuplas (link, categoría, nat) que se correspondan
+          con los elementos siguientes del iterador de la estructura.
+  \end{enumerate}
+
+  \Abs[estr\_iter]{itUni(tupla(link, categoría, nat))}[e]{it}{%
+    Siguientes($it$) $\igobs$ SecuDeTuplas( \hfill 1. \\
+      \margen Abs($e$.s), \\
+      \margen $e$.s.linksPorCatId[$e$.cid $-$ 1].cat, \\
+      \margen SecuDeLinks(Siguientes($e$.it)))
+  }
+
+  ~
+  
+  \tadOperacion{SecuDeTuplas}{lli/s,categoria/c,secu(link)/sl}
+               {secu(tupla(link, categoria, nat))}
+               {está?($c$, categorias($s$)) $\land$ EstánEnConj?($sl$, links($s$))}
+  \tadAxioma{SecuDeTuplas($s$, $c$, $sl$)}{\TADIF vacía?($sl$)
+                                           THEN \secuencia{}
+                                           ELSE $\langle$prim($sl$), \\
+                                                         \phantom{$\langle$}categoriaLink($s$, prim($sl$)), \\
+                                                         \phantom{$\langle$}accesosRecientes($s$, $c$, prim($sl$))$\rangle$
+                                                $\bullet$ SecuDeTuplas($s$, $c$, fin($sl$))
+                                           FI}
+  
+  ~
+
+  ~
+    
+  \tadOperacion{EstánEnConj?}{secu(link),conj(link)}{bool}{}
+  \tadAxioma{EstánEnConj?($sl$, $cl$)}{\TADIF vacía?($sl$)
+                                       THEN \textbf{true}
+                                       ELSE prim($sl$) $\in$ $cl$ $\land$ EstánEnConj?(fin($sl$), $cl$)
+                                       FI}
+  
+  ~
+
+  \tadOperacion{SecuDeLinks}{secu(puntero(estr\_link))/sp}{secu(link)}{$¬$(está?(NULL, $sp$))}
+  \tadAxioma{SecuDeLinks($sp$)}{\TADIF vacía?($sp$)
+                                THEN \secuencia{}
+                                ELSE \secuencia{prim($sp$)\DRef l}[SecuDeLinks(fin($sp$))]
+                                FI}
+  
+  ~
+
 \end{Representacion}
 
 \begin{Algoritmos}
@@ -947,7 +1015,6 @@
     \STATE \NombreFuncion{EliminarSiguiente}($it$)
     \STATE \NombreFuncion{AgregarComoSiguiente}($it$, $ptr$)
   \end{Algoritmo}
-      
   
   ~  
   
