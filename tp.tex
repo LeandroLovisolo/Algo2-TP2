@@ -888,9 +888,9 @@
  	\STATE
     \STATE var $cid$: \TipoVariable{nat}
     \STATE $cid$ $\leftarrow$ $estr\_l$.cid
- 	\STATE
+ 	\STATE var $ptrEstr\_l$: \TipoVariable{puntero(estr\_link)} $\leftarrow$  \&(\NombreFuncion{Obtener}($l$, $s$.links))
  	\WHILE{$¬$($cid$ $\igobs$ 0)}
-      \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[$cid$ - 1].links, \&($estr\_l$))
+      \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[$cid$ - 1].links, $ptrEstr\_l$)
  	  \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual
  	  \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false}
  	  \STATE $cid$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre
