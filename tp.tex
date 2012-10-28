@@ -355,7 +355,6 @@
     \end{enumerate}
   \end{enumerate}
 
-
   \Abs[estr\_acat]{acat}[e]{ac}{%
     categorias($ac$) $\igobs$ claves($e$.categorías) $\yluego$ \hfill 1. \\
     raíz($ac$) $\igobs$ $e$.raíz.nombre $\land$ \hfill 2. \\
@@ -374,9 +373,38 @@
   \begin{Estructura}{itcats}[itConj(puntero(estr\_cat))]
   \end{Estructura}
   
-  PENDIENTE: Rep y Abs.
+  \textbf{Invariante de representación:}
 
-  ~    
+  \begin{enumerate}
+    \item La secuencia de elementos siguientes del iterador no puede contener punteros nulos.
+  \end{enumerate}
+
+  \Rep[itConj(puntero(estr\_cat))][it]{
+    $¬$(está?(NULL, Siguientes($it$))) \hfill 1.
+  }
+
+  \mbox{}
+
+  \textbf{Función de abstracción:}
+  
+  \begin{enumerate}
+    \item Los elementos siguientes del iterador deben ser las tuplas (categoría, nat) que se correspondan
+          con los elementos siguientes de la instancia de itConj(puntero(estr\_cat)).
+  \end{enumerate}
+
+  \Abs[itConj(puntero(estr\_cat))]{itUni(tupla(categoría, nat))}[itconj]{it}{%
+    Siguientes($it$) $\igobs$ SecuDeTuplas(Siguientes($itconj$)) \hfill 1.
+  }
+
+  ~
+  
+  \tadOperacion{SecuDeTuplas}{secu(puntero(estr\_cat))}{secu(tupla(categoria, nat))}{}
+  \tadAxioma{SecuDeTuplas($sp$)}{\TADIF vacía?($sp$)
+                                 THEN \secuencia{}
+                                 ELSE \secuencia{$\langle$prim($sp$)\DRef nombre{, }prim($sp$)\DRef id$\rangle$}[fin($sp$)]
+                                 FI}
+
+  ~
 
 \end{Representacion}
 
