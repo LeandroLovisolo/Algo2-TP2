@@ -924,7 +924,10 @@
     
   ~  
   
-  \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}{$\Theta(|c| + |l| + h)$}{
+  \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}{
+    $\Theta(|c| + |l| + h)$, donde $h$ es la altura del árbol de categorías.
+  }
+  {
     $\Theta(1) + \Theta(|c|) + \Theta(1) + \Theta(1) + \Theta(|l| + copy(estr\_l)) + \Theta(|l|) + \Theta(1)\ +$ ciclo $=$ \\
     $4 * \Theta(1) + \Theta(|c|) + \Theta(|l| + copy(estr\_l))\ +$ ciclo $=$ \\
     $\Theta(|c|) + \Theta(|l| + copy(estr\_l))\ +$ ciclo $=$ \\
@@ -932,7 +935,7 @@
     $\Theta(|c|) + \Theta(|l|) + \Theta(|c|)\ +$ ciclo $=$ \\
     $2 * \Theta(|c|) + \Theta(|l|)\ +$ ciclo $=$ \\
     $\Theta(|c|) + \Theta(|l|)\ +$ ciclo $=$ \\
-    $\Theta(|c|) + \Theta(|l|)\ + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \hfill $h$ es la altura del árbol de categorías. \\
+    $\Theta(|c|) + \Theta(|l|)\ + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
     $\Theta(|c|) + \Theta(|l|)\ + h * (3 * \Theta(1)) =$ \\
     $\Theta(|c|) + \Theta(|l|)\ + h * \Theta(1) =$ \\
     $\Theta(|c| + |l| + h).$
@@ -956,7 +959,10 @@
   
   ~  
   
-  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}{$\Theta(|l| + h)$}{
+  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}{
+    $\Theta(|l| + h)$, donde $h$ es la altura del árbol de categorías.
+  }
+  {
     $\Theta(|l|) + \Theta(1) + \Theta(1) + \Theta(1) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
     $\Theta(|l|) + 3 * \Theta(1) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
     $\Theta(|l|) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
