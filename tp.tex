@@ -1031,20 +1031,20 @@
   
   ~  
   
-  \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ $it$.s.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid - 1].cat \CompTheta{???}
+  \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ $it$.s.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid - 1].cat \CompTheta{1}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1]) \CompTheta{???}
+  \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1]) \CompTheta{1}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}{$\Theta(???)$}{PENDIENTE.}
-    \STATE \NombreFuncion{Avanzar}($it$.it) \CompTheta{???}
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}{$\Theta(1)$}{}
+    \STATE \NombreFuncion{Avanzar}($it$.it) \CompTheta{1}
   \end{Algoritmo}
   
 \end{Algoritmos}
