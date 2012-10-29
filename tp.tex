@@ -873,17 +873,22 @@
 
 \begin{Algoritmos}
 
-  \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}{$\Theta(???)$}{PENDIENTE.}
-    \STATE \CrearTupla{$res$}\CampoTupla{categorías}{$ac$}, \CompTheta{???}
-    \STATE \MargenTupla      \CampoTupla{links}{\NombreFuncion{CrearDiccionario}()}, \CompTheta{???}
-    \STATE \MargenTupla      \CampoTupla{linksPorCatId}{\NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$))}, \CompTheta{???}
-    \STATE \MargenTupla      \CampoTupla{fechaActual}{0}\FinTupla \CompTheta{???}
-    \STATE \CrearTupla{$res$.linksPorCatId[0]}\CampoTupla{cat}{\NombreFuncion{NombreCategoríaRaíz}($ac$)}, \CompTheta{???}
-    \STATE \MargenTupla                       \CampoTupla{idPadre}{0}, \CompTheta{???}
-    \STATE \MargenTupla                       \CampoTupla{links}{\NombreFuncion{Vacía}()}, \CompTheta{???}
-    \STATE \MargenTupla                       \CampoTupla{últimoAcceso}{0}, \CompTheta{???}
-    \STATE \MargenTupla                       \CampoTupla{ordenado?}{\textbf{false}}\FinTupla \CompTheta{???}
-    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearItRaíz($ac$), 1, $res$)}  \CompTheta{???}
+  \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}{$\Theta(\#(categorias(ac)))$}{
+    $\Theta(1) + \Theta(1) + \Theta(\#categorias(ac)) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(\#categorias(ac)) =$ \\
+    $8 * \Theta(1) + 2 * \Theta(\#categorias(ac)) =$ \\
+    $2 * \Theta(\#categorias(ac)) =$ \\
+    $\Theta(\#categorias(ac)).$ \\    
+  }
+    \STATE \CrearTupla{$res$}\CampoTupla{categorías}{$ac$}, \CompTheta{1}
+    \STATE \MargenTupla      \CampoTupla{links}{\NombreFuncion{CrearDiccionario}()}, \CompTheta{1}
+    \STATE \MargenTupla      \CampoTupla{linksPorCatId}{\NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$))}, \CompTheta{$\#categorias(ac)$}
+    \STATE \MargenTupla      \CampoTupla{fechaActual}{0}\FinTupla \CompTheta{1}
+    \STATE \CrearTupla{$res$.linksPorCatId[0]}\CampoTupla{cat}{\NombreFuncion{NombreCategoríaRaíz}($ac$)}, \CompTheta{1}
+    \STATE \MargenTupla                       \CampoTupla{idPadre}{0}, \CompTheta{1}
+    \STATE \MargenTupla                       \CampoTupla{links}{\NombreFuncion{Vacía}()}, \CompTheta{1}
+    \STATE \MargenTupla                       \CampoTupla{últimoAcceso}{0}, \CompTheta{1}
+    \STATE \MargenTupla                       \CampoTupla{ordenado?}{\textbf{false}}\FinTupla \CompTheta{1}
+    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearItRaíz($ac$), 1, $res$)}  \CompTheta{$\#categorias(ac)$}
   \end{Algoritmo}
   
   ~  
