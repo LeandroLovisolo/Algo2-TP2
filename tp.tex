@@ -1046,12 +1046,19 @@
   
   ~
   
-  \begin{Algoritmo}{iIntercambiar}{\Inout{it}{itLista(puntero(estr\_link))}, \Inout{it'}{itLista(puntero(estr\_link))}}{}{$\Theta(???)$}{PENDIENTE.}
-    \STATE var $ptr$: \TipoVariable{puntero(estr\_link)} $\leftarrow$ \NombreFuncion{Siguiente}($it'$) \CompTheta{???}
-    \STATE \NombreFuncion{EliminarSiguiente}($it'$) \CompTheta{???}
-    \STATE \NombreFuncion{AgregarComoSiguiente}($it'$, \NombreFuncion{Siguiente}($it$)) \CompTheta{???}
-    \STATE \NombreFuncion{EliminarSiguiente}($it$) \CompTheta{???}
-    \STATE \NombreFuncion{AgregarComoSiguiente}($it$, $ptr$) \CompTheta{???}
+  \begin{Algoritmo}{iIntercambiar}{\Inout{it}{itLista(puntero(estr\_link))}, \Inout{it'}{itLista(puntero(estr\_link))}}{}{$\Theta(1)$}{
+  $\Theta(1) + \Theta(1) + \Theta(copy(Siguiente(it))) + \Theta(1) + \Theta(copy(ptr)) $= \\
+  $3*\Theta(1) + \Theta(copy(Siguiente(it))) + \Theta(copy(ptr)) $= \\
+  $3*\Theta(1) + \Theta(1) + \Theta(1) $= \\
+  $5*\Theta(1) $= \\
+  $\Theta(1) $ \\
+  3. Siguiente(it) devuelve un puntero(estr\_link) y la copia de punteros se realiza en $\Theta(1)$.
+  }
+    \STATE var $ptr$: \TipoVariable{puntero(estr\_link)} $\leftarrow$ \NombreFuncion{Siguiente}($it'$) \CompTheta{1}
+    \STATE \NombreFuncion{EliminarSiguiente}($it'$) \CompTheta{1}
+    \STATE \NombreFuncion{AgregarComoSiguiente}($it'$, \NombreFuncion{Siguiente}($it$)) \CompTheta{copy(Siguiente(it))}
+    \STATE \NombreFuncion{EliminarSiguiente}($it$) \CompTheta{1}
+    \STATE \NombreFuncion{AgregarComoSiguiente}($it$, $ptr$) \CompTheta{copy(ptr)}
   \end{Algoritmo}
   
   ~  
