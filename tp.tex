@@ -900,8 +900,7 @@
   
   ~  
   
-  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcats}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}
-  {
+  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcats}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}{
     $\Theta(\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)})$, donde:\\
       \margen$\bullet$ $\#subcategorias(x)$ es la cantidad de nodos del subárbol de categorías en el cual $x$ es el nodo raíz, y \\
       \margen$\bullet$ $Siguientes(it)_i$ es el $i$-ésimo elemento de la secuencia de elementos siguientes del iterador $it$.
@@ -960,25 +959,32 @@
   
   ~  
   
-  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}{$\Theta(???)$}{PENDIENTE.}
-    \STATE var $estr\_l$: \TipoVariable{estr\_link} $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \CompTheta{???}
+  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}{$\Theta(???)$}{
+    $\Theta(|l|) + \Theta(1) + \Theta(1) + \Theta(1) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
+    $\Theta(|l|) + 3 * \Theta(1) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
+    $\Theta(|l|) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
+    $\Theta(|l|) + h * (3 * \Theta(1)) =$ \\
+    $\Theta(|l|) + h =$ \\
+    $\Theta(|l| + h)$.
+  }
+    \STATE var $estr\_l$: \TipoVariable{estr\_link} $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \CompTheta{$|l|$}
     \IF{$f$ $\igobs$ $estr\_l$.últimoAcceso}
-      \STATE $estr\_l$.as[0] $\leftarrow$ $estr\_l$.as[0] + 1 \CompTheta{???}
+      \STATE $estr\_l$.as[0] $\leftarrow$ $estr\_l$.as[0] + 1 \CompTheta{1}
     \ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 1}
-      \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, $estr\_l$.as[0], $estr\_l$.as[1]) \CompTheta{???}
+      \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, $estr\_l$.as[0], $estr\_l$.as[1]) \CompTheta{1}
     \ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 2}
-      \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, $estr\_l$.as[0]) \CompTheta{???}
+      \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, $estr\_l$.as[0]) \CompTheta{1}
     \ELSE
-      \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, 0) \CompTheta{???}
+      \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, 0) \CompTheta{1}
     \ENDIF
     \STATE
-    \STATE $s$.fechaActual $\leftarrow$ $f$ \CompTheta{???}
+    \STATE $s$.fechaActual $\leftarrow$ $f$ \CompTheta{1}
     \STATE
-    \STATE var $cid$: \TipoVariable{nat} $\leftarrow$ $estr\_l$.cid \CompTheta{???}
+    \STATE var $cid$: \TipoVariable{nat} $\leftarrow$ $estr\_l$.cid \CompTheta{1}
     \WHILE{$¬$($cid$ $\igobs$ 0)}
-      \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual \CompTheta{???}
-      \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false} \CompTheta{???}
-      \STATE $idPadre$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre \CompTheta{???}
+      \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual \CompTheta{1}
+      \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false} \CompTheta{1}
+      \STATE $idPadre$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre \CompTheta{1}
     \ENDWHILE     
   \end{Algoritmo}
   
