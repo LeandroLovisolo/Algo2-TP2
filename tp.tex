@@ -1261,7 +1261,7 @@
   ~  
   
   \tadOperacion{NodoTerminalTieneSignificado}{estr\_nodo/e}{bool}{NoHayCiclos($e$, $\emptyset$)}
-  \tadAxioma{NodoTerminalTieneSignificado($e$)}{\TADIF EsTerminal($e$, 0)
+  \tadAxioma{NodoTerminalTieneSignificado($e$)}{\TADIF EsTerminal?($e$, 0)
                                                 THEN $¬$(significado($e$) $\igobs$ NULL)
                                                 ELSE NodoHijoTerminalTieneSignificado($e$, 0)
                                                 FI}
