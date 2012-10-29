@@ -481,56 +481,56 @@
 
   ~   
     
-  \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías).id \CompTheta{???}
+  \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}{$\Theta(|c|)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías).id \CompTheta{|c|}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{i\#Categorías}{\In{ac}{estr\_acat}}{nat}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{\#Claves}($ac$.categorías) \CompTheta{???}
+  \begin{Algoritmo}{i\#Categorías}{\In{ac}{estr\_acat}}{nat}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{\#Claves}($ac$.categorías) \CompTheta{1}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos) \CompTheta{???}
+  \begin{Algoritmo}{iCrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}{$\Theta(|padre|)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos) \CompTheta{|padre|}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearItRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}($ac$.raíz.hijos) \CompTheta{???}
+  \begin{Algoritmo}{iCrearItRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}($ac$.raíz.hijos) \CompTheta{1}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iCrearItDadoOtroIt}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it)\DRef hijos) \CompTheta{???}
+  \begin{Algoritmo}{iCrearItDadoOtroIt}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it)\DRef hijos) \CompTheta{1}
   \end{Algoritmo}  
 
   ~  
   
-  \begin{Algoritmo}{iHayMás?}{\In{it}{itConj(puntero(estr\_cat))}}{bool}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$) \CompTheta{???}
+  \begin{Algoritmo}{iHayMás?}{\In{it}{itConj(puntero(estr\_cat))}}{bool}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$) \CompTheta{1}
   \end{Algoritmo}
   
   ~
   
-  \begin{Algoritmo}{iCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{categoria}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef nombre \CompTheta{???}
+  \begin{Algoritmo}{iCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{categoria}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef nombre \CompTheta{1}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iIdCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{nat}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef id \CompTheta{???}
+  \begin{Algoritmo}{iIdCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{nat}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef id \CompTheta{1}
   \end{Algoritmo}  
   
   ~
   
-  \begin{Algoritmo}{iAvanzar}{\Inout{it}{itConj(puntero(estr\_cat))}}{}{$\Theta(???)$}{PENDIENTE.}
-    \STATE \NombreFuncion{Avanzar}($it$) \CompTheta{???}
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{itConj(puntero(estr\_cat))}}{}{$\Theta(1)$}{}
+    \STATE \NombreFuncion{Avanzar}($it$) \CompTheta{1}
   \end{Algoritmo}
 
 \end{Algoritmos}
