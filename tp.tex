@@ -1384,9 +1384,10 @@
   ~
 
   \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\Theta(|c|)$}{$\Theta(|c|)$}{
-   $\Theta(1) + \Theta(1)*|c| + \Theta(1) $= \\
-   $2*\Theta(1) + \Theta(|c|) $= \\
-   $\Theta(|c|)$
+    $\Theta(1) + |c| * \Theta(1) + \Theta(1) =$ \\
+    $2 * \Theta(1) + |c| * \Theta(1) =$ \\
+    $|c| * \Theta(1) =$ \\
+    $\Theta(|c|)$.
   }
     \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{1} 
     \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
