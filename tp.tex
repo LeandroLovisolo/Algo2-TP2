@@ -959,7 +959,7 @@
   
   ~  
   
-  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}{$\Theta(???)$}{
+  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}{$\Theta(|l| + h)$}{
     $\Theta(|l|) + \Theta(1) + \Theta(1) + \Theta(1) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
     $\Theta(|l|) + 3 * \Theta(1) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
     $\Theta(|l|) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
