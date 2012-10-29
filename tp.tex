@@ -1242,49 +1242,68 @@
 
 \begin{Algoritmos}
 
-  \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}{$\Theta(???)$}{PENDIENTE.}
-    \STATE \CrearTupla{$res$}\CampoTupla{raíz}{\NombreFuncion{iNuevoNodo}()}, \CompTheta{???}
-    \STATE \MargenTupla      \CampoTupla{\#Claves}{$0$}\FinTupla \CompTheta{???}
+  \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}{$\Theta(1)$}{
+    $\Theta(1) + \Theta(1) =$ \\
+    $2*\Theta(1) =$ \\
+    $\Theta(1)$   
+  }
+    \STATE \CrearTupla{$res$}\CampoTupla{raíz}{\NombreFuncion{iNuevoNodo}()}, \CompTheta{1}
+    \STATE \MargenTupla      \CampoTupla{\#Claves}{$0$}\FinTupla \CompTheta{1}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iNuevoNodo}{}{estr\_nodo}{$\Theta(???)$}{PENDIENTE.}
-    \STATE \CrearTupla{$res$}\CampoTupla{significado}{NULL}, \CompTheta{???}
-    \STATE \MargenTupla      \CampoTupla{hijos}{\NombreFuncion{CrearArreglo}()}\FinTupla \CompTheta{???}
+  \begin{Algoritmo}{iNuevoNodo}{}{estr\_nodo}{$\Theta(1)$}{
+    $\Theta(1) + \Theta(256) + 256*\Theta(1) =$ \\
+    $257*\Theta(1) + \Theta(256) =$ \\
+    $257*\Theta(1) + \Theta(1) =$ \\
+    $258*\Theta(1) =$ \\
+    $\Theta(1)$
+  }
+    \STATE \CrearTupla{$res$}\CampoTupla{significado}{NULL}, \CompTheta{1}
+    \STATE \MargenTupla      \CampoTupla{hijos}{\NombreFuncion{CrearArreglo}()}\FinTupla \CompTheta{256}
     \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to $255$}
-      \STATE $res$.hijos[$i$] $\leftarrow$ NULL \CompTheta{???}
+      \STATE $res$.hijos[$i$] $\leftarrow$ NULL \CompTheta{1}
     \ENDFOR 
   \end{Algoritmo}
 
   ~
    
-  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}{$\Theta(???)$}{PENDIENTE.}
-    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{???}
+  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}{$\Theta(|c| + copy(s))$}{
+    $\Theta(1) + (\Theta(1) + \Theta(1) + \Theta(1))*\Theta(|c|) + \Theta(copy(s))  + \Theta(1) =$ \\
+    $2*\Theta(1) + (3*\Theta(1))*\Theta(|c|) + \Theta(copy(s)) $= \\ 
+    $(\Theta(1))*\Theta(|c|) + \Theta(copy(s)) $= \\
+    $\Theta(|c|) + \Theta(copy(s)) $
+  }
+    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{1}
     \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
       \IF{$actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\igobs$ NULL}
-        \STATE $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\leftarrow$ \&(\NombreFuncion{iNuevoNodo}()) \CompTheta{???}
+        \STATE $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\leftarrow$ \&(\NombreFuncion{iNuevoNodo}()) \CompTheta{1}
       \ENDIF
-        \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] \CompTheta{???}
+        \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] \CompTheta{1}
     \ENDFOR
-    \STATE $actual$\DRef significado $\leftarrow$ \&(Copiar($s$)) \CompTheta{???}
-    \STATE $d$.\#Claves $\leftarrow$ $d$.\#Claves $+$ $1$ \CompTheta{???}
+    \STATE $actual$\DRef significado $\leftarrow$ \&(Copiar($s$)) \CompTheta{copy($s$)}
+    \STATE $d$.\#Claves $\leftarrow$ $d$.\#Claves $+$ $1$ \CompTheta{1}
   \end{Algoritmo}
   
   ~
 
-  \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\alpha$}{$\Theta(???)$}{PENDIENTE.}
-    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{???} 
+  \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\Theta(|c|)$}{$\Theta(|c|)$}{
+   $\Theta(1) + (\Theta(1))*\Theta(|c|) + \Theta(1) $= \\
+   $2*\Theta(1) + \Theta(|c|) $= \\
+   $\Theta(|c|)$
+  }
+    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{1} 
     \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
-      \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] \CompTheta{???}
+      \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] \CompTheta{1}
     \ENDFOR   
-    \STATE $res$ $\leftarrow$ *($actual$\DRef $significado$) \CompTheta{???}
+    \STATE $res$ $\leftarrow$ *($actual$\DRef $significado$) \CompTheta{1}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{i\#Claves}{\In{d}{estr\_dicctrie}}{nat}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ $d$.\#Claves \CompTheta{???}
+  \begin{Algoritmo}{i\#Claves}{\In{d}{estr\_dicctrie}}{nat}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ $d$.\#Claves \CompTheta{1}
   \end{Algoritmo}
 
 \end{Algoritmos}
