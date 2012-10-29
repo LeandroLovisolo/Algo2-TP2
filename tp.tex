@@ -1071,15 +1071,15 @@
   
   ~  
 
-  \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{estr\_c}{estr\_linksPorCatId}}{nat}{$\Theta(???)$}{PENDIENTE.}
+  \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{estr\_c}{estr\_linksPorCatId}}{nat}{$\Theta(1)$}{}
     \IF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso}
-      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] + $estr\_l$.as[2] \CompTheta{???}
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] + $estr\_l$.as[2] \CompTheta{1}
     \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 1}
-      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] \CompTheta{???}
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] \CompTheta{1}
     \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 2}          
-      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] \CompTheta{???}
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] \CompTheta{1}
     \ELSE
-      \STATE $res$ $\leftarrow$ 0 \CompTheta{???}
+      \STATE $res$ $\leftarrow$ 0 \CompTheta{1}
     \ENDIF
   \end{Algoritmo}
   
