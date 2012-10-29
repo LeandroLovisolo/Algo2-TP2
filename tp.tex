@@ -435,18 +435,18 @@
 \begin{Algoritmos}
 
   \begin{Algoritmo}{iCrearÁrbol}{\In{raiz}{categoria}}{estr\_acat}{$\Theta(|raiz|)$}{
-    $\Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(|raiz| + copy(raiz)) + \Theta(1) =$ \\
-    $5 * \Theta(1) + \Theta(|raiz| + copy(raiz)) =$ \\
-    $\Theta(|raiz| + copy(raiz)) =$ \\
-    $\Theta(|raiz|) + \Theta(copy(raiz)) =$ \\
+    $\Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(|raiz| + copy(estr\_raiz)) + \Theta(1) =$ \\
+    $5 * \Theta(1) + \Theta(|raiz| + copy(estr\_raiz)) =$ \\
+    $\Theta(|raiz| + copy(estr\_raiz)) =$ \\
+    $\Theta(|raiz|) + \Theta(copy(estr\_raiz)) =$ \\
     $\Theta(|raiz|) + \Theta(|raiz|) =$ \\
-    $\Theta(|raiz|)$ 
+    $\Theta(|raiz|).$ 
   }
     \STATE \CrearTupla{var $estr\_raiz$: \TipoVariable{estr\_cat}}\CampoTupla{id}{1},                                  \CompTheta{1}
     \STATE \MargenTupla                                           \CampoTupla{nombre}{$raiz$},                         \CompTheta{1}
     \STATE \MargenTupla                                           \CampoTupla{hijos}{\NombreFuncion{Vacío}()}\FinTupla \CompTheta{1}
     \STATE var $categorias$: \TipoVariable{dicctrie(estr\_cat)} $\leftarrow$ \NombreFuncion{CrearDiccionario}() \CompTheta{1}
-    \STATE \NombreFuncion{Definir}($raiz$, $estr\_raiz$, $categorias$) \CompTheta{|$raiz$| $+$ $copy(raiz)$}
+    \STATE \NombreFuncion{Definir}($raiz$, $estr\_raiz$, $categorias$) \CompTheta{$|raiz| + copy(estr\_raiz)$}
     \STATE \CrearTupla{$res$}\CampoTupla{raíz}{$estr\_raiz$}, %
                              \CampoTupla{categorías}{$categorias$}%
                              \FinTupla \CompTheta{1}  
@@ -460,13 +460,23 @@
 
   ~
   
-  \begin{Algoritmo}{iAgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{estr\_acat}}{}{$\Theta(???)$}{PENDIENTE.}
-    \STATE var $estr\_padre$: \TipoVariable{estr\_cat} $\leftarrow$ \NombreFuncion{Obtener}($padre$, $ac$.categorías) \CompTheta{???}
-    \STATE \CrearTupla{var $estr\_hija$: \TipoVariable{estr\_cat}}\CampoTupla{id}{\NombreFuncion{\#Claves}($ac$.categorías) + 1}, \CompTheta{???}
-    \STATE \MargenTupla                                           \CampoTupla{nombre}{$hija$}, \CompTheta{???}
-  \STATE \MargenTupla                                           \CampoTupla{hijos}{\NombreFuncion{Vacío}()}\FinTupla \CompTheta{???}
-  \STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$) \CompTheta{???}     
-    \STATE \NombreFuncion{AgregarRápido}($estr\_padre$.hijos, \&(\NombreFuncion{Obtener}($hija$, $ac$.categorías))) \CompTheta{???}
+  \begin{Algoritmo}{iAgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{estr\_acat}}{}{$\Theta(|padre| + |hija|)$}{
+    $\Theta(|padre|) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(|hija| + copy(estr\_hija)) + \Theta(|hija|) + \Theta(1) =$ \\
+    $\Theta(|padre|) + \Theta(|hija| + copy(estr\_hija)) + \Theta(|hija|) =$ \\
+    $\Theta(|padre|) + \Theta(|hija|) + \Theta(copy(estr\_hija)) + \Theta(|hija|) =$ \\
+    $\Theta(|padre|) + 2 * \Theta(|hija|) + \Theta(copy(estr\_hija)) =$ \\
+    $\Theta(|padre|) + 2 * \Theta(|hija|) + \Theta(|hija|) =$ \\
+    $\Theta(|padre|) + 3 * \Theta(|hija|) =$ \\
+    $\Theta(|padre|) + \Theta(|hija|) =$ \\
+    $\Theta(|padre| + |hija|).$
+  }
+    \STATE var $estr\_padre$: \TipoVariable{estr\_cat} $\leftarrow$ \NombreFuncion{Obtener}($padre$, $ac$.categorías) \CompTheta{$|padre|$}
+    \STATE \CrearTupla{var $estr\_hija$: \TipoVariable{estr\_cat}}\CampoTupla{id}{\NombreFuncion{\#Claves}($ac$.categorías) + 1}, \CompTheta{1}
+    \STATE \MargenTupla                                           \CampoTupla{nombre}{$hija$}, \CompTheta{1}
+    \STATE \MargenTupla                                           \CampoTupla{hijos}{\NombreFuncion{Vacío}()}\FinTupla \CompTheta{1}
+    \STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$) \CompTheta{$|hija| + copy(estr\_hija)$}     
+    \STATE $estr\_hija$ $\leftarrow$ \NombreFuncion{Obtener}($hija$, $ac$.categorías) \CompTheta{$|hija|$}
+    \STATE \NombreFuncion{AgregarRápido}($estr\_padre$.hijos, \&($estr\_hija$)) \CompTheta{1}
   \end{Algoritmo}
 
   ~   
