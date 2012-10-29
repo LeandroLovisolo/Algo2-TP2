@@ -1347,11 +1347,10 @@
   ~
 
   \begin{Algoritmo}{iNuevoNodo}{}{estr\_nodo}{$\Theta(1)$}{
-    $\Theta(1) + \Theta(256) + 256*\Theta(1) =$ \\
-    $257*\Theta(1) + \Theta(256) =$ \\
-    $257*\Theta(1) + \Theta(1) =$ \\
-    $258*\Theta(1) =$ \\
-    $\Theta(1)$
+    $\Theta(1) + \Theta(256) + 256 * \Theta(1) =$ \\
+    $\Theta(1) + 256 * \Theta(1) + 256 * \Theta(1) =$ \\    
+    $513 * \Theta(1) =$ \\
+    $\Theta(1)$.
   }
     \STATE \CrearTupla{$res$}\CampoTupla{significado}{NULL}, \CompTheta{1}
     \STATE \MargenTupla      \CampoTupla{hijos}{\NombreFuncion{CrearArreglo}()}\FinTupla \CompTheta{256}
