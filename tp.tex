@@ -136,10 +136,11 @@
 
 \algsetup{indent=2em, linenodelimiter=.}
 
-%Algoritmo(nombre, argumentos, valor retorno) { cuerpo }
-\newenvironmentx{Algoritmo}[4]{%
+%Algoritmo(nombre, argumentos, valor retorno, complejidad, justificacion) { cuerpo }
+\newenvironmentx{Algoritmo}[5]{%
   \def \complejidad {#4}
-  %\begin{framed}
+  \def \justificacion {#5}
+  \begin{framed}
     \InterfazAlgoritmo{#1}{#2}{#3}  
     \begin{addmargin}[2em]{0em}
       \begin{algorithmic}[1]
@@ -147,11 +148,15 @@
 {
       \end{algorithmic}
     \end{addmargin}
-
-    ~  
-  
-    \textbf{Complejidad:} \complejidad
-  %\end{framed}  
+    \vspace*{0.5em}%
+    \hspace*{\parindent}\textbf{Complejidad:} \complejidad%
+    \ifthenelse{\equal{\justificacion}{}}{}{
+      \vspace*{0.5em}%
+      \begin{addmargin}[\parindent + 1em]{0em}
+        \justificacion
+      \end{addmargin}    
+    }
+  \end{framed}  
 }
 
 %CrearTupla(variable donde se almacenará)
@@ -429,12 +434,19 @@
 
 \begin{Algoritmos}
 
-  \begin{Algoritmo}{iCrearÁrbol}{\In{raiz}{categoria}}{estr\_acat}{PENDIENTE.}
+  \begin{Algoritmo}{iCrearÁrbol}{\In{raiz}{categoria}}{estr\_acat}{$\Theta(|raiz|)$}{
+    $\Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(|raiz| + copy(raiz)) + \Theta(1) =$ \\
+    $5 * \Theta(1) + \Theta(|raiz| + copy(raiz)) =$ \\
+    $\Theta(|raiz| + copy(raiz)) =$ \\
+    $\Theta(|raiz|) + \Theta(copy(raiz)) =$ \\
+    $\Theta(|raiz|) + \Theta(|raiz|) =$ \\
+    $\Theta(|raiz|)$ 
+  }
     \STATE \CrearTupla{var $estr\_raiz$: \TipoVariable{estr\_cat}}\CampoTupla{id}{1},                                  \CompTheta{1}
     \STATE \MargenTupla                                           \CampoTupla{nombre}{$raiz$},                         \CompTheta{1}
     \STATE \MargenTupla                                           \CampoTupla{hijos}{\NombreFuncion{Vacío}()}\FinTupla \CompTheta{1}
-  \STATE var $categorias$: \TipoVariable{dicctrie(estr\_cat)} $\leftarrow$ \NombreFuncion{CrearDiccionario}() \CompTheta{???}
-    \STATE \NombreFuncion{Definir}($raiz$, $estr\_raiz$, $categorias$) \CompTheta{???}
+    \STATE var $categorias$: \TipoVariable{dicctrie(estr\_cat)} $\leftarrow$ \NombreFuncion{CrearDiccionario}() \CompTheta{1}
+    \STATE \NombreFuncion{Definir}($raiz$, $estr\_raiz$, $categorias$) \CompTheta{|$raiz$| $+$ $copy(raiz)$}
     \STATE \CrearTupla{$res$}\CampoTupla{raíz}{$estr\_raiz$}, %
                              \CampoTupla{categorías}{$categorias$}%
                              \FinTupla \CompTheta{1}  
@@ -442,13 +454,13 @@
 
   ~  
    
-  \begin{Algoritmo}{iNombreCategoríaRaíz}{\In{ac}{estr\_acat}}{categoria}{PENDIENTE.}
+  \begin{Algoritmo}{iNombreCategoríaRaíz}{\In{ac}{estr\_acat}}{categoria}{$\Theta(1)$}{}
   \STATE $res$ $\leftarrow$ $ac$.raíz.nombre \CompTheta{1}
   \end{Algoritmo}  
 
   ~
   
-  \begin{Algoritmo}{iAgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{estr\_acat}}{}{PENDIENTE.}
+  \begin{Algoritmo}{iAgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{estr\_acat}}{}{$\Theta(???)$}{PENDIENTE.}
     \STATE var $estr\_padre$: \TipoVariable{estr\_cat} $\leftarrow$ \NombreFuncion{Obtener}($padre$, $ac$.categorías) \CompTheta{???}
     \STATE \CrearTupla{var $estr\_hija$: \TipoVariable{estr\_cat}}\CampoTupla{id}{\NombreFuncion{\#Claves}($ac$.categorías) + 1}, \CompTheta{???}
     \STATE \MargenTupla                                           \CampoTupla{nombre}{$hija$}, \CompTheta{???}
@@ -459,55 +471,55 @@
 
   ~   
     
-  \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}{PENDIENTE.}
+  \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías).id \CompTheta{???}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{i\#Categorías}{\In{ac}{estr\_acat}}{nat}{PENDIENTE.}
+  \begin{Algoritmo}{i\#Categorías}{\In{ac}{estr\_acat}}{nat}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{\#Claves}($ac$.categorías) \CompTheta{???}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}{PENDIENTE.}
+  \begin{Algoritmo}{iCrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos) \CompTheta{???}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearItRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}{PENDIENTE.}
+  \begin{Algoritmo}{iCrearItRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}($ac$.raíz.hijos) \CompTheta{???}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iCrearItDadoOtroIt}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}{PENDIENTE.}
+  \begin{Algoritmo}{iCrearItDadoOtroIt}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it)\DRef hijos) \CompTheta{???}
   \end{Algoritmo}  
 
   ~  
   
-  \begin{Algoritmo}{iHayMás?}{\In{it}{itConj(puntero(estr\_cat))}}{bool}{PENDIENTE.}
+  \begin{Algoritmo}{iHayMás?}{\In{it}{itConj(puntero(estr\_cat))}}{bool}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$) \CompTheta{???}
   \end{Algoritmo}
   
   ~
   
-  \begin{Algoritmo}{iCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{categoria}{PENDIENTE.}
+  \begin{Algoritmo}{iCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{categoria}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef nombre \CompTheta{???}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iIdCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{nat}{PENDIENTE.}
+  \begin{Algoritmo}{iIdCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{nat}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef id \CompTheta{???}
   \end{Algoritmo}  
   
   ~
   
-  \begin{Algoritmo}{iAvanzar}{\Inout{it}{itConj(puntero(estr\_cat))}}{}{PENDIENTE.}
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{itConj(puntero(estr\_cat))}}{}{$\Theta(???)$}{PENDIENTE.}
     \STATE \NombreFuncion{Avanzar}($it$) \CompTheta{???}
   \end{Algoritmo}
 
@@ -851,7 +863,7 @@
 
 \begin{Algoritmos}
 
-  \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}{PENDIENTE.}
+  \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}{$\Theta(???)$}{PENDIENTE.}
     \STATE \CrearTupla{$res$}\CampoTupla{categorías}{$ac$}, \CompTheta{???}
     \STATE \MargenTupla      \CampoTupla{links}{\NombreFuncion{CrearDiccionario}()}, \CompTheta{???}
     \STATE \MargenTupla      \CampoTupla{linksPorCatId}{\NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$))}, \CompTheta{???}
@@ -866,7 +878,7 @@
   
   ~  
   
-  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcats}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}{PENDIENTE.}
+  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcats}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}{$\Theta(???)$}{PENDIENTE.}
     \WHILE{\NombreFuncion{HayMás?}($it$)}
       \STATE \CrearTupla{$s$.linksPorCatId[\NombreFuncion{IdCategoríaActual}($it$) - 1]}%
                           \CampoTupla{cat}{\NombreFuncion{CategoríaActual}($it$)},  \CompTheta{???}
@@ -881,7 +893,7 @@
     
   ~  
   
-  \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}{PENDIENTE.}
+  \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}{$\Theta(???)$}{PENDIENTE.}
     \STATE \CrearTupla{var $estr\_l$: \TipoVariable{estr\_link}}
                         \CampoTupla{l}{$l$}, \CompTheta{???}
     \STATE \MargenTupla \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)}, \CompTheta{???}
@@ -901,7 +913,7 @@
   
   ~  
   
-  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}{PENDIENTE.}
+  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}{$\Theta(???)$}{PENDIENTE.}
     \STATE var $estr\_l$: \TipoVariable{estr\_link} $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \CompTheta{???}
     \IF{$f$ $\igobs$ $estr\_l$.últimoAcceso}
       \STATE $estr\_l$.as[0] $\leftarrow$ $estr\_l$.as[0] + 1 \CompTheta{???}
@@ -925,7 +937,7 @@
   
   ~
   
-  \begin{Algoritmo}{iCrearArregloDe3Nats}{\In{a}{nat}, \In{b}{nat}, \In{c}{nat}}{arreglo\_estático[3] de nat}{PENDIENTE.}
+  \begin{Algoritmo}{iCrearArregloDe3Nats}{\In{a}{nat}, \In{b}{nat}, \In{c}{nat}}{arreglo\_estático[3] de nat}{$\Theta(???)$}{PENDIENTE.}
     \STATE $\res$ $\leftarrow$ \NombreFuncion{CrearArreglo}() \CompTheta{???}
     \STATE $\res$[0] $\leftarrow$ $a$ \CompTheta{???}
     \STATE $\res$[1] $\leftarrow$ $b$ \CompTheta{???}
@@ -934,14 +946,14 @@
   
   ~  
   
-  \begin{Algoritmo}{i\#Links}{\In{c}{categoría}, \In{s}{estr\_sistema}}{nat}{PENDIENTE.}
+  \begin{Algoritmo}{i\#Links}{\In{c}{categoría}, \In{s}{estr\_sistema}}{nat}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Longitud}($s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1].links) \CompTheta{???}
   \end{Algoritmo}
 
   
   ~  
   
-  \begin{Algoritmo}{iCrearIt}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}{PENDIENTE.}
+  \begin{Algoritmo}{iCrearIt}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}{$\Theta(???)$}{PENDIENTE.}
     \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId} $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1] \CompTheta{???}
     \IF{$¬$($estr\_c$.ordenado?)}
       \STATE \NombreFuncion{iOrdenarLinks}($estr\_c$) \CompTheta{???}
@@ -953,7 +965,7 @@
   
   ~
   
-  \begin{Algoritmo}{iOrdenarLinks}{\In{estr\_c}{estr\_linksPorCatId}}{}{PENDIENTE.}
+  \begin{Algoritmo}{iOrdenarLinks}{\In{estr\_c}{estr\_linksPorCatId}}{}{$\Theta(???)$}{PENDIENTE.}
     \STATE var $it$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links) \CompTheta{???}
     \WHILE{\NombreFuncion{HaySiguiente}($it$)}
       \STATE var $it'$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{Copiar}($it$) \CompTheta{???}
@@ -973,7 +985,7 @@
   
   ~  
 
-  \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{estr\_c}{estr\_linksPorCatId}}{nat}{PENDIENTE.}
+  \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{estr\_c}{estr\_linksPorCatId}}{nat}{$\Theta(???)$}{PENDIENTE.}
     \IF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso}
       \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] + $estr\_l$.as[2] \CompTheta{???}
     \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 1}
@@ -987,7 +999,7 @@
   
   ~
   
-  \begin{Algoritmo}{iIntercambiar}{\Inout{it}{itLista(puntero(estr\_link))}, \Inout{it'}{itLista(puntero(estr\_link))}}{}{PENDIENTE.}
+  \begin{Algoritmo}{iIntercambiar}{\Inout{it}{itLista(puntero(estr\_link))}, \Inout{it'}{itLista(puntero(estr\_link))}}{}{$\Theta(???)$}{PENDIENTE.}
     \STATE var $ptr$: \TipoVariable{puntero(estr\_link)} $\leftarrow$ \NombreFuncion{Siguiente}($it'$) \CompTheta{???}
     \STATE \NombreFuncion{EliminarSiguiente}($it'$) \CompTheta{???}
     \STATE \NombreFuncion{AgregarComoSiguiente}($it'$, \NombreFuncion{Siguiente}($it$)) \CompTheta{???}
@@ -997,31 +1009,31 @@
   
   ~  
   
-  \begin{Algoritmo}{iHayMás?}{\In{it}{estr\_iter}}{bool}{PENDIENTE.}
+  \begin{Algoritmo}{iHayMás?}{\In{it}{estr\_iter}}{bool}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$.it) \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}{PENDIENTE.}
+  \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it)\DRef l \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}{PENDIENTE.}
+  \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ $it$.s.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid - 1].cat \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}{PENDIENTE.}
+  \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1]) \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}{PENDIENTE.}
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}{$\Theta(???)$}{PENDIENTE.}
     \STATE \NombreFuncion{Avanzar}($it$.it) \CompTheta{???}
   \end{Algoritmo}
   
@@ -1230,14 +1242,14 @@
 
 \begin{Algoritmos}
 
-  \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}{PENDIENTE.}
+  \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}{$\Theta(???)$}{PENDIENTE.}
     \STATE \CrearTupla{$res$}\CampoTupla{raíz}{\NombreFuncion{iNuevoNodo}()}, \CompTheta{???}
     \STATE \MargenTupla      \CampoTupla{\#Claves}{$0$}\FinTupla \CompTheta{???}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iNuevoNodo}{}{estr\_nodo}{PENDIENTE.}
+  \begin{Algoritmo}{iNuevoNodo}{}{estr\_nodo}{$\Theta(???)$}{PENDIENTE.}
     \STATE \CrearTupla{$res$}\CampoTupla{significado}{NULL}, \CompTheta{???}
     \STATE \MargenTupla      \CampoTupla{hijos}{\NombreFuncion{CrearArreglo}()}\FinTupla \CompTheta{???}
     \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to $255$}
@@ -1247,7 +1259,7 @@
 
   ~
    
-  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}{PENDIENTE.}
+  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}{$\Theta(???)$}{PENDIENTE.}
     \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{???}
     \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
       \IF{$actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\igobs$ NULL}
@@ -1261,7 +1273,7 @@
   
   ~
 
-  \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\alpha$}{PENDIENTE.}
+  \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\alpha$}{$\Theta(???)$}{PENDIENTE.}
     \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{???} 
     \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
       \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] \CompTheta{???}
@@ -1271,7 +1283,7 @@
 
   ~
   
-  \begin{Algoritmo}{i\#Claves}{\In{d}{estr\_dicctrie}}{nat}{PENDIENTE.}
+  \begin{Algoritmo}{i\#Claves}{\In{d}{estr\_dicctrie}}{nat}{$\Theta(???)$}{PENDIENTE.}
     \STATE $res$ $\leftarrow$ $d$.\#Claves \CompTheta{???}
   \end{Algoritmo}
 
