@@ -11,6 +11,7 @@
 \usepackage{algorithmic}
 \usepackage{scrextend}
 \usepackage{framed}
+\usepackage{calc}
 
 
 \setenumerate{noitemsep}
@@ -874,10 +875,12 @@
 \begin{Algoritmos}
 
   \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}{$\Theta(\#(categorias(ac)))$}{
-    $\Theta(1) + \Theta(1) + \Theta(\#categorias(ac)) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(\#categorias(ac)) =$ \\
-    $8 * \Theta(1) + 2 * \Theta(\#categorias(ac)) =$ \\
-    $2 * \Theta(\#categorias(ac)) =$ \\
-    $\Theta(\#categorias(ac)).$ \\    
+    $12 * \Theta(1) + \Theta(\#categorias(ac)) + \Theta(\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)}) =$ \\
+    $\Theta(\#categorias(ac)) + \Theta(\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)}) =$ \\
+    $\Theta(\#categorias(ac)) + \Theta(\#categorias(ac) - 1) =$ \\
+    $\Theta(\#categorias(ac)).$ \\
+    \\
+    Notar que $\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)} = \#categorias(ac) - 1$.
   }
     \STATE \CrearTupla{$res$}\CampoTupla{categorías}{$ac$}, \CompTheta{1}
     \STATE \MargenTupla      \CampoTupla{links}{\NombreFuncion{CrearDiccionario}()}, \CompTheta{1}
@@ -888,41 +891,70 @@
     \STATE \MargenTupla                       \CampoTupla{links}{\NombreFuncion{Vacía}()}, \CompTheta{1}
     \STATE \MargenTupla                       \CampoTupla{últimoAcceso}{0}, \CompTheta{1}
     \STATE \MargenTupla                       \CampoTupla{ordenado?}{\textbf{false}}\FinTupla \CompTheta{1}
-    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearItRaíz($ac$), 1, $res$)}  \CompTheta{$\#categorias(ac)$}
+    \STATE var $it$: \TipoVariable{itcats} $\leftarrow$ \NombreFuncion{CrearItRaíz}($ac$) \CompTheta{1}
+    \STATE \NombreFuncion{iAgregarALinksPorCatId}( \CompTheta{$\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)}$}
+    \STATE   \margen $it$, \CompTheta{1}
+    \STATE   \margen 1, \CompTheta{1}
+    \STATE   \margen $res$)  \CompTheta{1}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcats}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}{$\Theta(???)$}{PENDIENTE.}
+  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcats}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}
+  {
+    $\Theta(\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)})$, donde:\\
+      \margen$\bullet$ $\#subcategorias(x)$ es la cantidad de nodos del subárbol de categorías en el cual $x$ es el nodo raíz, y \\
+      \margen$\bullet$ $Siguientes(it)_i$ es el $i$-ésimo elemento de la secuencia de elementos siguientes del iterador $it$.
+  }
+  {
+    El algoritmo recibe un iterador de categorías, y para cada una de ellas guarda información en la posición correspondiente
+    en el arreglo $s$.linksPorCatId, y luego crea un iterador de sus categorías hijas que utiliza para llamarse recursivamente.
+  }
     \WHILE{\NombreFuncion{HayMás?}($it$)}
       \STATE \CrearTupla{$s$.linksPorCatId[\NombreFuncion{IdCategoríaActual}($it$) - 1]}%
-                          \CampoTupla{cat}{\NombreFuncion{CategoríaActual}($it$)},  \CompTheta{???}
-      \STATE \MargenTupla \CampoTupla{idPadre}{$idPadre$},  \CompTheta{???}
-      \STATE \MargenTupla \CampoTupla{links}{\NombreFuncion{Vacía}()},  \CompTheta{???}
-      \STATE \MargenTupla \CampoTupla{últimoAcceso}{0},  \CompTheta{???}
-      \STATE \MargenTupla \CampoTupla{ordenado?}{\textbf{false}}\FinTupla  \CompTheta{???}
-      \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearItDadoOtroIt}($it$), \NombreFuncion{IdCategoríaActual}($it$), $s$) \CompTheta{???}
-      \STATE \NombreFuncion{Avanzar}($it$) \CompTheta{???}
+                          \CampoTupla{cat}{\NombreFuncion{CategoríaActual}($it$)},  \CompTheta{1}
+      \STATE \MargenTupla \CampoTupla{idPadre}{$idPadre$},  \CompTheta{1}
+      \STATE \MargenTupla \CampoTupla{links}{\NombreFuncion{Vacía}()},  \CompTheta{1}
+      \STATE \MargenTupla \CampoTupla{últimoAcceso}{0},  \CompTheta{1}
+      \STATE \MargenTupla \CampoTupla{ordenado?}{\textbf{false}}\FinTupla  \CompTheta{1}
+      \STATE var $it'$: \TipoVariable{itcats} $\leftarrow$ \NombreFuncion{CrearItDadoOtroIt}($it$)  \CompTheta{1}
+      \STATE \NombreFuncion{iAgregarALinksPorCatId}(  \CompTheta{$\sum_{i=1}^{i=long(Siguientes(it'))}{\#subcategorias(Siguientes(it')_i)}$}
+      \STATE   \margen$ithijos$, \CompTheta{1}
+      \STATE   \margen\NombreFuncion{IdCategoríaActual}($it$), \CompTheta{1}
+      \STATE   \margen$s$) \CompTheta{1}
+      \STATE \NombreFuncion{Avanzar}($it$) \CompTheta{1}
     \ENDWHILE
   \end{Algoritmo}
     
   ~  
   
-  \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}{$\Theta(???)$}{PENDIENTE.}
+  \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}{$\Theta(|c| + |l| + h)$}{
+    $\Theta(1) + \Theta(|c|) + \Theta(1) + \Theta(1) + \Theta(|l| + copy(estr\_l)) + \Theta(|l|) + \Theta(1)\ +$ ciclo $=$ \\
+    $4 * \Theta(1) + \Theta(|c|) + \Theta(|l| + copy(estr\_l))\ +$ ciclo $=$ \\
+    $\Theta(|c|) + \Theta(|l| + copy(estr\_l))\ +$ ciclo $=$ \\
+    $\Theta(|c|) + \Theta(|l|) + \Theta(copy(estr\_l))\ +$ ciclo $=$ \\    
+    $\Theta(|c|) + \Theta(|l|) + \Theta(|c|)\ +$ ciclo $=$ \\
+    $2 * \Theta(|c|) + \Theta(|l|)\ +$ ciclo $=$ \\
+    $\Theta(|c|) + \Theta(|l|)\ +$ ciclo $=$ \\
+    $\Theta(|c|) + \Theta(|l|)\ + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \hfill $h$ es la altura del árbol de categorías. \\
+    $\Theta(|c|) + \Theta(|l|)\ + h * (3 * \Theta(1)) =$ \\
+    $\Theta(|c|) + \Theta(|l|)\ + h * \Theta(1) =$ \\
+    $\Theta(|c| + |l| + h).$
+  }
     \STATE \CrearTupla{var $estr\_l$: \TipoVariable{estr\_link}}
-                        \CampoTupla{l}{$l$}, \CompTheta{???}
-    \STATE \MargenTupla \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)}, \CompTheta{???}
-    \STATE \MargenTupla \CampoTupla{últimoAcceso}{$s$.fechaActual},  \CompTheta{???}
-    \STATE \MargenTupla \CampoTupla{as}{\NombreFuncion{iCrearArregloDe3Nats}(0, 0, 0)}\FinTupla \CompTheta{???}
-    \STATE \NombreFuncion{Definir}($l$, $estr\_l$, $s$.links) \CompTheta{???}
-    \STATE $estr\_l$ $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \CompTheta{???}
+                        \CampoTupla{l}{$l$}, \CompTheta{1}
+    \STATE \MargenTupla \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)}, \CompTheta{$|c|$}
+    \STATE \MargenTupla \CampoTupla{últimoAcceso}{$s$.fechaActual},  \CompTheta{1}
+    \STATE \MargenTupla \CampoTupla{as}{\NombreFuncion{iCrearArregloDe3Nats}(0, 0, 0)}\FinTupla \CompTheta{1}
+    \STATE \NombreFuncion{Definir}($l$, $estr\_l$, $s$.links) \CompTheta{$|l| + copy(estr\_l)$}
+    \STATE $estr\_l$ $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \CompTheta{$|l|$}
     \STATE
-    \STATE var $cid$: \TipoVariable{nat} $\leftarrow$ $estr\_l$.cid \CompTheta{???}
+    \STATE var $cid$: \TipoVariable{nat} $\leftarrow$ $estr\_l$.cid \CompTheta{1}
     \WHILE{$¬$($cid$ $\igobs$ 0)}
-      \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[$cid$ - 1].links, \&($estr\_l$)) \CompTheta{???}
-      \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual \CompTheta{???}
-      \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false} \CompTheta{???}
-      \STATE $cid$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre \CompTheta{???}
+      \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[$cid$ - 1].links, \&($estr\_l$)) \CompTheta{1}
+      \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual \CompTheta{1}
+      \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false} \CompTheta{1}
+      \STATE $cid$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre \CompTheta{1}
     \ENDWHILE
   \end{Algoritmo}
   
