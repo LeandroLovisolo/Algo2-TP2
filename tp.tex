@@ -1032,22 +1032,41 @@
   
   ~
   
-  \begin{Algoritmo}{iOrdenarLinks}{\In{estr\_c}{estr\_linksPorCatId}}{}{$\Theta(???)$}{PENDIENTE.}
-    \STATE var $it$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links) \CompTheta{???}
+  \begin{Algoritmo}{iOrdenarLinks}{\In{estr\_c}{estr\_linksPorCatId}}{}{
+    $\Theta(n^2)$, donde $n$ es $|estr\_c$.links$|$.
+  }
+  {
+    $\Theta(1) + (\sum_{i=1}^{i=n} \sum_{j=i}^{j=n} \Theta(1)) =$ \\
+    $\Theta(1) + \Theta(1) * (\sum_{i=1}^{i=n} \sum_{j=i}^{j=n} 1) =$ \\
+    $\Theta(1) + \Theta(1) * (\sum_{i=1}^{i=n} n - i) =$ \\
+    $\Theta(1) + \Theta(1) * (n^2 + (\sum_{i=1}^{i=n} - i)) =$ \\
+    $\Theta(1) + \Theta(1) * (n^2 - (\sum_{i=1}^{i=n} i)) =$ \\
+    $\Theta(1) + \Theta(1) * (n^2 - \frac{1}{2} * (n * (n - 1))) =$ \\
+    $\Theta(1) + \Theta(1) * (n^2 - \frac{1}{2} * (n^2 - n)) =$ \\    
+    $\Theta(1) + \Theta(n^2 - \frac{1}{2} * (n^2 - n)) =$ \\
+    $\Theta(1) + \Theta(n^2 - \frac{1}{2} * n^2 - \frac{1}{2} * n)) =$ \\    
+    $\Theta(1) + \Theta(n^2) - \frac{1}{2} * \Theta(n^2) - \frac{1}{2} * \Theta(n) =$ \\
+    $\Theta(1) + \frac{1}{2} * \Theta(n^2) - \frac{1}{2} * \Theta(n) =$ \\    
+    $\Theta(n^2)$.  
+  }
+    \STATE var $it$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links) \CompTheta{1}
     \WHILE{\NombreFuncion{HaySiguiente}($it$)}
-      \STATE var $it'$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{Copiar}($it$) \CompTheta{???}
-      \STATE var $itMax$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{Copiar}($it'$) \CompTheta{???}
+      \STATE var $it'$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{Copiar}($it$) \CompTheta{1}
+      \STATE var $itMax$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{Copiar}($it'$) \CompTheta{1}
       \WHILE{\NombreFuncion{HaySiguiente}($it'$)}
-        \IF{\NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it'$), $estr\_c$) $>$
-            \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($itMax$), $estr\_c$)}
-          \STATE $itMax$ $\leftarrow$ \NombreFuncion{Copiar}($it'$) \CompTheta{???}
+        \STATE var $arActual$: \TipoVariable{nat} $\leftarrow$
+               \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it'$), $estr\_c$) \CompTheta{1}
+        \STATE var $arMax$: \TipoVariable{nat} $\leftarrow$
+               \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($itMax$), $estr\_c$) \CompTheta{1}
+        \IF{$arActual > arMax$}
+          \STATE $itMax$ $\leftarrow$ \NombreFuncion{Copiar}($it'$) \CompTheta{1}
         \ENDIF
-    \STATE \NombreFuncion{Avanzar($it'$)} \CompTheta{???}
+    \STATE \NombreFuncion{Avanzar($it'$)} \CompTheta{1}
     \ENDWHILE
-    \STATE \NombreFuncion{iIntercamabiar}($it$, $itMax$) \CompTheta{???}
-      \STATE \NombreFuncion{Avanzar($it$)} \CompTheta{???}
+    \STATE \NombreFuncion{iIntercamabiar}($it$, $itMax$) \CompTheta{1}
+      \STATE \NombreFuncion{Avanzar($it$)} \CompTheta{1}
     \ENDWHILE
-    \STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true} \CompTheta{???}
+    \STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true} \CompTheta{1}
   \end{Algoritmo}  
   
   ~  
