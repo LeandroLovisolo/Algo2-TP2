@@ -1081,12 +1081,12 @@
 
   \begin{Estructura}{dicctrie$(\alpha)$}[estr\_dicctrie]
     \begin{Tupla}[estr\_dicctrie]
-      \tupItem{raíz}{estr\_nodo},
+      \tupItem{raíz}{estr\_nodo},\\
       \tupItem{\#Claves}{nat}%
     \end{Tupla}
    
     \begin{Tupla}[estr\_nodo]
-      \tupItem{significado}{puntero$(\alpha)$},    
+      \tupItem{significado}{puntero$(\alpha)$},\\
       \tupItem{hijos}{arreglo\_estático[256] de puntero(estr\_nodo)}%
     \end{Tupla}
   \end{Estructura}
