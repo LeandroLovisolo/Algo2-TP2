@@ -481,20 +481,20 @@
 
   ~   
     
-  \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías).id \CompTheta{???}
+  \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}{$\Theta(|c|)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías).id \CompTheta{|c|}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{i\#Categorías}{\In{ac}{estr\_acat}}{nat}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{\#Claves}($ac$.categorías) \CompTheta{???}
+  \begin{Algoritmo}{i\#Categorías}{\In{ac}{estr\_acat}}{nat}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{\#Claves}($ac$.categorías) \CompTheta{1}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos) \CompTheta{???}
+  \begin{Algoritmo}{iCrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}{$\Theta(|padre|)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos) \CompTheta{|padre|}
   \end{Algoritmo}
 
   ~
