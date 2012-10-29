@@ -1024,32 +1024,32 @@
   
   ~  
   
-  \begin{Algoritmo}{iHayMás?}{\In{it}{estr\_iter}}{bool}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$.it) \CompTheta{???}
+  \begin{Algoritmo}{iHayMás?}{\In{it}{estr\_iter}}{bool}{$\Theta(1)$}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$.it) \CompTheta{1}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it)\DRef l \CompTheta{???}
+  \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}{$\Theta(1)$}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it)\DRef l \CompTheta{1}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ $it$.s.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid - 1].cat \CompTheta{???}
+  \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ $it$.s.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid - 1].cat \CompTheta{1}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}{$\Theta(???)$}{PENDIENTE.}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1]) \CompTheta{???}
+  \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}{$\Theta(1)$}{}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1]) \CompTheta{1}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}{$\Theta(???)$}{PENDIENTE.}
-    \STATE \NombreFuncion{Avanzar}($it$.it) \CompTheta{???}
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}{$\Theta(1)$}{}
+    \STATE \NombreFuncion{Avanzar}($it$.it) \CompTheta{1}
   \end{Algoritmo}
   
 \end{Algoritmos}
@@ -1285,9 +1285,9 @@
   ~
    
   \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}{$\Theta(|c| + copy(s))$}{
-    $\Theta(1) + (\Theta(1) + \Theta(1) + \Theta(1))*\Theta(|c|) + \Theta(copy(s))  + \Theta(1) =$ \\
-    $2*\Theta(1) + (3*\Theta(1))*\Theta(|c|) + \Theta(copy(s)) $= \\ 
-    $(\Theta(1))*\Theta(|c|) + \Theta(copy(s)) $= \\
+    $\Theta(1) + (\Theta(1) + \Theta(1) + \Theta(1))*|c| + \Theta(copy(s))  + \Theta(1) =$ \\
+    $2*\Theta(1) + (3*\Theta(1))*|c| + \Theta(copy(s)) $= \\ 
+    $(\Theta(1))*|c| + \Theta(copy(s)) $= \\
     $\Theta(|c|) + \Theta(copy(s)) $
   }
     \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{1}
@@ -1304,7 +1304,7 @@
   ~
 
   \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\Theta(|c|)$}{$\Theta(|c|)$}{
-   $\Theta(1) + (\Theta(1))*\Theta(|c|) + \Theta(1) $= \\
+   $\Theta(1) + \Theta(1)*|c| + \Theta(1) $= \\
    $2*\Theta(1) + \Theta(|c|) $= \\
    $\Theta(|c|)$
   }
