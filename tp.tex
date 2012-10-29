@@ -10,6 +10,7 @@
 \usepackage{enumitem}
 \usepackage{algorithmic}
 \usepackage{scrextend}
+\usepackage{framed}
 
 
 \setenumerate{noitemsep}
@@ -124,41 +125,54 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+%margen: margen de uso general
+\newcommandx{\margen}{\hspace*{5mm}}
+
 %InterfazFuncion(nombre, argumentos, valor retorno)
 \newcommandx{\InterfazAlgoritmo}[3]{%
   \hangindent=\parindent
   \TipoFuncion{#1}{#2}{#3}%
 }
 
+\algsetup{indent=2em, linenodelimiter=.}
+
 %Algoritmo(nombre, argumentos, valor retorno) { cuerpo }
-\newenvironmentx{Algoritmo}[3]{%
-  \InterfazAlgoritmo{#1}{#2}{#3}
-  \begin{addmargin}[2em]{0em}
-    \algsetup{indent=2em}
-    \begin{algorithmic}
+\newenvironmentx{Algoritmo}[4]{%
+  \def \complejidad {#4}
+  %\begin{framed}
+    \InterfazAlgoritmo{#1}{#2}{#3}  
+    \begin{addmargin}[2em]{0em}
+      \begin{algorithmic}[1]
 }
 {
-    \end{algorithmic}
-  \end{addmargin}
+      \end{algorithmic}
+    \end{addmargin}
+
+    ~  
+  
+    \textbf{Complejidad:} \complejidad
+  %\end{framed}  
 }
 
-%CrearTupla(variable en la que se va a guardar) { cuerpo }
-\newlength{\lenVariable}
-\newenvironmentx{CrearTupla}[1]{%
-    \settowidth{\lenVariable}{#1 $\leftarrow$ $\langle$}%
-    \addtolength{\lenVariable}{\parindent}%
-    #1 $\leftarrow$ $\langle$%
-    \begin{minipage}[t]{\linewidth-\lenTupla}%
-}{%
-    $\rangle$%
-    \end{minipage}%
+%CrearTupla(variable donde se almacenará)
+\newlength{\margenTupla}
+\newcommandx{\CrearTupla}[1]{%
+  \settowidth{\margenTupla}{#1 $\leftarrow$ $\langle$}%  
+  #1 $\leftarrow$ $\langle$%  
 }
 
-%CampoTupla(nombre del campo, valor)
+%MargenTupla
+\newcommandx{\MargenTupla}{\hspace*{\margenTupla}}
+
+%CampoTupla(campo, valor)
 \newcommandx{\CampoTupla}[2]{\TipoVariable{#1}: #2}
 
-%margen
-\newcommandx{\margen}{\hspace*{5mm}}
+%FinTupla
+\newcommandx{\FinTupla}{$\rangle$}
+
+%CompTheta(complejidad)
+\newcommandx{\CompTheta}[1]{\hfill $\Theta$(#1)}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Árbol de Categorías                                                       %%
@@ -415,95 +429,86 @@
 
 \begin{Algoritmos}
 
-  \begin{Algoritmo}{iCrearÁrbol}{\In{raiz}{categoria}}{estr\_acat}
-  	\STATE var $estr\_raiz$: \TipoVariable{estr\_cat}
-	\STATE \begin{CrearTupla}{$estr\_raiz$}
-	         \CampoTupla{id}{1},
-             \CampoTupla{nombre}{$raiz$},
-             \CampoTupla{hijos}{\NombreFuncion{Vacío}()}%
-           \end{CrearTupla}
-	\STATE var $categorias$: \TipoVariable{dicctrie(estr\_cat)}
-    \STATE $categorias$ $\leftarrow$ \NombreFuncion{CrearDiccionario}()
-    \STATE \NombreFuncion{Definir}($raiz$, $estr\_raiz$, $categorias$)
-	\STATE \begin{CrearTupla}{$res$}
-	         \CampoTupla{raíz}{$estr\_raiz$},	
-             \CampoTupla{categorías}{$categorias$}%
-           \end{CrearTupla}
+  \begin{Algoritmo}{iCrearÁrbol}{\In{raiz}{categoria}}{estr\_acat}{PENDIENTE.}
+    \STATE \CrearTupla{var $estr\_raiz$: \TipoVariable{estr\_cat}}\CampoTupla{id}{1},                                  \CompTheta{1}
+    \STATE \MargenTupla                                           \CampoTupla{nombre}{$raiz$},                         \CompTheta{1}
+    \STATE \MargenTupla                                           \CampoTupla{hijos}{\NombreFuncion{Vacío}()}\FinTupla \CompTheta{1}
+  \STATE var $categorias$: \TipoVariable{dicctrie(estr\_cat)} $\leftarrow$ \NombreFuncion{CrearDiccionario}() \CompTheta{???}
+    \STATE \NombreFuncion{Definir}($raiz$, $estr\_raiz$, $categorias$) \CompTheta{???}
+    \STATE \CrearTupla{$res$}\CampoTupla{raíz}{$estr\_raiz$}, %
+                             \CampoTupla{categorías}{$categorias$}%
+                             \FinTupla \CompTheta{1}  
   \end{Algoritmo}
 
   ~  
    
-  \begin{Algoritmo}{iNombreCategoríaRaíz}{\In{ac}{estr\_acat}}{categoria}
-	\STATE $res$ $\leftarrow$ $ac$.raíz.nombre
+  \begin{Algoritmo}{iNombreCategoríaRaíz}{\In{ac}{estr\_acat}}{categoria}{PENDIENTE.}
+  \STATE $res$ $\leftarrow$ $ac$.raíz.nombre \CompTheta{1}
   \end{Algoritmo}  
 
   ~
   
-  \begin{Algoritmo}{iAgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{estr\_acat}}{}
-  	\STATE var $estr\_padre$: \TipoVariable{estr\_cat}  
-  	\STATE $estr\_padre$ $\leftarrow$ \NombreFuncion{Obtener}($padre$, $ac$.categorías)
-  	\STATE var $estr\_hija$: \TipoVariable{estr\_cat}
-	\STATE \begin{CrearTupla}{$estr\_hija$}
-	         \CampoTupla{id}{\NombreFuncion{\#Claves}($ac$.categorías) + 1},
-	         \CampoTupla{nombre}{$hija$},
-	         \CampoTupla{hijos}{\NombreFuncion{Vacío}()$\rangle$}%
-	       \end{CrearTupla}
-	\STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$)	       
-    \STATE \NombreFuncion{AgregarRápido}($estr\_padre$.hijos, \&(\NombreFuncion{Obtener}($hija$, $ac$.categorías)))
+  \begin{Algoritmo}{iAgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{estr\_acat}}{}{PENDIENTE.}
+    \STATE var $estr\_padre$: \TipoVariable{estr\_cat} $\leftarrow$ \NombreFuncion{Obtener}($padre$, $ac$.categorías) \CompTheta{???}
+    \STATE \CrearTupla{var $estr\_hija$: \TipoVariable{estr\_cat}}\CampoTupla{id}{\NombreFuncion{\#Claves}($ac$.categorías) + 1}, \CompTheta{???}
+    \STATE \MargenTupla                                           \CampoTupla{nombre}{$hija$}, \CompTheta{???}
+  \STATE \MargenTupla                                           \CampoTupla{hijos}{\NombreFuncion{Vacío}()}\FinTupla \CompTheta{???}
+  \STATE \NombreFuncion{Definir}($hija$, $estr\_hija$, $ac$) \CompTheta{???}     
+    \STATE \NombreFuncion{AgregarRápido}($estr\_padre$.hijos, \&(\NombreFuncion{Obtener}($hija$, $ac$.categorías))) \CompTheta{???}
   \end{Algoritmo}
 
   ~   
     
-  \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}
-  	\STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías).id
+  \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías).id \CompTheta{???}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{i\#Categorías}{\In{ac}{estr\_acat}}{nat}
-  	\STATE $res$ $\leftarrow$ \NombreFuncion{\#Claves}($ac$.categorías)
+  \begin{Algoritmo}{i\#Categorías}{\In{ac}{estr\_acat}}{nat}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{\#Claves}($ac$.categorías) \CompTheta{???}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos)
+  \begin{Algoritmo}{iCrearIt}{\In{padre}{categoria}, \In{ac}{acat}}{itConj(puntero(estr\_cat))}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Obtener}($padre$, $ac$.categorías).hijos) \CompTheta{???}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iCrearItRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}($ac$.raíz.hijos)
+  \begin{Algoritmo}{iCrearItRaíz}{\In{ac}{acat}}{itConj(puntero(estr\_cat))}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}($ac$.raíz.hijos) \CompTheta{???}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iCrearItDadoOtroIt}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it)\DRef hijos)
+  \begin{Algoritmo}{iCrearItDadoOtroIt}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it)\DRef hijos) \CompTheta{???}
   \end{Algoritmo}  
 
   ~  
   
-  \begin{Algoritmo}{iHayMás?}{\In{it}{itConj(puntero(estr\_cat))}}{bool}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$)
+  \begin{Algoritmo}{iHayMás?}{\In{it}{itConj(puntero(estr\_cat))}}{bool}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$) \CompTheta{???}
   \end{Algoritmo}
   
   ~
   
-  \begin{Algoritmo}{iCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{categoria}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef nombre
+  \begin{Algoritmo}{iCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{categoria}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef nombre \CompTheta{???}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{iIdCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{nat}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef id
+  \begin{Algoritmo}{iIdCategoríaActual}{\In{it}{itConj(puntero(estr\_cat))}}{nat}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$)\DRef id \CompTheta{???}
   \end{Algoritmo}  
   
   ~
   
-  \begin{Algoritmo}{iAvanzar}{\Inout{it}{itConj(puntero(estr\_cat))}}{}
-    \STATE \NombreFuncion{Avanzar}($it$)
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{itConj(puntero(estr\_cat))}}{}{PENDIENTE.}
+    \STATE \NombreFuncion{Avanzar}($it$) \CompTheta{???}
   \end{Algoritmo}
 
 \end{Algoritmos}
@@ -617,7 +622,7 @@
                                              THEN \textbf{true}
                                              ELSE prim($sl$) $\in$ links($s$) $\land$ estánEnSistema?(fin($sl$), $s$)
                                              FI}
-	  \tadAxioma{iteraLinksCorrectos($it$, $c$, $s$)}{terminanIgual(Siguientes($it$), tuplasLinks($c$, $s$))}
+    \tadAxioma{iteraLinksCorrectos($it$, $c$, $s$)}{terminanIgual(Siguientes($it$), tuplasLinks($c$, $s$))}
       \tadAxioma{terminanIgual($st$, $st'$)}{\TADIF vacía?($st$) $\lor$ vacía?($st'$)
                                              THEN \textbf{true}
                                              ELSE ult($st$) $\igobs$ ult($st'$) $\land$ terminanIgual(com($st$), com($st'$))
@@ -846,197 +851,178 @@
 
 \begin{Algoritmos}
 
-  \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}
-    \STATE \begin{CrearTupla}{$res$}
-             \CampoTupla{categorías}{$ac$},
-             \CampoTupla{links}{\NombreFuncion{CrearDiccionario}()},\\
-             \CampoTupla{linksPorCatId}{\NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$))},
-             \CampoTupla{fechaActual}{0}%
-           \end{CrearTupla} 
-    \STATE \begin{CrearTupla}{$res$.linksPorCatId[0]}
-             \CampoTupla{cat}{\NombreFuncion{NombreCategoríaRaíz}($ac$)},
-             \CampoTupla{idPadre}{0},
-             \CampoTupla{links}{\NombreFuncion{Vacía}()},\\
-             \CampoTupla{últimoAcceso}{0},
-             \CampoTupla{ordenado?}{\textbf{false}}%
-           \end{CrearTupla}
-    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearItRaíz($ac$), 1, $res$)}   
+  \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}{PENDIENTE.}
+    \STATE \CrearTupla{$res$}\CampoTupla{categorías}{$ac$}, \CompTheta{???}
+    \STATE \MargenTupla      \CampoTupla{links}{\NombreFuncion{CrearDiccionario}()}, \CompTheta{???}
+    \STATE \MargenTupla      \CampoTupla{linksPorCatId}{\NombreFuncion{CrearArreglo}(\NombreFuncion{\#Categorías}($ac$))}, \CompTheta{???}
+    \STATE \MargenTupla      \CampoTupla{fechaActual}{0}\FinTupla \CompTheta{???}
+    \STATE \CrearTupla{$res$.linksPorCatId[0]}\CampoTupla{cat}{\NombreFuncion{NombreCategoríaRaíz}($ac$)}, \CompTheta{???}
+    \STATE \MargenTupla                       \CampoTupla{idPadre}{0}, \CompTheta{???}
+    \STATE \MargenTupla                       \CampoTupla{links}{\NombreFuncion{Vacía}()}, \CompTheta{???}
+    \STATE \MargenTupla                       \CampoTupla{últimoAcceso}{0}, \CompTheta{???}
+    \STATE \MargenTupla                       \CampoTupla{ordenado?}{\textbf{false}}\FinTupla \CompTheta{???}
+    \STATE \NombreFuncion{iAgregarALinksPorCatId(CrearItRaíz($ac$), 1, $res$)}  \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcats}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}
+  \begin{Algoritmo}{iAgregarALinksPorCatId}{\Inout{it}{itcats}, \In{idPadre}{nat}, \Inout{s}{estr\_sistema}}{}{PENDIENTE.}
     \WHILE{\NombreFuncion{HayMás?}($it$)}
-      \STATE \begin{CrearTupla}{$s$.linksPorCatId[\NombreFuncion{IdCategoríaActual}($it$) - 1]}
-               \CampoTupla{cat}{\NombreFuncion{CategoríaActual}($it$)},
-               \CampoTupla{idPadre}{$idPadre$},\\
-               \CampoTupla{links}{\NombreFuncion{Vacía}()},
-               \CampoTupla{últimoAcceso}{0},
-               \CampoTupla{ordenado?}{\textbf{false}}%
-             \end{CrearTupla}
-      \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearItDadoOtroIt}($it$), \NombreFuncion{IdCategoríaActual}($it$), $s$)
-      \STATE \NombreFuncion{Avanzar}($it$)
+      \STATE \CrearTupla{$s$.linksPorCatId[\NombreFuncion{IdCategoríaActual}($it$) - 1]}%
+                          \CampoTupla{cat}{\NombreFuncion{CategoríaActual}($it$)},  \CompTheta{???}
+      \STATE \MargenTupla \CampoTupla{idPadre}{$idPadre$},  \CompTheta{???}
+      \STATE \MargenTupla \CampoTupla{links}{\NombreFuncion{Vacía}()},  \CompTheta{???}
+      \STATE \MargenTupla \CampoTupla{últimoAcceso}{0},  \CompTheta{???}
+      \STATE \MargenTupla \CampoTupla{ordenado?}{\textbf{false}}\FinTupla  \CompTheta{???}
+      \STATE \NombreFuncion{iAgregarALinksPorCatId}(\NombreFuncion{CrearItDadoOtroIt}($it$), \NombreFuncion{IdCategoríaActual}($it$), $s$) \CompTheta{???}
+      \STATE \NombreFuncion{Avanzar}($it$) \CompTheta{???}
     \ENDWHILE
   \end{Algoritmo}
     
   ~  
   
-  \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}
-  	\STATE var $estr\_l$: \TipoVariable{estr\_link}
-  	\STATE \begin{CrearTupla}{$estr\_l$}
-             \CampoTupla{l}{$l$},
-             \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)},\\
-             \CampoTupla{últimoAcceso}{$s$.fechaActual},
-             \CampoTupla{as}{\NombreFuncion{iCrearArregloDe3Nats}(0, 0, 0)}%
-  	       \end{CrearTupla}
- 	\STATE \NombreFuncion{Definir}($l$, $estr\_l$, $s$.links)
- 	\STATE $estr\_l$ $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links)
- 	\STATE
-    \STATE var $cid$: \TipoVariable{nat}
-    \STATE $cid$ $\leftarrow$ $estr\_l$.cid
+  \begin{Algoritmo}{iAgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{estr\_sistema}}{}{PENDIENTE.}
+    \STATE \CrearTupla{var $estr\_l$: \TipoVariable{estr\_link}}
+                        \CampoTupla{l}{$l$}, \CompTheta{???}
+    \STATE \MargenTupla \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)}, \CompTheta{???}
+    \STATE \MargenTupla \CampoTupla{últimoAcceso}{$s$.fechaActual},  \CompTheta{???}
+    \STATE \MargenTupla \CampoTupla{as}{\NombreFuncion{iCrearArregloDe3Nats}(0, 0, 0)}\FinTupla \CompTheta{???}
+    \STATE \NombreFuncion{Definir}($l$, $estr\_l$, $s$.links) \CompTheta{???}
+    \STATE $estr\_l$ $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \CompTheta{???}
     \STATE
- 	\WHILE{$¬$($cid$ $\igobs$ 0)}
-      \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[$cid$ - 1].links, \&($estr\_l$))
- 	  \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual
- 	  \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false}
- 	  \STATE $cid$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre
- 	\ENDWHILE
+    \STATE var $cid$: \TipoVariable{nat} $\leftarrow$ $estr\_l$.cid \CompTheta{???}
+    \WHILE{$¬$($cid$ $\igobs$ 0)}
+      \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[$cid$ - 1].links, \&($estr\_l$)) \CompTheta{???}
+      \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual \CompTheta{???}
+      \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false} \CompTheta{???}
+      \STATE $cid$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre \CompTheta{???}
+    \ENDWHILE
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}
-    \STATE var $estr\_l$: \TipoVariable{estr\_link}
-    \STATE $estr\_l$ $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links)
-	\IF{$f$ $\igobs$ $estr\_l$.últimoAcceso}
-	  \STATE $estr\_l$.as[0] $\leftarrow$ $estr\_l$.as[0] + 1
-	\ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 1}
-	  \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, $estr\_l$.as[0], $estr\_l$.as[1])
-	\ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 2}
-	  \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, $estr\_l$.as[0])
-	\ELSE
-	  \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, 0)
-	\ENDIF
- 	\STATE
- 	\STATE $s$.fechaActual $\leftarrow$ $f$	
- 	\STATE
-    \STATE var $cid$: \TipoVariable{nat}
-    \STATE $cid$ $\leftarrow$ $estr\_l$.cid
- 	\STATE
- 	\WHILE{$¬$($cid$ $\igobs$ 0)}
- 	  \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual
- 	  \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false}
- 	  \STATE $idPadre$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre
- 	\ENDWHILE  	 	
+  \begin{Algoritmo}{iAccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{estr\_sistema}}{}{PENDIENTE.}
+    \STATE var $estr\_l$: \TipoVariable{estr\_link} $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \CompTheta{???}
+    \IF{$f$ $\igobs$ $estr\_l$.últimoAcceso}
+      \STATE $estr\_l$.as[0] $\leftarrow$ $estr\_l$.as[0] + 1 \CompTheta{???}
+    \ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 1}
+      \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, $estr\_l$.as[0], $estr\_l$.as[1]) \CompTheta{???}
+    \ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 2}
+      \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, $estr\_l$.as[0]) \CompTheta{???}
+    \ELSE
+      \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, 0) \CompTheta{???}
+    \ENDIF
+    \STATE
+    \STATE $s$.fechaActual $\leftarrow$ $f$ \CompTheta{???}
+    \STATE
+    \STATE var $cid$: \TipoVariable{nat} $\leftarrow$ $estr\_l$.cid \CompTheta{???}
+    \WHILE{$¬$($cid$ $\igobs$ 0)}
+      \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual \CompTheta{???}
+      \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false} \CompTheta{???}
+      \STATE $idPadre$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre \CompTheta{???}
+    \ENDWHILE     
   \end{Algoritmo}
   
   ~
   
-  \begin{Algoritmo}{iCrearArregloDe3Nats}{\In{a}{nat}, \In{b}{nat}, \In{c}{nat}}{arreglo\_estático[3] de nat}
-    \STATE $\res$ $\leftarrow$ \NombreFuncion{CrearArreglo}()
-    \STATE $\res$[0] $\leftarrow$ $a$
-    \STATE $\res$[1] $\leftarrow$ $b$
-    \STATE $\res$[2] $\leftarrow$ $c$
+  \begin{Algoritmo}{iCrearArregloDe3Nats}{\In{a}{nat}, \In{b}{nat}, \In{c}{nat}}{arreglo\_estático[3] de nat}{PENDIENTE.}
+    \STATE $\res$ $\leftarrow$ \NombreFuncion{CrearArreglo}() \CompTheta{???}
+    \STATE $\res$[0] $\leftarrow$ $a$ \CompTheta{???}
+    \STATE $\res$[1] $\leftarrow$ $b$ \CompTheta{???}
+    \STATE $\res$[2] $\leftarrow$ $c$ \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{i\#Links}{\In{c}{categoría}, \In{s}{estr\_sistema}}{nat}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{Longitud}($s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1].links)
+  \begin{Algoritmo}{i\#Links}{\In{c}{categoría}, \In{s}{estr\_sistema}}{nat}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Longitud}($s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1].links) \CompTheta{???}
   \end{Algoritmo}
 
   
   ~  
   
-  \begin{Algoritmo}{iCrearIt}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}
-    \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId}
-  	\STATE $estr\_c$ $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1]
-  	\IF{$¬$($estr\_c$.ordenado?)}
-      \STATE \NombreFuncion{iOrdenarLinks}($estr\_c$)
-  	\ENDIF
-    \STATE \begin{CrearTupla}{$res$}
-	         \CampoTupla{s}{$s$},
-             \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)},
-             \CampoTupla{it}{\NombreFuncion{CrearIt}($estr\_c$.links)}%
-           \end{CrearTupla}           
+  \begin{Algoritmo}{iCrearIt}{\In{c}{categoría}, \In{s}{estr\_sistema}}{estr\_iter}{PENDIENTE.}
+    \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId} $\leftarrow$ $s$.linksPorCatId[\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1] \CompTheta{???}
+    \IF{$¬$($estr\_c$.ordenado?)}
+      \STATE \NombreFuncion{iOrdenarLinks}($estr\_c$) \CompTheta{???}
+    \ENDIF
+    \STATE \CrearTupla{$res$}\CampoTupla{s}{$s$}, \CompTheta{???}
+    \STATE \MargenTupla      \CampoTupla{cid}{\NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías)}, \CompTheta{???}
+    \STATE \MargenTupla      \CampoTupla{it}{\NombreFuncion{CrearIt}($estr\_c$.links)}\FinTupla \CompTheta{???}
   \end{Algoritmo}  
   
   ~
   
-  \begin{Algoritmo}{iOrdenarLinks}{\In{estr\_c}{estr\_linksPorCatId}}{}
-    \STATE var $it$: \TipoVariable{itLista(puntero(estr\_link))}
-    \STATE $it$ $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links)  	
-  	\WHILE{\NombreFuncion{HaySiguiente}($it$)}
-      \STATE var $it'$: \TipoVariable{itLista(puntero(estr\_link))}
-      \STATE $it'$ $\leftarrow$ \NombreFuncion{Copiar}($it$)
-      \STATE var $itMax$: \TipoVariable{itLista(puntero(estr\_link))}      
-      \STATE $itMax$ $\leftarrow$ \NombreFuncion{Copiar}($it'$)
+  \begin{Algoritmo}{iOrdenarLinks}{\In{estr\_c}{estr\_linksPorCatId}}{}{PENDIENTE.}
+    \STATE var $it$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links) \CompTheta{???}
+    \WHILE{\NombreFuncion{HaySiguiente}($it$)}
+      \STATE var $it'$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{Copiar}($it$) \CompTheta{???}
+      \STATE var $itMax$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{Copiar}($it'$) \CompTheta{???}
       \WHILE{\NombreFuncion{HaySiguiente}($it'$)}
         \IF{\NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it'$), $estr\_c$) $>$
             \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($itMax$), $estr\_c$)}
-          \STATE $itMax$ $\leftarrow$ \NombreFuncion{Copiar}($it'$)
-  	  	\ENDIF
-		\STATE \NombreFuncion{Avanzar($it'$)}
-	  \ENDWHILE
-	  \STATE \NombreFuncion{iIntercamabiar}($it$, $itMax$)  	
-  	  \STATE \NombreFuncion{Avanzar($it$)}
-  	\ENDWHILE
-  	\STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true}  
+          \STATE $itMax$ $\leftarrow$ \NombreFuncion{Copiar}($it'$) \CompTheta{???}
+        \ENDIF
+    \STATE \NombreFuncion{Avanzar($it'$)} \CompTheta{???}
+    \ENDWHILE
+    \STATE \NombreFuncion{iIntercamabiar}($it$, $itMax$) \CompTheta{???}
+      \STATE \NombreFuncion{Avanzar($it$)} \CompTheta{???}
+    \ENDWHILE
+    \STATE $estr\_c$.ordenado? $\leftarrow$ \textbf{true} \CompTheta{???}
   \end{Algoritmo}  
   
   ~  
 
-  \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{estr\_c}{estr\_linksPorCatId}}{nat}
+  \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{estr\_c}{estr\_linksPorCatId}}{nat}{PENDIENTE.}
     \IF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso}
-      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] + $estr\_l$.as[2]
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] + $estr\_l$.as[2] \CompTheta{???}
     \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 1}
-      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1]
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] \CompTheta{???}
     \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 2}          
-      \STATE $res$ $\leftarrow$ $estr\_l$.as[0]
+      \STATE $res$ $\leftarrow$ $estr\_l$.as[0] \CompTheta{???}
     \ELSE
-      \STATE $res$ $\leftarrow$ 0
+      \STATE $res$ $\leftarrow$ 0 \CompTheta{???}
     \ENDIF
   \end{Algoritmo}
   
   ~
   
-  \begin{Algoritmo}{iIntercambiar}{\Inout{it}{itLista(puntero(estr\_link))}, \Inout{it'}{itLista(puntero(estr\_link))}}{}
-    \STATE var $ptr$: \TipoVariable{puntero(estr\_link)}
-    \STATE $ptr$ $\leftarrow$ \NombreFuncion{Siguiente}($it'$)
-    \STATE \NombreFuncion{EliminarSiguiente}($it'$)
-    \STATE \NombreFuncion{AgregarComoSiguiente}($it'$, \NombreFuncion{Siguiente}($it$))
-    \STATE \NombreFuncion{EliminarSiguiente}($it$)
-    \STATE \NombreFuncion{AgregarComoSiguiente}($it$, $ptr$)
+  \begin{Algoritmo}{iIntercambiar}{\Inout{it}{itLista(puntero(estr\_link))}, \Inout{it'}{itLista(puntero(estr\_link))}}{}{PENDIENTE.}
+    \STATE var $ptr$: \TipoVariable{puntero(estr\_link)} $\leftarrow$ \NombreFuncion{Siguiente}($it'$) \CompTheta{???}
+    \STATE \NombreFuncion{EliminarSiguiente}($it'$) \CompTheta{???}
+    \STATE \NombreFuncion{AgregarComoSiguiente}($it'$, \NombreFuncion{Siguiente}($it$)) \CompTheta{???}
+    \STATE \NombreFuncion{EliminarSiguiente}($it$) \CompTheta{???}
+    \STATE \NombreFuncion{AgregarComoSiguiente}($it$, $ptr$) \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iHayMás?}{\In{it}{estr\_iter}}{bool}
-    $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$.it)
+  \begin{Algoritmo}{iHayMás?}{\In{it}{estr\_iter}}{bool}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{HaySiguiente}($it$.it) \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}
-    $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it)\DRef l
+  \begin{Algoritmo}{iLinkActual}{\In{it}{estr\_iter}}{link}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{Siguiente}($it$.it)\DRef l \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}
-    $res$ $\leftarrow$ $it$.s.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid - 1].cat
+  \begin{Algoritmo}{iCategoríaLinkActual}{\In{it}{estr\_iter}}{categoria}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ $it$.s.linksPorCatId[\NombreFuncion{Siguiente}($it$.it)\DRef cid - 1].cat \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}
-    \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1])
+  \begin{Algoritmo}{iAccesosRecientesLinkActual}{\In{it}{estr\_iter}}{nat}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it$.iter), $it$.s.linksPorCatId[$it$.cid - 1]) \CompTheta{???}
   \end{Algoritmo}
   
   ~  
   
-  \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}
-    \NombreFuncion{Avanzar}($it$.it)
+  \begin{Algoritmo}{iAvanzar}{\Inout{it}{estr\_iter}}{}{PENDIENTE.}
+    \STATE \NombreFuncion{Avanzar}($it$.it) \CompTheta{???}
   \end{Algoritmo}
   
 \end{Algoritmos}
@@ -1244,58 +1230,49 @@
 
 \begin{Algoritmos}
 
-  \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}
-    \STATE \begin{CrearTupla}{$res$}
-             \CampoTupla{raíz}{\NombreFuncion{iNuevoNodo}()},
-             \CampoTupla{\#Claves}{$0$}%
-           \end{CrearTupla}
+  \begin{Algoritmo}{iCrearDiccionario}{}{estr\_dicctrie}{PENDIENTE.}
+    \STATE \CrearTupla{$res$}\CampoTupla{raíz}{\NombreFuncion{iNuevoNodo}()}, \CompTheta{???}
+    \STATE \MargenTupla      \CampoTupla{\#Claves}{$0$}\FinTupla \CompTheta{???}
   \end{Algoritmo}
 
   ~
 
-  \begin{Algoritmo}{iNuevoNodo}{}{estr\_nodo}
-    \STATE \begin{CrearTupla}{$res$}
-             \CampoTupla{significado}{NULL},
-             \CampoTupla{hijos}{\NombreFuncion{CrearArreglo}()}%
-           \end{CrearTupla}
-    \STATE var $i$: \TipoVariable{nat}
-    \FOR{$i$ $\leftarrow$ $0$ to $255$}
-      \STATE $res$.hijos[$i$] $\leftarrow$ NULL
+  \begin{Algoritmo}{iNuevoNodo}{}{estr\_nodo}{PENDIENTE.}
+    \STATE \CrearTupla{$res$}\CampoTupla{significado}{NULL}, \CompTheta{???}
+    \STATE \MargenTupla      \CampoTupla{hijos}{\NombreFuncion{CrearArreglo}()}\FinTupla \CompTheta{???}
+    \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to $255$}
+      \STATE $res$.hijos[$i$] $\leftarrow$ NULL \CompTheta{???}
     \ENDFOR 
   \end{Algoritmo}
 
   ~
    
-  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}
-    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)}
-    \STATE $actual$ $\leftarrow$ \&($d$.raíz)
-    \STATE var $i$: \TipoVariable{nat}
-    \FOR{$i$ $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
+  \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}{PENDIENTE.}
+    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{???}
+    \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
       \IF{$actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\igobs$ NULL}
-        \STATE $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\leftarrow$ \&(\NombreFuncion{iNuevoNodo}())
+        \STATE $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\leftarrow$ \&(\NombreFuncion{iNuevoNodo}()) \CompTheta{???}
       \ENDIF
-        \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])]
+        \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] \CompTheta{???}
     \ENDFOR
-    \STATE $actual$\DRef significado $\leftarrow$ \&(Copiar($s$))
-    \STATE $d$.\#Claves $\leftarrow$ $d$.\#Claves $+$ $1$
+    \STATE $actual$\DRef significado $\leftarrow$ \&(Copiar($s$)) \CompTheta{???}
+    \STATE $d$.\#Claves $\leftarrow$ $d$.\#Claves $+$ $1$ \CompTheta{???}
   \end{Algoritmo}
   
   ~
 
-  \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\alpha$}
-    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)}
-    \STATE $actual$ $\leftarrow$ \&($d$.raíz)
-    \STATE var $i$: \TipoVariable{nat}
-    \FOR{$i$ $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
-      \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])]
+  \begin{Algoritmo}{iObtener}{\In{c}{string}, \In{d}{estr\_dicctrie}}{$\alpha$}{PENDIENTE.}
+    \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{???} 
+    \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
+      \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] \CompTheta{???}
     \ENDFOR   
-    \STATE $res$ $\leftarrow$ *($actual$\DRef $significado$)
+    \STATE $res$ $\leftarrow$ *($actual$\DRef $significado$) \CompTheta{???}
   \end{Algoritmo}
 
   ~
   
-  \begin{Algoritmo}{i\#Claves}{\In{d}{estr\_dicctrie}}{nat}
-    $res$ $\leftarrow$ $d$.\#Claves
+  \begin{Algoritmo}{i\#Claves}{\In{d}{estr\_dicctrie}}{nat}{PENDIENTE.}
+    \STATE $res$ $\leftarrow$ $d$.\#Claves \CompTheta{???}
   \end{Algoritmo}
 
 \end{Algoritmos}
