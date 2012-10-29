@@ -11,11 +11,8 @@
 \usepackage{algorithmic}
 \usepackage{scrextend}
 \usepackage{framed}
-\usepackage{calc}
-
 
 \setenumerate{noitemsep}
-
 
 \newcommand{\moduloNombre}[1]{\textbf{#1}}
 
@@ -115,7 +112,6 @@
   \tadAxioma{Abs($#3$)}{#4}%
 }%
 
-
 \newcommand{\DRef}{\ensuremath{\rightarrow}}
 
 \begin{document}
@@ -141,7 +137,8 @@
 \newenvironmentx{Algoritmo}[5]{%
   \def \complejidad {#4}
   \def \justificacion {#5}
-  \begin{framed}
+
+  \begin{oframed}
     \InterfazAlgoritmo{#1}{#2}{#3}  
     \begin{addmargin}[2em]{0em}
       \begin{algorithmic}[1]
@@ -157,7 +154,7 @@
         \justificacion
       \end{addmargin}    
     }
-  \end{framed}  
+  \end{oframed}
 }
 
 %CrearTupla(variable donde se almacenará)
@@ -481,7 +478,7 @@
   \end{Algoritmo}
 
   ~   
-    
+
   \begin{Algoritmo}{iIdCategoríaPorNombre}{\In{c}{categoria}, \In{ac}{estr\_acat}}{nat}{$\Theta(|c|)$}{}
     \STATE $res$ $\leftarrow$ \NombreFuncion{Obtener}($c$, $ac$.categorías).id \CompTheta{|c|}
   \end{Algoritmo}
