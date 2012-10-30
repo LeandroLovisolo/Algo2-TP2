@@ -1374,9 +1374,9 @@
   ~
 
   \begin{Algoritmo}{iNuevoNodo}{}{estr\_nodo}{$\Theta(1)$}{
-    $\Theta(1) + \Theta(256) + 256 * \Theta(1) =$ \\
-    $\Theta(1) + 256 * \Theta(1) + 256 * \Theta(1) =$ \\    
-    $513 * \Theta(1) =$ \\
+    $\Theta(1) + 256 * \Theta(1) + 256 * (\Theta(1) + \Theta(1)) =$ \\    
+    $\Theta(1) + 256 * \Theta(1) + 256 * \Theta(1) + 256 * \Theta(1) =$ \\
+    $769 * \Theta(1) =$ \\            
     $\Theta(1)$.
   }
     \STATE \CrearTupla{$res$}\CampoTupla{significado}{NULL}, \Complejidad{1}
