@@ -553,12 +553,14 @@
   {$res$ $\igobs$ iniciar($ac$)}
   [$\Theta$(\#(categorías($ac$))]
   [crea un sistema cuyo árbol de categorías es $ac$.]
+  [$res$ podrá invalidarse si se modifica $ac$ luego de ejecutarse esta operación.]
 
   \InterfazFuncion{AgregarLink}{\In{l}{link}, \In{c}{categoria}, \Inout{s}{sistema}}{}
   [$s$ $\igobs$ $s_{0}$ $\land$ $¬$($l$ $\in$ links($s$)) $\land$ está?($c$, categorías($s$)]
   {$s$ $\igobs$ nuevoLink($s_{0}$, $l$, $c$)}
   [$\Theta$(|$l$| + |$c$| + $h$), donde $h$ representa altura(categorías($s$)).]
   [agrega al sistema el link $l$ con categoría $c$.]
+  [el link $l$ se agrega por copia.]
 
   \InterfazFuncion{AccederLink}{\In{l}{link}, \In{f}{fecha}, \Inout{s}{sistema}}{}
   [$s$ $\igobs$ $s_{0}$ $\land$ $l$ $\in$ links($s$) $\land$ $f$ $\geq$ fechaActual($s$)]
