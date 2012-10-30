@@ -1033,13 +1033,13 @@
     $\Theta(|c| + n^2)$ ó $\Theta(|c|)$, donde $n$ es la cantidad de links de $c$ y todas sus subcategorías.
   }
   {
-    $\Theta(1) + \Theta(|c|) + (\Theta(|estr\_c$.links$|^2)$ ó $0) + \Theta(1) + \Theta(|c|) + \Theta(1) =$ \\
-    $3 * \Theta(1) + \Theta(|c|) + (\Theta(|estr\_c$.links$|^2)$ ó $0) + \Theta(|c|) =$ \\
+    $\Theta(1) + \Theta(|c|) + \Theta(1) + (\Theta(|estr\_c$.links$|^2)$ ó $0) + \Theta(1) + \Theta(|c|) + \Theta(1) =$ \\
+    $4 * \Theta(1) + \Theta(|c|) + (\Theta(|estr\_c$.links$|^2)$ ó $0) + \Theta(|c|) =$ \\
     $\Theta(|c|) + (\Theta(|estr\_c$.links$|^2)$ ó $0) + \Theta(|c|) =$ \\
     $2 * \Theta(|c|) + (\Theta(|estr\_c$.links$|^2)$ ó $0) =$ \\
     $\Theta(|c|) + (\Theta(|estr\_c$.links$|^2)$ ó $0) =$ \\
     $\Theta(|c|) + (\Theta(n^2)$ ó $0) =$ \\
-    $\Theta(|c|) + (n^2$ ó $0) =$ \\    
+    $(\Theta(|c|) + \Theta(n^2))$ ó $\Theta(|c|) =$ \\    
     $\Theta(|c| + n^2)$ ó $\Theta(|c|)$. \\
     \\
     Notar que $n =\ $estr\_c$.links$.
