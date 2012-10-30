@@ -1389,11 +1389,9 @@
   ~
    
   \begin{Algoritmo}{iDefinir}{\In{c}{string}, \In{s}{$\alpha$}, \Inout{d}{estr\_dicctrie}}{}{$\Theta(|c| + copy(s))$}{
-    $\Theta(1) + |c| * (\Theta(1) + \Theta(1) + \Theta(1)) + \Theta(copy(s)) + \Theta(1) =$ \\
-    $\Theta(1) + |c| * 3 * \Theta(1) + \Theta(copy(s)) + \Theta(1) =$ \\ 
-    $2 * \Theta(1) + |c| * 3 * \Theta(1) + \Theta(copy(s)) =$ \\     
-    $|c| * 3 * \Theta(1) + \Theta(copy(s)) =$ \\
-    $3 * \Theta(|c|) + \Theta(copy(s)) =$ \\
+    $\Theta(1) + |c| * (\Theta(1) + \Theta(1) + (\Theta(1)$ ó $0) + \Theta(1)) + \Theta(copy(s)) + \Theta(1) =$ \\
+    $\Theta(1) + |c| * \Theta(1) + \Theta(copy(s)) + \Theta(1) =$ \\ 
+    $|c| * \Theta(1) + \Theta(copy(s)) =$ \\
     $\Theta(|c|) + \Theta(copy(s)) =$ \\
     $\Theta(|c| + copy(s))$.
   }
