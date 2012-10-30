@@ -979,11 +979,16 @@
     $\Theta(|l| + h)$, donde $h$ es la altura del árbol de categorías.
   }
   {
-    $\Theta(|l|) + \Theta(1) + \Theta(1) + \Theta(1) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
-    $\Theta(|l|) + 3 * \Theta(1) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
-    $\Theta(|l|) + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
-    $\Theta(|l|) + h * (3 * \Theta(1)) =$ \\
-    $\Theta(|l|) + h =$ \\
+    $\Theta(|l|)\ +$ condicionales $ +\ \Theta(1) + \Theta(1)\ +$ ciclo $ =$ \\
+    $\Theta(|l|)\ +$ condicionales $+$ ciclo $ =$ \\
+    $\Theta(|l|) + \Theta(1) + (\Theta(1) $ ó $(\Theta(1) + (\Theta(1) $ ó $(\Theta(1) + (\Theta(1) $ ó $\Theta(1))))))\ + $ ciclo $ =$ \\  
+    $\Theta(|l|) + \Theta(1)\ +$ ciclo $ =$ \\
+    $\Theta(|l|)\ +$ ciclo $ =$ \\
+    $\Theta(|l|)\ + h * (\Theta(1) + \Theta(1) + \Theta(1) + \Theta(1)) + \Theta(1) =$ \\
+    $\Theta(|l|)\ + h * (4 * \Theta(1)) + \Theta(1) =$ \\
+    $\Theta(|l|)\ + h * \Theta(1) + \Theta(1) =$ \\
+    $\Theta(|l|)\ + h * \Theta(1) =$ \\
+    $\Theta(|l|)\ + \Theta(h) =$ \\
     $\Theta(|l| + h)$.
   }
     \STATE var $estr\_l$: \TipoVariable{estr\_link} $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \Complejidad{$|l|$}
