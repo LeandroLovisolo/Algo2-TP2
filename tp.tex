@@ -141,7 +141,7 @@
   \begin{oframed}
     \InterfazAlgoritmo{#1}{#2}{#3}  
     \begin{addmargin}[2em]{0em}
-      \begin{algorithmic}[1]
+      \begin{algorithmic}
 }
 {
       \end{algorithmic}
@@ -903,10 +903,7 @@
     \STATE \MargenTupla                       \CampoTupla{últimoAcceso}{0}, \Complejidad{1}
     \STATE \MargenTupla                       \CampoTupla{ordenado?}{\textbf{false}}\FinTupla \Complejidad{1}
     \STATE var $it$: \TipoVariable{itcats} $\leftarrow$ \NombreFuncion{CrearItRaíz}($ac$) \Complejidad{1}
-    \STATE \NombreFuncion{iAgregarALinksPorCatId}( \Complejidad{$\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)}$}
-    \STATE   \margen $it$, \Complejidad{1}
-    \STATE   \margen 1, \Complejidad{1}
-    \STATE   \margen $res$)  \Complejidad{1}
+    \STATE \NombreFuncion{iAgregarALinksPorCatId}($it$, 1, $res$) \Complejidad{$\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)}$}
   \end{Algoritmo}
   
   ~  
