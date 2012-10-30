@@ -589,7 +589,7 @@
   {$res$ $\igobs$ CrearItUni(tuplasLinks($c$, $s$)) $\land$ alias(iteraLinksCorrectos($res$, $c$, $s$))}  
   [$\Theta$(|$c$| + $n^2$), donde $n$ representa long(linksOrdenadosPorAccesos($s$, $c$)).]
   [devuelve un iterador unidireccional de los links de la categoría $c$ y todas sus subcategorías ordenados de mayor a menor cantidad de accesos recientes.]
-  [El iterador podrá invalidarse si se agregan links a la categoría $c$ o alguna subcategoría y/o si se registran accesos a links de dichas categorías.]  
+  [el iterador podrá invalidarse si se agregan links a la categoría $c$ o alguna subcategoría y/o si se registran accesos a links de dichas categorías.]  
    
   \InterfazFuncion{HayMás?}{\In{it}{itlinks}}{bool}
   {$res$ $\igobs$ HayMás?($it$)}
