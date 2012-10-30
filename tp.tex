@@ -237,7 +237,7 @@
   [devuelve un iterador unidireccional de las categorías hijas directas de la categoría raíz de $ac$.]
   [Siguientes($res$) podrá cambiar si se agregan nuevas categorías hijas directas a la categoría raíz.]
 
-  \InterfazFuncion{CrearItDadoOtroIt}{\In{it}{itcats}, \In{ac}{acat}}{itcats}
+  \InterfazFuncion{CrearItHijos}{\In{it}{itcats}, \In{ac}{acat}}{itcats}
   [HayMás?($it$)]
   {$res$ $\igobs$ CrearItUni(tuplasHijos($\Pi_1$(Actual($it$)), $ac$)) $\land$ alias(iteraLosHijos($res$, $\Pi_1$(Actual($it$)), $ac$))}
   [$\Theta(1)$]
@@ -506,7 +506,7 @@
 
   ~
   
-  \begin{Algoritmo}{iCrearItDadoOtroIt}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}{$\Theta(1)$}{}
+  \begin{Algoritmo}{iCrearItHijos}{\In{it}{itConj(puntero(estr\_cat))}}{itConj(puntero(estr\_cat))}{$\Theta(1)$}{}
     \STATE $res$ $\leftarrow$ \NombreFuncion{CrearIt}(\NombreFuncion{Siguiente}(it)\DRef hijos) \CompTheta{1}
   \end{Algoritmo}  
 
@@ -920,7 +920,7 @@
       \STATE \MargenTupla \CampoTupla{links}{\NombreFuncion{Vacía}()},  \CompTheta{1}
       \STATE \MargenTupla \CampoTupla{últimoAcceso}{0},  \CompTheta{1}
       \STATE \MargenTupla \CampoTupla{ordenado?}{\textbf{false}}\FinTupla  \CompTheta{1}
-      \STATE var $it'$: \TipoVariable{itcats} $\leftarrow$ \NombreFuncion{CrearItDadoOtroIt}($it$)  \CompTheta{1}
+      \STATE var $it'$: \TipoVariable{itcats} $\leftarrow$ \NombreFuncion{CrearItHijos}($it$)  \CompTheta{1}
       \STATE \NombreFuncion{iAgregarALinksPorCatId}(  \CompTheta{$\sum_{i=1}^{i=long(Siguientes(it'))}{\#subcategorias(Siguientes(it')_i)}$}
       \STATE   \margen$ithijos$, \CompTheta{1}
       \STATE   \margen\NombreFuncion{IdCategoríaActual}($it$), \CompTheta{1}
