@@ -202,6 +202,7 @@
   {$res$ $\igobs$ raíz($ac$)}
   [$\Theta(1)$]
   [devuelve el nombre de la categoría raíz de $ac$.]
+  [$res$ no es modificable.]
 
   \InterfazFuncion{AgregarCategoría}{\In{hija}{categoria}, \In{padre}{categoria}, \Inout{ac}{acat}}{}
   [$ac$ $\igobs$ $ac_{0}$ $\land$ está?($padre$, $ac$) $\land$ $¬$vacía?($hija$) $\land$ $¬$está?($hija$, $ac$)]
@@ -252,6 +253,7 @@
   {$res$ $\igobs$ $\Pi_1$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve el elemento actual del iterador.]
+  [$res$ no es modificable.]
 
   \InterfazFuncion{IdCategoríaActual}{\In{it}{itcats}}{nat}
   [HayMás?($it$)]
@@ -589,12 +591,14 @@
   {$res$ $\igobs$ $\Pi_1$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve el link actual del iterador.]
+  [$res$ no es modificable.]
 
   \InterfazFuncion{CategoríaLinkActual}{\In{it}{itlinks}}{categoria}
   [HayMás?($it$)]
   {$res$ $\igobs$ $\Pi_2$(Actual($it$))}
   [$\Theta(1)$]
   [devuelve la categoría del link actual del iterador.]
+  [$res$ no es modificable.]
 
   \InterfazFuncion{AccesosRecientesLinkActual}{\In{it}{itlinks}}{nat}
   [HayMás?($it$)]
@@ -1174,7 +1178,7 @@
   [def?($c$, $d$)]
   {$res$ $\igobs$ obtener($c$, $d$)}
   [$\Theta(|c|)$]
-  [devuelve el significado de la clave $c$ en $d$.]  
+  [devuelve el significado de la clave $c$ en $d$.]
    
   \InterfazFuncion{\#Claves}{\In{d}{dicctrie$(\alpha)$}}{nat}
   {$res$ $\igobs$ \#(claves($d$))}
