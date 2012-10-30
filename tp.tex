@@ -913,7 +913,7 @@
     El algoritmo recibe un iterador de categorías, y para cada una de ellas guarda información en la posición correspondiente
     en el arreglo $s$.linksPorCatId, y luego crea un iterador de sus categorías hijas que utiliza para llamarse recursivamente.
   }
-    \WHILE{\NombreFuncion{HayMás?}($it$)}{1}
+    \WHILE{\NombreFuncion{HayMás?}($it$)}
       \STATE \CrearTupla{$s$.linksPorCatId[\NombreFuncion{IdCategoríaActual}($it$) - 1]}%
                           \CampoTupla{cat}{\NombreFuncion{CategoríaActual}($it$)},  \CompTheta{1}
       \STATE \MargenTupla \CampoTupla{idPadre}{$idPadre$},  \CompTheta{1}
@@ -956,7 +956,7 @@
     \STATE $estr\_l$ $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \CompTheta{$|l|$}
     \STATE
     \STATE var $cid$: \TipoVariable{nat} $\leftarrow$ $estr\_l$.cid \CompTheta{1}
-    \WHILE{$¬$($cid$ $\igobs$ 0)}{1}
+    \WHILE{$¬$($cid$ $\igobs$ 0)}
       \STATE \NombreFuncion{AgregarAtrás}($s$.linksPorCatId[$cid$ - 1].links, \&($estr\_l$)) \CompTheta{1}
       \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual \CompTheta{1}
       \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false} \CompTheta{1}
@@ -978,11 +978,11 @@
     $\Theta(|l| + h)$.
   }
     \STATE var $estr\_l$: \TipoVariable{estr\_link} $\leftarrow$ \NombreFuncion{Obtener}($l$, $s$.links) \CompTheta{$|l|$}
-    \IF{$f$ $\igobs$ $estr\_l$.últimoAcceso}{1}
+    \IF{$f$ $\igobs$ $estr\_l$.últimoAcceso}
       \STATE $estr\_l$.as[0] $\leftarrow$ $estr\_l$.as[0] + 1 \CompTheta{1}
-    \ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 1}{1}
+    \ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 1}
       \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, $estr\_l$.as[0], $estr\_l$.as[1]) \CompTheta{1}
-    \ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 2}{1}
+    \ELSIF{$f$ $\igobs$ $estr\_l$.últimoAcceso + 2}
       \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, $estr\_l$.as[0]) \CompTheta{1}
     \ELSE
       \STATE $estr\_l$.as $\leftarrow$ \NombreFuncion{iCrearArregloDe3Nats}(1, 0, 0) \CompTheta{1}
@@ -991,7 +991,7 @@
     \STATE $s$.fechaActual $\leftarrow$ $f$ \CompTheta{1}
     \STATE
     \STATE var $cid$: \TipoVariable{nat} $\leftarrow$ $estr\_l$.cid \CompTheta{1}
-    \WHILE{$¬$($cid$ $\igobs$ 0)}{1}
+    \WHILE{$¬$($cid$ $\igobs$ 0)}
       \STATE $s$.linksPorCatId[$cid$ - 1].últimoAcceso $\leftarrow$ $s$.fechaActual \CompTheta{1}
       \STATE $s$.linksPorCatId[$cid$ - 1].ordenado? $\leftarrow$ \textbf{false} \CompTheta{1}
       \STATE $idPadre$ $\leftarrow$ $s$.linksPorCatId[$cid$ - 1].idPadre \CompTheta{1}
@@ -1032,7 +1032,7 @@
   }
     \STATE var $estr\_c$: \TipoVariable{estr\_linksPorCatId} $\leftarrow$ $s$.linksPorCatId[ \CompTheta{1}
     \STATE   \margen \NombreFuncion{IdCategoríaPorNombre}($c$, $s$.categorías) - 1] \CompTheta{|c|}
-    \IF{$¬$($estr\_c$.ordenado?)}{1}
+    \IF{$¬$($estr\_c$.ordenado?)}
       \STATE \NombreFuncion{iOrdenarLinks}($estr\_c$) \CompTheta{$|estr\_c$.links$|^2$}
     \ENDIF
     \STATE \CrearTupla{$res$}\CampoTupla{s}{$s$}, \CompTheta{1}
@@ -1060,15 +1060,15 @@
     $\Theta(n^2)$.  
   }
     \STATE var $it$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{CrearIt}($estr\_c$.links) \CompTheta{1}
-    \WHILE{\NombreFuncion{HaySiguiente}($it$)}{1}
+    \WHILE{\NombreFuncion{HaySiguiente}($it$)}
       \STATE var $it'$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{Copiar}($it$) \CompTheta{1}
       \STATE var $itMax$: \TipoVariable{itLista(puntero(estr\_link))} $\leftarrow$ \NombreFuncion{Copiar}($it'$) \CompTheta{1}
-      \WHILE{\NombreFuncion{HaySiguiente}($it'$)}{1}
+      \WHILE{\NombreFuncion{HaySiguiente}($it'$)}
         \STATE var $arActual$: \TipoVariable{nat} $\leftarrow$
                \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($it'$), $estr\_c$) \CompTheta{1}
         \STATE var $arMax$: \TipoVariable{nat} $\leftarrow$
                \NombreFuncion{iAccesosRecientes}(*\NombreFuncion{Siguiente}($itMax$), $estr\_c$) \CompTheta{1}
-        \IF{$arActual > arMax$}{1}
+        \IF{$arActual > arMax$}
           \STATE $itMax$ $\leftarrow$ \NombreFuncion{Copiar}($it'$) \CompTheta{1}
         \ENDIF
     \STATE \NombreFuncion{Avanzar($it'$)} \CompTheta{1}
@@ -1082,11 +1082,11 @@
   ~  
 
   \begin{Algoritmo}{iAccesosRecientes}{\In{estr\_l}{estr\_link}, \In{estr\_c}{estr\_linksPorCatId}}{nat}{$\Theta(1)$}{}
-    \IF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso}{1}
+    \IF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso}
       \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] + $estr\_l$.as[2] \CompTheta{1}
-    \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 1}{1}
+    \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 1}
       \STATE $res$ $\leftarrow$ $estr\_l$.as[0] + $estr\_l$.as[1] \CompTheta{1}
-    \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 2}{1}     
+    \ELSIF{$estr\_c$.últimoAcceso $\igobs$ $estr\_l$.últimoAcceso + 2}          
       \STATE $res$ $\leftarrow$ $estr\_l$.as[0] \CompTheta{1}
     \ELSE
       \STATE $res$ $\leftarrow$ 0 \CompTheta{1}
@@ -1384,7 +1384,7 @@
   }
     \STATE var $actual$: \TipoVariable{puntero(estr\_nodo)} $\leftarrow$ \&($d$.raíz) \CompTheta{1}
     \FOR{var $i$: \TipoVariable{nat} $\leftarrow$ $0$ to \NombreFuncion{Longitud}($c$)}
-      \IF{$actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\igobs$ NULL}{1}
+      \IF{$actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\igobs$ NULL}
         \STATE $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] $\leftarrow$ \&(\NombreFuncion{iNuevoNodo}()) \CompTheta{1}
       \ENDIF
         \STATE $actual$ $\leftarrow$ $actual$\DRef hijos[\NombreFuncion{Ord}($c$[$i$])] \CompTheta{1}

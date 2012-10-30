@@ -183,20 +183,20 @@
   \newcommand{\GLOBALS}{\ALC@it\algorithmicglobals\ }
   \newcommand{\BODY}[1][default]{\ALC@it\algorithmicbody\ \ALC@com{##1}\begin{ALC@body}}
   \newcommand{\ENDBODY}{\end{ALC@body}}
-  \newcommand{\IF}[3][default]{\ALC@it\algorithmicif\ ##2\ \algorithmicthen \hfill $\Theta$(##3)%
+  \newcommand{\IF}[2][default]{\ALC@it\algorithmicif\ ##2\ \algorithmicthen%
 \ALC@com{##1}\begin{ALC@if}}
   \newcommand{\ELSE}[1][default]{\end{ALC@if}\ALC@it\algorithmicelse%
 \ALC@com{##1}\begin{ALC@if}}
-  \newcommand{\ELSIF}[3][default]%
-{\end{ALC@if}\ALC@it\algorithmicelsif\ ##2\ \algorithmicthen \hfill $\Theta$(##3)%
+  \newcommand{\ELSIF}[2][default]%
+{\end{ALC@if}\ALC@it\algorithmicelsif\ ##2\ \algorithmicthen%
 \ALC@com{##1}\begin{ALC@if}}
   \newcommand{\FOR}[2][default]{\ALC@it\algorithmicfor\ ##2\ \algorithmicdo%
 \ALC@com{##1}\begin{ALC@for}}
   \newcommand{\FORALL}[2][default]{\ALC@it\algorithmicforall\ ##2\ %
 \algorithmicdo%
 \ALC@com{##1}\begin{ALC@for}}
-  \newcommand{\WHILE}[3][default]{\ALC@it\algorithmicwhile\ ##2\ %
-\algorithmicdo \hfill $\Theta$(##3)%
+  \newcommand{\WHILE}[2][default]{\ALC@it\algorithmicwhile\ ##2\ %
+\algorithmicdo%
 \ALC@com{##1}\begin{ALC@whl}}
   \newcommand{\LOOP}[1][default]{\ALC@it\algorithmicloop%
 \ALC@com{##1}\begin{ALC@loop}}
