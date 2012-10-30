@@ -949,9 +949,11 @@
     $\Theta(|c|) + \Theta(|l|) + \Theta(|c|)\ +$ ciclo $=$ \\
     $2 * \Theta(|c|) + \Theta(|l|)\ +$ ciclo $=$ \\
     $\Theta(|c|) + \Theta(|l|)\ +$ ciclo $=$ \\
-    $\Theta(|c|) + \Theta(|l|)\ + h * (\Theta(1) + \Theta(1) + \Theta(1)) =$ \\
-    $\Theta(|c|) + \Theta(|l|)\ + h * (3 * \Theta(1)) =$ \\
-    $\Theta(|c|) + \Theta(|l|)\ + h * \Theta(1) =$ \\
+    $\Theta(|c|) + \Theta(|l|) + h * (\Theta(1) + \Theta(1) + \Theta(1) + \Theta(1) + \Theta(1)) + \Theta(1) =$ \\
+    $\Theta(|c|) + \Theta(|l|) + h * (5 * \Theta(1)) + \Theta(1) =$ \\
+    $\Theta(|c|) + \Theta(|l|) + h * \Theta(1) + \Theta(1) =$ \\
+    $\Theta(|c|) + \Theta(|l|) + h * \Theta(1) =$ \\
+    $\Theta(|c|) + \Theta(|l|) + \Theta(h) =$ \\    
     $\Theta(|c| + |l| + h).$
   }
     \STATE \CrearTupla{var $estr\_l$: \TipoVariable{estr\_link}}%
