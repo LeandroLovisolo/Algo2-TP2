@@ -1327,13 +1327,13 @@
     \#(claves($d$)) $\igobs$ $e$.\#Claves $\yluego$ \hfill 1. \\
     ($\forall c$: string)(def?($c$, $d$) $\impluego$ ( \hfill 2. \\
       \margen $¬$(ObtenerDeLaEstructura($c$, $e$.raíz) $\igobs$ NULL) $\yluego$ \hfill 2. a) \\
-      \margen obtener($c$, $d$) $\igobs$ ObtenerDeLaEstructura($c$, $e$.raíz) \hfill 2. b) \\
+      \margen obtener($c$, $d$) $\igobs$ *(ObtenerDeLaEstructura($c$, $e$.raíz)) \hfill 2. b) \\
     ))
   }
 
   ~
   
-  \tadOperacion{ObtenerDeLaEstructura}{string,estr\_nodo}{bool}{}
+  \tadOperacion{ObtenerDeLaEstructura}{string,estr\_nodo}{puntero($\alpha$)}{}
   \tadAxioma{ObtenerDeLaEstructura($c$, $n$)}{\TADIF vacía?($c$)
                                               THEN $n$.significado
                                               ELSE {\TADIF $n$.hijos[Ord(prim($c$))] $\igobs$ NULL
