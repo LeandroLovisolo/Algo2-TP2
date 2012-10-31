@@ -546,7 +546,8 @@ Recuperatorio   &&\\
   \tadOperacion{SecuDeTuplas}{secu(puntero(estr\_cat))/sp}{secu(tupla(categoria, nat))}{$¬$(está?(NULL, $sp$)}
   \tadAxioma{SecuDeTuplas($sp$)}{\TADIF vacía?($sp$)
                                  THEN \secuencia{}
-                                 ELSE \secuencia{$\langle$prim($sp$)\DRef nombre{, }prim($sp$)\DRef id$\rangle$}[fin($sp$)]
+                                 ELSE \secuencia{$\langle$prim($sp$)\DRef nombre{, }prim($sp$)\DRef id$\rangle$}
+                                                [SecuDeTuplas(fin($sp$))]
                                  FI}
 
   ~
