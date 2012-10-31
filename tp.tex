@@ -962,7 +962,7 @@ Recuperatorio   &&\\
   
   \tadOperacion{MismosAccesos}{link/l,lli/s,estr\_sistema/e}{bool}{$l$ $\in$ links($s$) $\land$ def?($l$, $e$.links)}
   \tadAxioma{MismosAccesos($l$, $s$, $e$)}{
-    ($\forall n$: nat)($n$ $\leq$ 2 $\impluego$ \\
+    ($\forall n$: nat)(($n$ $\leq$ 2 $\land$ fechaUltimoAcceso($s$, $l$) $\geq$ $n$) $\impluego$ \\
       \margen accesosRecientesDia($s$, $l$, fechaUltimoAcceso($s$, $l$) $-$ $n$) $\igobs$ \\
       \margen obtener($l$, $e$.links).as[$n$])
   }
