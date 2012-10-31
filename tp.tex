@@ -1066,7 +1066,7 @@ Recuperatorio   &&\\
 \begin{Algoritmos}
 
   \begin{Algoritmo}{iCrearSistema}{\In{ac}{estr\_acat}}{estr\_sistema}{$\Theta(\#(categorias(ac)))$}{
-    $12 * \Theta(1) + \Theta(\#categorias(ac)) + \Theta(\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)}) =$ \\
+    $9 * \Theta(1) + \Theta(\#categorias(ac)) + \Theta(\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)}) =$ \\
     $\Theta(\#categorias(ac)) + \Theta(\sum_{i=1}^{i=long(Siguientes(it))}{\#subcategorias(Siguientes(it)_i)}) =$ \\
     $\Theta(\#categorias(ac)) + \Theta(\#categorias(ac) - 1) =$ \\
     $\Theta(\#categorias(ac)).$ \\
