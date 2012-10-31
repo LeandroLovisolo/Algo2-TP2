@@ -877,6 +877,8 @@ Recuperatorio   &&\\
       \item $idPadre$ debe ser igual al id del padre de la categoría en el árbol,
             o cero si la categoría es la raíz.
       \item La lista de punteros de estr\_link no puede tener elementos repetidos.
+      \item La lista de punteros de estr\_link debe contener punteros a las estructuras estr\_link
+            de todos los links de la categoría del elemento.
       \item Para cada elemento en la lista de punteros de estr\_link:
       \begin{enumerate}
         \item El elemento no puede ser un puntero nulo.
@@ -895,7 +897,7 @@ Recuperatorio   &&\\
       \margen $estr\_l$.l $\igobs$ $l$ $\land$ \hfill 1. a) \\
       \margen ($\exists c$: categoría)(está?($c$, $s$.categorías) $\yluego$ $estr\_l$.cid $\igobs$ id($s$.categorías. $c$)) $\land$ \hfill 1. b) \\
       \margen $estr\_l$.últimoAcceso $\leq$ $s$.fechaActual \hfill 1. c) \\
-    )) $\land$ \\
+    )) $\yluego$ \\
     tam($s$.linksPorCatId) $\igobs$ \#(categorias($s$.categorías)) $\land$ \hfill 2. \\
     ($\forall i$: nat)($i$ $<$ tam($s$.linksPorCatId) $\impluego$ ( \hfill 3. \\
       \margen está?($estr\_c$.cat, $s$.categorías) $\yluego$ \hfill 3. a) \\
@@ -906,12 +908,13 @@ Recuperatorio   &&\\
         \margen\margen \phantom{(}\textbf{else} id($s$.categorías, padre($s$.categorías, $estr\_c$.cat)) \\
         \margen\margen \phantom{(}\textbf{fi}) $\land$ \\
       \margen SinRepetidos($estr\_c$.links) $\land$ \hfill 3. d) \\
-      \margen ($\forall l$: puntero(estr\_link))(está?($l$, $estr\_c$.links) $\impluego$ ( \hfill 3. e) \\
-        \margen\margen $¬$($l$ $\igobs$ NULL) $\yluego$ \hfill 3. e) 1) \\
-        \margen\margen def?($l$\DRef l, $s$.links) $\yluego$ $l$ $\igobs$ \&(obtener($l$\DRef l, $s$.links)) $\land$ \hfill 3. e) 2) \\
-        \margen\margen $¬$($estr\_c$.idPadre $\igobs$ 0) $\impluego$ está?($l$, $s$.linksPorCatId[$estr\_c$.idPadre $-$ $1$].links) \hfill 3. e) 3) \\
+      \margen ($\forall l$: link)(def?($l$, $s$.links) $\impluego$ (está?($estr\_l$, $s$.linksPorCatId[$estr\_l$.cid - 1].links))) $\land$ \hfill 3. e) \\      
+      \margen ($\forall l$: puntero(estr\_link))(está?($l$, $estr\_c$.links) $\impluego$ ( \hfill 3. f) \\
+        \margen\margen $¬$($l$ $\igobs$ NULL) $\yluego$ \hfill 3. f) 1) \\
+        \margen\margen def?($l$\DRef l, $s$.links) $\yluego$ $l$ $\igobs$ \&(obtener($l$\DRef l, $s$.links)) $\land$ \hfill 3. f) 2) \\
+        \margen\margen $¬$($estr\_c$.idPadre $\igobs$ 0) $\impluego$ está?($l$, $s$.linksPorCatId[$estr\_c$.idPadre $-$ $1$].links) \hfill 3. f) 3) \\
       \margen )) $\land$ \\
-      \margen $estr\_c$.últimoAcceso $\leq$ $s$.fechaActual \hfill 3. f) \\
+      \margen $estr\_c$.últimoAcceso $\leq$ $s$.fechaActual \hfill 3. g) \\
     )) $\land$ \\
     ($\exists l$: link)(def?($l$, $s$.links) $\yluego$ obtener($l$, $s$.links).últimoAcceso $\igobs$ $s$.fechaActual), \hfill 4. \\
     donde $estr\_l$ es obtener($l$, $s$.links) y $estr\_c$ es $s$.linksPorCatId[$i$].
