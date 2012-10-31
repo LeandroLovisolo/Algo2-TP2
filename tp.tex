@@ -15,6 +15,8 @@
 \usepackage{framed}
 
 \setenumerate{noitemsep}
+\setitemize{noitemsep}
+\setitemize{noitemsep}
 
 \newcommand{\moduloNombre}[1]{\textbf{#1}}
 
@@ -116,6 +118,9 @@
 
 \newcommand{\DRef}{\ensuremath{\rightarrow}}
 
+% Estilo de listas de items
+\renewcommand{\labelitemi}{$\bullet$}
+
 % Fancyhdr
 \pagestyle{fancy}
 \thispagestyle{fancy}
@@ -126,7 +131,7 @@
 
 \fancypagestyle{caratula} {
    \fancyhf{}
-   \fancyfoot[C]{\thepage /\pageref{LastPage}}
+   \cfoot{\thepage /\pageref{LastPage}}
    \renewcommand{\headrulewidth}{0pt}
    \renewcommand{\footrulewidth}{0pt}
 }
@@ -408,6 +413,16 @@ Recuperatorio   &&\\
 \begin{Representacion}
 
   \Titulo{Representación del árbol de categorías}
+  
+  ~
+  
+  Representamos el árbol de categorías a partir de un diccionario trie de tuplas \TipoVariable{estr\_cat},
+  que contienen toda la información necesaria para representar cada categoría individualmente.  
+  
+  El diccionario nos permite acceder una categoría arbitraria $c$ en $\Theta(|c|)$.
+  
+  Además, guardamos una referencia a la categoría raíz, lo cual nos permite acceder a la misma en $\Theta(1)$.  
+  
 
   \begin{Estructura}{acat}[estr\_acat]
     \begin{Tupla}[estr\_acat]
@@ -492,6 +507,13 @@ Recuperatorio   &&\\
   ~
 
   \Titulo{Representación del iterador}  
+  
+  ~
+  
+  El iterador de categorías permite recorrer el conjunto de hijos directos de una categoría arbitraria.
+  
+  Su representación es simplemente un iterador del conjunto de hijos de la categoría en cuestión,
+  es decir, un iterador del campo \textit{hijos} de su tupla \TipoVariable{estr\_cat}.
   
   \begin{Estructura}{itcats}[itConj(puntero(estr\_cat))]
   \end{Estructura}
@@ -762,6 +784,57 @@ Recuperatorio   &&\\
 \begin{Representacion}
   \Titulo{Representación del sistema}
   
+  ~
+  
+  Representamos el sistema por medio de la tupla \TipoVariable{estr\_sistema}, en la que se redunda información
+  sobre las categorías para poder cumplir con las complejidades pedidas. La tupla contiene:
+  
+  \begin{itemize}
+    \item una referencia al árbol de categorías recibido al construir el sistema,
+    \item un diccionario trie \textit{links} de tuplas \TipoVariable{estr\_links}, que permite acceder
+          a la información de cualquier link $l$ en $\Theta(|l|)$,
+    \item un arreglo \textit{linksPorCatId} de tuplas \TipoVariable{estr\_linksPorCatId}, de las siguientes características:
+    \begin{itemize}
+      \item tamaño igual a la cantidad de categorías en el sistema,
+      \item la tupla en la posición $i$ se corresponde con la categoría de id $i + 1$,
+      \item cada tupla contiene el nombre de la categoría, el id del padre y una lista de links en ésa categoría y
+            todas sus subcategorías, entre otras cosas;
+    \end{itemize}
+    \item la fecha actual del sistema, que coincide con la fecha en la que se accedió a algún link
+          del sistema por última vez, o vale cero si aún no se registraron accesos.
+  \end{itemize}    
+
+  La tupla \TipoVariable{estr\_link} contiene el link representado, el id de la categoría a la que pertenece,
+  la fecha en la se accedió por última vez y un arreglo de tres naturales, que contiene la cantidad de accesos
+  en la fecha de último acceso y en los dos días anteriores.
+  
+  La tupla \TipoVariable{estr\_linksPorCatId} contiene la categoría representada, el id de su padre,
+  una lista con los links que pertenecen a esa categoría y todas sus subcategorías, la fecha en la que
+  se accedió a algún link de esa lista por última vez, y un booleano que indica si la lista está ordenada
+  según $linksOrdenadosPorAccesos(s, c)$, donde $c$ es la categoría representada por esta tupla.
+  
+  Las estructuras elegidas nos permiten satisfacer la complejidad de la creación de un iterador de links
+  según $linksOrdenadosPorAccesos(s, c)$ en $\Theta(|c| + n^2)$: primero consultamos el id de $c$ en
+  el árbol del sistema, lo cual tiene costo $\Theta(|c|)$, luego utilizamos el id como índice en
+  el arreglo $s$.linksPorCatId para acceder a la lista de links de $c$ y sus subcategorías con costo $\Theta(1)$;
+  finalmente ordenamos el arreglo según $linksOrdenadosPorAcceso(s, c)$ con costo $\Theta(n^2)$, sólo si no
+  estaba previamente ordenado. El costo total es $\Theta(|c| + n^2)$, o $\Theta(|c|)$ si ya se respetaba el orden.
+  
+  Agregar un link $l$ bajo una categoría $c$ en un sistema $s$ tiene costo $\Theta(|l| + |c| + h)$:
+  primero agregamos el link al diccionario trie $s$.links con costo $\Theta(|l|)$, luego consultamos el id
+  de la categoría $c$ con costo $\Theta(|c|)$, luego usamos el id de la categoría como índice en el arreglo
+  $s$.linksPorCatId para agregar el link a la lista de links de su categoría y obtener el id de la categoría padre
+  en $\Theta(1)$, y finalmente utilizamos el id de la categoría padre como índice en el arreglo $s$.linksPorCatId
+  para agregar el link a su lista de links, repitiendo el proceso hasta llegar a la categoría raíz, con costo
+  $\Theta(h)$. De esta manera logramos que cada categoría conozca sus links, y que todos los ancestros conozcan
+  los links de sus categorías descendientes. Notar que cada vez que se agrega un link a alguna tupla
+  \TipoVariable{estr\_linksPorCatId} se setea en falso el booleano que indica si se cumple el orden.
+  
+  De manera similar, acceder un link se logra con costo $\Theta(|l| + h)$: primero consultamos la tupla
+  \TipoVariable{estr\_link} en el diccionario trie \textit{links} con costo $\Theta(|l|)$, y luego
+  recorremos la jerarquía de estructuras \TipoVariable{estr\_linksPorCatId} para setear el booleano de orden
+  a falso y actualizar la fecha de último acceso de cada categoría de ser necesario, con costo $\Theta(h)$.
+  
   \begin{Estructura}{sistema}[estr\_sistema]
     \begin{Tupla}[estr\_sistema]
       \tupItem{categorías}{acat},\\
@@ -895,6 +968,18 @@ Recuperatorio   &&\\
   ~
   
   \Titulo{Representación del iterador}  
+  
+  ~
+  
+  El iterador de links permite recorrer la secuencia de links según $linksOrdenadosPorAccesos(s, c)$, dado un sistema $s$
+  y una categoría $c$. Lo representamos con una tupla que contiene una referencia al sistema, el id de la categoría $c$
+  y un iterador de la lista de links de la estructura \TipoVariable{estr\_linksPorCatId} correspondiente a $c$, la cual
+  se asumirá ordenada según $linksOrdenadosPorAccesos(s, c)$.
+  
+  El id de la categoría nos permitirá proyectar el nombre de la misma y la cantidad de accesos recientes del link actual,
+  utilizando el id como índice en el arreglo $s$.linksPorCatId para obtener en $\Theta(1)$ el nombre y la fecha en la que
+  se accedió por última vez algún link de la categoría, siendo este último un dato necesario para calcular la cantidad
+  de accesos recientes del link actual.
   
   \begin{Estructura}{itlinks}[estr\_iter]
     \begin{Tupla}[estr\_iter]
@@ -1298,6 +1383,15 @@ Recuperatorio   &&\\
 ~
 
 \begin{Representacion}
+
+  Representamos cada nodo del árbol con una tupla que contiene un puntero a su significado,
+  que podrá ser NULL si no hay un significado asociado a ese nodo, y un arreglo de 256 punteros
+  a nodos hijos, en el que elemento de índice $i$ representa al nodo hijo correspondiente
+  al Char de valor $ord^{-1}(i)$, el cual será NULL si no se definió ninguna clave
+  que comience con la traza de ese nodo seguida del Char $ord^{-1}(i)$.
+  
+  El diccionario se representa con una tupla que mantiene una referencia al nodo raíz, y un
+  natural que cuenta la cantidad total de claves definidas en el diccionario.
 
   \begin{Estructura}{dicctrie$(\alpha)$}[estr\_dicctrie]
     \begin{Tupla}[estr\_dicctrie]
